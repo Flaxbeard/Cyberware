@@ -1,0 +1,80 @@
+# BLOCKS
+tile.cyberware.surgery.name=Robosurgeon
+tile.cyberware.surgeryChamber.name=Surgery Chamber
+
+# ITEMS
+item.cyberware.bodyPart.brain.name=Human Brain
+item.cyberware.bodyPart.eyes.name=Human Eyes
+item.cyberware.bodyPart.heart.name=Human Heart
+item.cyberware.bodyPart.lungs.name=Human Lungs
+item.cyberware.manaseerLens.lens.name=Manaseer Lenses
+item.cyberware.manaseerLens.link.name=Manalink
+item.cyberware.cybereyes.name=Cybereyes
+item.cyberware.cybereyeUpgrades.nightVision.name=Enhanced Low-Light Vision
+item.cyberware.cybereyeUpgrades.underwaterVision.name=Liquid Refraction Calibrator
+item.cyberware.cybereyeUpgrades.hudjack.name=Hudjack
+item.cyberware.cybereyeUpgrades.targeting.name=Targeting Overlay
+item.cyberware.cybereyeUpgrades.zoom.name=Distance Enhancer
+item.cyberware.expCapsule.name=Experience Capsule
+item.cyberware.brainUpgrades.corticalStack.name=Cortical Stack
+item.cyberware.brainUpgrades.enderJammer.name=Ender Jammer
+item.cyberware.brainUpgrades.consciousnessTransmitter.name=Consciousness Transmitter
+item.cyberware.brainUpgrades.neuralContextualizer.name=Neural Contextualizer
+item.cyberware.cyberheart.name=Cardiomechanic Pump
+item.cyberware.heartUpgrades.defibrillator.name=Internal Defibrillator
+item.cyberware.heartUpgrades.platlets.name=Platelet Dispatcher
+item.cyberware.heartUpgrades.medkit.name=Stem Cell Synthesizer
+item.cyberware.lungsUpgrades.oxygen.name=Compressed Oxygen Implant
+item.cyberware.lungsUpgrades.hyperoxygenation.name=Hyperoxygenation Boost
+
+# TOOLTIPS
+itemGroup.cyberware=Cyberware
+
+cyberware.slot.eyes=Eyes Slot
+cyberware.gui.missingEssential.eyes=Missing eyes, will cause Blindness
+cyberware.slot.cranium=Cranium Slot
+cyberware.gui.missingEssential.cranium=Missing brain, will cause Death
+cyberware.slot.heart=Heart Slot
+cyberware.gui.missingEssential.heart=Missing heart, will cause Death
+cyberware.slot.lungs=Lungs Slot
+cyberware.gui.missingEssential.lungs=Missing lungs, will cause Death
+
+cyberware.tooltip.shiftPrompt=Hold shift for more info
+cyberware.tooltip.requires=Requires
+cyberware.tooltip.joiner=,
+
+# KEYBINDS
+cyberware.keybinds.category=Cyberware
+cyberware.keybinds.zoom=Zoom
+
+# ITEM TOOLTIPS
+cyberware.tooltip.spiderEye=Provides spider vision\nSee in the dark
+cyberware.tooltip.bodyPart.0=
+cyberware.tooltip.bodyPart.1=
+cyberware.tooltip.bodyPart.2=
+cyberware.tooltip.cybereyes=Immunity to blindness\nEnables Cybereye upgrades
+cyberware.tooltip.cybereyeUpgrades.0=See in the dark
+cyberware.tooltip.cybereyeUpgrades.1=See underwater
+cyberware.tooltip.cybereyeUpgrades.2=Allows upgrades to overlay a HUD
+cyberware.tooltip.cybereyeUpgrades.3=Highlights nearby creatures
+cyberware.tooltip.cybereyeUpgrades.4.before=Zoom using the
+cyberware.tooltip.cybereyeUpgrades.4.after=key
+cyberware.tooltip.manaseerLens.0=Reveals functional radius of flowers\nDisplays additional redstone information
+cyberware.tooltip.manaseerLens.1=Reveals functional radius of flowers\nDisplays additional redstone information
+cyberware.tooltip.expCapsule.before=
+cyberware.tooltip.expCapsule.after=recorded experiences stored
+cyberware.tooltip.brainUpgrades.0=Saves XP in capsule after death
+cyberware.tooltip.brainUpgrades.1=Blocks ender teleportation nearby
+cyberware.tooltip.brainUpgrades.2=Keep some XP after death
+cyberware.tooltip.brainUpgrades.3=Automatically switch to the right tool
+cyberware.tooltip.cyberheart=Immunity to weakness
+cyberware.tooltip.heartUpgrades.0=Prevents certain death once
+cyberware.tooltip.heartUpgrades.1=Heals when close to full health
+cyberware.tooltip.heartUpgrades.2=Heals last hit, after a long delay
+cyberware.tooltip.lungsUpgrades.0=Additional oxygen, regenerates slowly
+cyberware.tooltip.lungsUpgrades.1=Additional speed while sprinting
+
+# DAMAGE TYPE
+death.attack.cyberware.brainless=If only %1$s had a brain
+death.attack.cyberware.heartless=%1$s died to heartlessness
+death.attack.cyberware.surgery=%1$s didn't return from the operation
