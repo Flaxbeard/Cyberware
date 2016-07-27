@@ -22,6 +22,7 @@ import flaxbeard.cyberware.api.ICyberwareTabItem;
 import flaxbeard.cyberware.api.ICyberwareTabItem.EnumCategory;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.CyberwareContent;
 
 @Mod(modid = Cyberware.MODID, version = Cyberware.VERSION)
 public class Cyberware
@@ -64,7 +65,7 @@ public class Cyberware
 		@Override
 		public ItemStack getIconItemStack()
 		{
-			return new ItemStack(Items.REDSTONE);
+			return new ItemStack(CyberwareContent.cyberlimbs, 1, 3);
 		}
 		
 		@Override

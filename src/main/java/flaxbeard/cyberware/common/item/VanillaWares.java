@@ -48,9 +48,9 @@ public class VanillaWares
 		}
 
 		@Override
-		public ItemStack[] required(ItemStack stack)
+		public ItemStack[][] required(ItemStack stack)
 		{
-			return new ItemStack[0];
+			return new ItemStack[0][0];
 		}
 
 		@Override
@@ -132,7 +132,23 @@ public class VanillaWares
 			return I18n.format("cyberware.tooltip.spiderEye").split("\\\\n");
 		}
 
+		@Override
+		public int getCapacity(ItemStack wareStack)
+		{
+			return 0;
+		}
 
+		@Override
+		public void onAdded(EntityLivingBase entity, ItemStack stack) {}
+
+		@Override
+		public void onRemoved(EntityLivingBase entity, ItemStack stack) {}
+
+		@Override
+		public int getEssenceCost(ItemStack stack)
+		{
+			return 5;
+		}
 		
 	}
 }

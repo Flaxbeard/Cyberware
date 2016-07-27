@@ -17,10 +17,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.ItemStackHandler;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
@@ -28,10 +32,11 @@ import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class TileEntitySurgery extends TileEntity implements ITickable
 {
-	public ItemStackHandler slotsPlayer = new ItemStackHandler(100);
-	public ItemStackHandler slots = new ItemStackHandler(100);
-	public boolean[] discardSlots = new boolean[100];
-	public boolean[] isEssentialMissing = new boolean[EnumSlot.values().length];
+	public ItemStackHandler slotsPlayer = new ItemStackHandler(120);
+	public ItemStackHandler slots = new ItemStackHandler(120);
+	public boolean[] discardSlots = new boolean[120];
+	public boolean[] isEssentialMissing = new boolean[EnumSlot.values().length * 2];
+	public int essence = 0;
 	public int wrongSlot = -1;
 	public int ticksWrong = 0;
 
@@ -94,10 +99,12 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					i++;
 				}
 			}
+			
+			this.updateEssence();
 		}
 		else
 		{
-			slotsPlayer = new ItemStackHandler(100);
+			slotsPlayer = new ItemStackHandler(120);
 			for (EnumSlot slotType : EnumSlot.values())
 			{
 				updateEssential(slotType);
@@ -142,6 +149,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 				}
 			}
 		}
+
 		
 		return false;
 	}
@@ -149,10 +157,15 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	public void setWrongSlot(int index)
 	{
 		this.wrongSlot = index;
-		if (Minecraft.getMinecraft().thePlayer != null)
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
 		{
-			this.ticksWrong = Minecraft.getMinecraft().thePlayer.ticksExisted;
+			wrong();
 		}
+	}
+	
+	public void wrong()
+	{
+		this.ticksWrong = Minecraft.getMinecraft().thePlayer.ticksExisted;
 	}
 	
 	public void disableDependants(ItemStack stack, EnumSlot slot, int n)
@@ -171,7 +184,6 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					if (!areRequirementsFulfilled(playerStack, slot, n))
 					{
 						discardSlots[index] = true;
-						System.out.println(":_");
 					}
 				}
 			}
@@ -180,54 +192,65 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	
 	public void enableDependsOn(ItemStack stack, EnumSlot slot, int n)
 	{
-		int row = slot.ordinal();
 		if (stack != null)
 		{
 			ICyberware ware = CyberwareAPI.getCyberware(stack);
-			for (ItemStack needed : ware.required(stack))
+			for (ItemStack[] neededItem : ware.required(stack))
 			{
 				boolean found = false;
 				
-				for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
+				outerLoop:
+				for (ItemStack needed : neededItem)
 				{
-					if (i != n)
+	
+					
+					for (int row = 0; row < EnumSlot.values().length; row++)
 					{
-						int index = row * LibConstants.WARE_PER_SLOT + i;
-						ItemStack playerStack = slotsPlayer.getStackInSlot(index);
-						
-						if (playerStack != null && playerStack.getItem() == needed.getItem() && playerStack.getItemDamage() == needed.getItemDamage())
+						for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
 						{
-							found = true;
-							discardSlots[index] = false;
-							break;
+							if (i != n)
+							{
+								int index = row * LibConstants.WARE_PER_SLOT + i;
+								ItemStack playerStack = slotsPlayer.getStackInSlot(index);
+								
+								if (playerStack != null && playerStack.getItem() == needed.getItem() && playerStack.getItemDamage() == needed.getItemDamage())
+								{
+									found = true;
+									discardSlots[index] = false;
+									break outerLoop;
+								}
+							}
 						}
 					}
+					
 				}
-				
 				if (!found) System.out.println("BADDDD!!!!!!!!!");
+
 			}
 		}
 	}
 	
 	public boolean canDisableItem(ItemStack stack, EnumSlot slot, int n)
 	{
-		int row = slot.ordinal();
 		if (stack != null)
 		{
-			for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
+			for (int row = 0; row < EnumSlot.values().length; row++)
 			{
-				if (i != n)
+				for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
 				{
-					int index = row * LibConstants.WARE_PER_SLOT + i;
-					ItemStack slotStack = slots.getStackInSlot(index);
-					ItemStack playerStack = null;//slotsPlayer.getStackInSlot(index);
-					
-					ItemStack otherStack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
-					
-					if (!areRequirementsFulfilled(otherStack, slot, n))
+					if (i != n)
 					{
-						setWrongSlot(index);
-						return false;
+						int index = row * LibConstants.WARE_PER_SLOT + i;
+						ItemStack slotStack = slots.getStackInSlot(index);
+						ItemStack playerStack = null;//slotsPlayer.getStackInSlot(index);
+						
+						ItemStack otherStack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
+						
+						if (!areRequirementsFulfilled(otherStack, slot, n))
+						{
+							setWrongSlot(index);
+							return false;
+						}
 					}
 				}
 			}
@@ -237,33 +260,41 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	
 	public boolean areRequirementsFulfilled(ItemStack stack, EnumSlot slot, int n)
 	{
-		int row = slot.ordinal();
 		if (stack != null)
 		{
 			ICyberware ware = CyberwareAPI.getCyberware(stack);
-			for (ItemStack needed : ware.required(stack))
+			for (ItemStack[] neededItem : ware.required(stack))
 			{
 				boolean found = false;
-				
-				for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
+
+				outerLoop:
+				for (ItemStack needed : neededItem)
 				{
-					if (i != n)
+					
+					for (int row = 0; row < EnumSlot.values().length; row++)
 					{
-						int index = row * LibConstants.WARE_PER_SLOT + i;
-						ItemStack slotStack = slots.getStackInSlot(index);
-						ItemStack playerStack = slotsPlayer.getStackInSlot(index);
-						
-						ItemStack otherStack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
-						
-						if (otherStack != null && otherStack.getItem() == needed.getItem() && otherStack.getItemDamage() == needed.getItemDamage())
+						for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
 						{
-							found = true;
-							break;
+							if (i != n)
+							{
+								int index = row * LibConstants.WARE_PER_SLOT + i;
+								ItemStack slotStack = slots.getStackInSlot(index);
+								ItemStack playerStack = slotsPlayer.getStackInSlot(index);
+								
+								ItemStack otherStack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
+								
+								if (otherStack != null && otherStack.getItem() == needed.getItem() && otherStack.getItemDamage() == needed.getItemDamage())
+								{
+									found = true;
+									break outerLoop;
+								}
+							}
 						}
 					}
+					
 				}
-				
 				if (!found) return false;
+
 			}
 		}
 		
@@ -283,6 +314,8 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		{
 			this.discardSlots[i] = ((NBTTagByte) list.get(i)).getByte() > 0;
 		}
+		
+		this.essence = compound.getInteger("essence");
 	}
 	
 	@Override
@@ -296,7 +329,8 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	{
 		
 		compound = super.writeToNBT(compound);
-		
+	
+		compound.setInteger("essence", essence);
 		compound.setTag("inv", this.slots.serializeNBT());
 		compound.setTag("inv2", this.slotsPlayer.serializeNBT());
 		
@@ -312,11 +346,25 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	
 	public void updateEssential(EnumSlot slot)
 	{
-		this.isEssentialMissing[slot.ordinal()] = !isEssential(slot);
+		if (slot.hasEssential())
+		{
+			byte answer = isEssential(slot);
+			boolean foundFirst = (answer & 1) > 0;
+			boolean foundSecond = (answer & 2) > 0;
+			this.isEssentialMissing[slot.ordinal() * 2] = !foundFirst;
+			this.isEssentialMissing[slot.ordinal() * 2 + 1] = !foundSecond;
+		}
+		else
+		{
+			this.isEssentialMissing[slot.ordinal() * 2] = false;
+			this.isEssentialMissing[slot.ordinal() * 2 + 1] = false;
+		}
 	}
 
-	private boolean isEssential(EnumSlot slot)
+	private byte isEssential(EnumSlot slot)
 	{
+		byte r = 0;
+		
 		for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
 		{
 			int index = slot.ordinal() * LibConstants.WARE_PER_SLOT + i;
@@ -325,13 +373,31 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			
 			ItemStack stack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
 
-			if (stack != null && CyberwareAPI.getCyberware(stack).isEssential(stack))
+			if (stack != null)
 			{
-
-				return true;
+				ICyberware ware = CyberwareAPI.getCyberware(stack);
+				if (ware.isEssential(stack))
+				{
+					if (slot.isSided() && ware instanceof ISidedLimb)
+					{
+						if (((ISidedLimb) ware).getSide(stack) == EnumSide.LEFT && (r & 1) == 0)
+						{
+							r += 1;
+						}
+						else if ((r & 2) == 0)
+						{
+							r += 2;
+						}
+					}
+					else
+					{
+						return 3;
+					}
+				}
+				
 			}
 		}
-		return false;
+		return r;
 	}
 
 	@Override
@@ -404,7 +470,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		}
 	}
 
-	private void processUpdate()
+	public void processUpdate()
 	{
 		updatePlayerSlots(targetEntity);
 		
@@ -421,20 +487,37 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			for (int j = slotIndex * LibConstants.WARE_PER_SLOT; j < (slotIndex + 1) * LibConstants.WARE_PER_SLOT; j++)
 			{
 				ItemStack newStack = slots.getStackInSlot(j);
-				ItemStack targetEntityStack = slotsPlayer.getStackInSlot(j);
+				ItemStack targetEntityStack = ItemStack.copyItemStack(slotsPlayer.getStackInSlot(j));
 				if (newStack != null && newStack.stackSize > 0)
 				{
-					wares[c] = newStack.copy();
+					ItemStack ret = newStack.copy();
+					if (targetEntityStack != null && ret.getItem() == targetEntityStack.getItem() && ret.getItemDamage() == targetEntityStack.getItemDamage())
+					{
+						int maxSize = CyberwareAPI.getCyberware(ret).installedStackSize(ret);
+
+						if (ret.stackSize < maxSize)
+						{
+							int numToShift = Math.min(maxSize - ret.stackSize, targetEntityStack.stackSize);
+							targetEntityStack.stackSize -= numToShift;
+							ret.stackSize += numToShift;
+						}
+					}
+
 					if (targetEntityStack != null && targetEntityStack.stackSize > 0)
 					{
+						targetEntityStack.setTagCompound(null);
 						addItemStack(targetEntity, targetEntityStack);
 					}
+					
+					wares[c] = ret;
+
 					c++;
 				}
 				else if (targetEntityStack != null && targetEntityStack.stackSize > 0)
 				{
 					if (discardSlots[j])
-					{
+					{				
+						targetEntityStack.setTagCompound(null);
 						addItemStack(targetEntity, targetEntityStack);
 						
 					}
@@ -447,16 +530,18 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			}
 			if (!worldObj.isRemote)
 			{
-				cyberware.setInstalledCyberware(slot, wares);
+				cyberware.setInstalledCyberware(targetEntity, slot, wares);
 			}
-			cyberware.setHasEssential(slot, !isEssentialMissing[slotIndex]);
+			cyberware.setHasEssential(slot, !isEssentialMissing[slotIndex * 2], !isEssentialMissing[slotIndex * 2 + 1]);
 		}
-		
+		cyberware.setEssence(essence);
+		cyberware.updateCapacity();
+		cyberware.setImmune();
 		if (!worldObj.isRemote)
 		{
 			CyberwareAPI.updateData(targetEntity);
 		}
-		slots = new ItemStackHandler(100);
+		slots = new ItemStackHandler(120);
 		
 	}
 
@@ -506,4 +591,40 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	public int progressTicks = 0;
 	public static boolean workingOnPlayer = false;
 	public static int playerProgressTicks = 0;
+
+	public void updateEssence()
+	{
+		this.essence = LibConstants.BASE_ESSENCE;
+
+		for (EnumSlot slot : EnumSlot.values())
+		{
+			for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
+			{
+				int index = slot.ordinal() * LibConstants.WARE_PER_SLOT + i;
+				ItemStack slotStack = slots.getStackInSlot(index);
+				ItemStack playerStack = slotsPlayer.getStackInSlot(index);
+				
+				ItemStack stack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
+				
+				if (stack != null)
+				{
+					
+					ItemStack ret = stack.copy();
+					if (slotStack != null && ret != null && playerStack != null && ret.getItem() == playerStack.getItem() && ret.getItemDamage() == playerStack.getItemDamage())
+					{
+						int maxSize = CyberwareAPI.getCyberware(ret).installedStackSize(ret);
+
+						if (ret.stackSize < maxSize)
+						{
+							int numToShift = Math.min(maxSize - ret.stackSize, playerStack.stackSize);
+							ret.stackSize += numToShift;
+						}
+					}
+					ICyberware ware = CyberwareAPI.getCyberware(ret);
+
+					this.essence -= ware.getEssenceCost(ret);
+				}
+			}
+		}
+	}
 }

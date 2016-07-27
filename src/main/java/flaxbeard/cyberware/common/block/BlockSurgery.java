@@ -3,6 +3,7 @@ package flaxbeard.cyberware.common.block;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,15 +17,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.items.ItemStackHandler;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
-import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class BlockSurgery extends BlockContainer
 {
@@ -32,6 +29,9 @@ public class BlockSurgery extends BlockContainer
 	public BlockSurgery()
 	{
 		super(Material.IRON);
+		setHardness(5.0F);
+		setResistance(10.0F);
+		setSoundType(SoundType.METAL);
 		
 		String name = "surgery";
 		
@@ -70,75 +70,23 @@ public class BlockSurgery extends BlockContainer
 		if (tileentity instanceof TileEntitySurgery)
 		{
 			TileEntitySurgery surgery = (TileEntitySurgery) tileentity;
-			if (player.isSneaking())
+			/*if (player.isSneaking())
 			{
 				if (CyberwareAPI.hasCapability(player))
 				{
-					surgery.updatePlayerSlots(player);
-
-					ICyberwareUserData cyberware = CyberwareAPI.getCapability(player);
-					
-					for (int slotIndex = 0; slotIndex < EnumSlot.values().length; slotIndex++)
-					{
-						EnumSlot slot = EnumSlot.values()[slotIndex];
-						ItemStack[] wares = new ItemStack[LibConstants.WARE_PER_SLOT];
-						
-						int c = 0;
-						for (int j = slotIndex * LibConstants.WARE_PER_SLOT; j < (slotIndex + 1) * LibConstants.WARE_PER_SLOT; j++)
-						{
-							ItemStack newStack = surgery.slots.getStackInSlot(j);
-							ItemStack playerStack = surgery.slotsPlayer.getStackInSlot(j);
-							if (newStack != null && newStack.stackSize > 0)
-							{
-								wares[c] = newStack.copy();
-								if (playerStack != null && playerStack.stackSize > 0)
-								{
-									if (!player.inventory.addItemStackToInventory(playerStack) && !worldIn.isRemote)
-									{
-										
-									}
-								}
-								c++;
-							}
-							else if (playerStack != null && playerStack.stackSize > 0)
-							{
-								if (surgery.discardSlots[j])
-								{
-									if (!player.inventory.addItemStackToInventory(playerStack) && !worldIn.isRemote)
-									{
-										
-									}
-								}
-								else
-								{
-									wares[c] = surgery.slotsPlayer.getStackInSlot(j).copy();
-									c++;
-								}
-							}
-						}
-						if (!worldIn.isRemote)
-						{
-							cyberware.setInstalledCyberware(slot, wares);
-						}
-						cyberware.setHasEssential(slot, !surgery.isEssentialMissing[slotIndex]);
-					}
-					
-					if (!worldIn.isRemote)
-					{
-						CyberwareAPI.updateData(player);
-					}
-					surgery.slots = new ItemStackHandler(100);
-					
+					surgery.targetEntity = player;
+					surgery.processUpdate();
+					surgery.targetEntity = null;
 					
 				}
 				
 			}
 			else
-			{
+			{*/
 
 				surgery.updatePlayerSlots(player);
 				player.openGui(Cyberware.INSTANCE, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-			}
+			//}
 			
 		}
 		

@@ -2,6 +2,7 @@ package flaxbeard.cyberware.common;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareUserDataImpl;
@@ -27,6 +28,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(CyberwareDataHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(MiscHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandler.INSTANCE);
+		FMLCommonHandler.instance().bus().register(EssentialsMissingHandler.INSTANCE);
 	}
 	
 	public void postInit()

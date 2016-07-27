@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -41,18 +42,23 @@ public class BlockSurgeryChamber extends BlockContainer
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool OPEN = PropertyBool.create("open");
 	public static final PropertyEnum<EnumChamberHalf> HALF = PropertyEnum.<EnumChamberHalf>create("half", EnumChamberHalf.class);
+	public final Item ib;
 	
 	public BlockSurgeryChamber()
 	{
 		super(Material.IRON);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(OPEN, Boolean.valueOf(false)).withProperty(HALF, EnumChamberHalf.LOWER));
 		
+		setHardness(5.0F);
+		setResistance(10.0F);
+		setSoundType(SoundType.METAL);
+		
 		String name = "surgeryChamber";
 		
 		this.setRegistryName(name);
 		GameRegistry.register(this);
 
-		Item ib = new ItemSurgeryChamber(this);
+		ib = new ItemSurgeryChamber(this);
 		ib.setRegistryName(name);
 		GameRegistry.register(ib);
 		

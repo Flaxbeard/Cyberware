@@ -1,14 +1,9 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import io.netty.buffer.ByteBuf;
-
-import java.util.concurrent.Callable;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -64,14 +59,14 @@ public class SurgeryRemovePacket implements IMessage
 		@Override
 		public IMessage onMessage(SurgeryRemovePacket message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(new DoSync(message.pos, message.dimensionId, message.slotNumber, message.isNull));
+			DimensionManager.getWorld(message.dimensionId).addScheduledTask(new DoSync(message.pos, message.dimensionId, message.slotNumber, message.isNull));
 
 			return null;
 		}
 		
 	}
 	
-	private static class DoSync implements Callable<Void>
+	private static class DoSync implements Runnable
 	{
 		private BlockPos pos;
 		private int dimensionId;
@@ -87,7 +82,7 @@ public class SurgeryRemovePacket implements IMessage
 		}
 
 		@Override
-		public Void call() throws Exception
+		public void run()
 		{
 			World world = DimensionManager.getWorld(dimensionId);
 			TileEntity te = world.getTileEntity(pos);
@@ -108,11 +103,11 @@ public class SurgeryRemovePacket implements IMessage
 							EnumSlot.values()[slotNumber / 10], slotNumber % LibConstants.WARE_PER_SLOT);
 				}
 				surgery.updateEssential(EnumSlot.values()[slotNumber / LibConstants.WARE_PER_SLOT]);
+				surgery.updateEssence();
 
 			}
 			
 			
-			return null;
 		}
 		
 	}

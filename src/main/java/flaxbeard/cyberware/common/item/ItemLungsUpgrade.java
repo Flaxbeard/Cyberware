@@ -1,5 +1,8 @@
 package flaxbeard.cyberware.common.item;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -22,11 +25,12 @@ import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.client.ClientUtils;
+import flaxbeard.cyberware.common.lib.LibConstants;
 
-public class ItemLungsUpgrades extends ItemCyberware
+public class ItemLungsUpgrade extends ItemCyberware
 {
 
-	public ItemLungsUpgrades(String name, EnumSlot slot, String[] subnames)
+	public ItemLungsUpgrade(String name, EnumSlot slot, String[] subnames)
 	{
 		super(name, slot, subnames);
 		MinecraftForge.EVENT_BUS.register(this);
@@ -38,8 +42,7 @@ public class ItemLungsUpgrades extends ItemCyberware
 	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
 	{
 		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)))
+		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)) && !p.isCreative())
 		{
 			GL11.glPushMatrix();
 			ItemStack stack = CyberwareAPI.getCyberware(p, new ItemStack(this, 1, 0));
@@ -86,6 +89,8 @@ public class ItemLungsUpgrades extends ItemCyberware
 		}
 	}
 	
+	private Map<EntityLivingBase, Boolean> lastOxygen = new HashMap<EntityLivingBase, Boolean>();
+	
 	@SubscribeEvent
 	public void handleLivingUpdate(LivingUpdateEvent event)
 	{
@@ -106,10 +111,40 @@ public class ItemLungsUpgrades extends ItemCyberware
 			}
 		}
 		
-		if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 0)) && (e.isSprinting() || e instanceof EntityMob) && !e.isInWater() && e.onGround)
+
+
+		ItemStack test = new ItemStack(this, 1, 1);
+		if ((e.isSprinting() || e instanceof EntityMob) && !e.isInWater() && e.onGround)
 		{
-			e.moveRelative(0F, .5F, 0.075F);
+			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 1)))
+			{
+				boolean last = getLastOxygen(e);
+
+				int ranks = CyberwareAPI.getCyberwareRank(e, test);
+				test.stackSize = ranks;
+				boolean powerUsed = e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last;
+				
+				if (powerUsed)
+				{
+					e.moveRelative(0F, .2F * ranks, 0.075F);
+				}
+			}
 		}
+	}
+	
+	private boolean getLastOxygen(EntityLivingBase e)
+	{
+		if (!lastOxygen.containsKey(e))
+		{
+			lastOxygen.put(e, true);
+		}
+		return lastOxygen.get(e);
+	}
+	
+	@Override
+	public int installedStackSize(ItemStack stack)
+	{
+		return stack.getItemDamage() == 1 ? 3 : 1;
 	}
 
 	private int getAir(ItemStack stack)
@@ -121,5 +156,29 @@ public class ItemLungsUpgrades extends ItemCyberware
 			stack.setTagCompound(tag);
 		}
 		return stack.getTagCompound().getInteger("air");
+	}
+	
+	@Override
+	public int getPowerConsumption(ItemStack stack)
+	{
+		return stack.getItemDamage() == 1 ? LibConstants.HYPEROXYGENATION_CONSUMPTION * stack.stackSize : 0;
+	}
+	
+	@Override
+	public int getEssenceCost(ItemStack stack)
+	{
+		if (stack.getItemDamage() == 1)
+		{
+			switch (stack.stackSize)
+			{
+				case 1:
+					return 2;
+				case 2:
+					return 4;
+				case 3:
+					return 5;
+			}
+		}
+		return super.getEssenceCost(stack);
 	}
 }

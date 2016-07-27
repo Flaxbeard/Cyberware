@@ -22,7 +22,6 @@
         "open": {
             "true": {},
             "false": {}
-        },
-        "inventory": [{}]
+        }
     }
 }

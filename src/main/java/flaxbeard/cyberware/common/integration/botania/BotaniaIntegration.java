@@ -9,7 +9,7 @@ public class BotaniaIntegration
 
 	public static void preInit()
 	{
-		manaLens = new ItemManaLens("manaseerLens", EnumSlot.EYES,
-				new String[] { "lens", "link" });
+		/*manaLens = new ItemManaLens("manaseerLens", EnumSlot.EYES,
+				new String[] { "lens", "link" });*/
 	}
 }

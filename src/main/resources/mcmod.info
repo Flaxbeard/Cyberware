@@ -1,0 +1,15 @@
+[
+{
+  "modid": "cyberware",
+  "name": "Cyberware",
+  "description": "Augmentation in Minecraft",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Flaxbeard/Cyberware",
+  "updateUrl": "",
+  "authorList": ["Flaxbeard"],
+  "credits": "Thanks to Vazkii, DivineAspect and everyone else who helped out.",
+  "logoFile": "",
+  "screenshots": []
+}
+]

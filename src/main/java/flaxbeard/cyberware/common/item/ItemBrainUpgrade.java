@@ -1,24 +1,41 @@
 package flaxbeard.cyberware.common.item;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.lib.LibConstants;
+import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
+import flaxbeard.cyberware.common.network.DodgePacket;
 
 public class ItemBrainUpgrade extends ItemCyberware
 {
@@ -105,7 +122,7 @@ public class ItemBrainUpgrade extends ItemCyberware
 	{
 		EntityPlayer p = event.getEntityPlayer();
 		
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 3)) && !p.isSneaking())
+		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 3)) && isContextWorking(p) && !p.isSneaking())
 		{
 			IBlockState state = event.getState();
 			ItemStack tool = p.getHeldItem(EnumHand.MAIN_HAND);
@@ -125,6 +142,48 @@ public class ItemBrainUpgrade extends ItemCyberware
 				}
 			}
 		}
+	}
+	
+	private static Map<EntityLivingBase, Boolean> isContextWorking = new HashMap<EntityLivingBase, Boolean>();
+	private static Map<EntityLivingBase, Boolean> isMatrixWorking = new HashMap<EntityLivingBase, Boolean>();
+
+	@SubscribeEvent(priority=EventPriority.NORMAL)
+	public void handleLivingUpdate(LivingUpdateEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		
+		ItemStack test = new ItemStack(this, 1, 3);
+		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			isContextWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
+		}
+		
+		test = new ItemStack(this, 1, 4);
+		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			isMatrixWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
+		}
+		
+	}
+	
+	private boolean isContextWorking(EntityLivingBase e)
+	{
+		if (!isContextWorking.containsKey(e))
+		{
+			isContextWorking.put(e, false);
+		}
+		
+		return isContextWorking.get(e);
+	}
+	
+	private boolean isMatrixWorking(EntityLivingBase e)
+	{
+		if (!isMatrixWorking.containsKey(e))
+		{
+			isMatrixWorking.put(e, false);
+		}
+		
+		return isMatrixWorking.get(e);
 	}
 	
 	public boolean isToolEffective(ItemStack tool, IBlockState state)
@@ -151,5 +210,81 @@ public class ItemBrainUpgrade extends ItemCyberware
 		{
 			event.setCanceled(true);
 		}
+	}
+	
+	private static ArrayList<String> lastHits = new ArrayList<String>();
+
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void handleHurt(LivingAttackEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		
+		if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 4)) && isMatrixWorking(e))
+		{
+
+			if (!e.worldObj.isRemote && event.getSource() instanceof EntityDamageSource)
+			{
+				Entity attacker = ((EntityDamageSource) event.getSource()).getSourceOfDamage();
+				if (e instanceof EntityPlayer)
+				{
+					String str = e.getEntityId() + " " + e.ticksExisted + " " + attacker.getEntityId();
+					if (lastHits.contains(str))
+					{
+						return;
+					}
+					else
+					{
+						lastHits.add(str);
+					}
+				}
+				
+				boolean armor = false;
+				for (ItemStack stack : e.getArmorInventoryList())
+				{
+					if (stack != null && stack.getItem() instanceof ItemArmor)
+					{
+						if (((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(EntityEquipmentSlot.CHEST) > 4)
+						{
+							return;
+						}
+					}
+					else if (stack != null && stack.getItem() instanceof ISpecialArmor)
+					{
+						if (((ISpecialArmor) stack.getItem()).getProperties(e, stack, event.getSource(), event.getAmount(), 1).AbsorbRatio * 25D > 4)
+						{
+							return;
+						}
+					}
+					
+					if (stack != null)
+					{
+						armor = true;
+					}
+					
+				}
+				
+
+				if (!((float) e.hurtResistantTime > (float) e.maxHurtResistantTime / 2.0F))
+                {
+					Random random = e.getRNG();
+					if (random.nextFloat() < (armor ? LibConstants.DODGE_ARMOR : LibConstants.DODGE_NO_ARMOR))
+					{
+						event.setCanceled(true);
+						e.hurtResistantTime = e.maxHurtResistantTime;
+						e.hurtTime = e.maxHurtTime = 10;
+						ReflectionHelper.setPrivateValue(EntityLivingBase.class, e, 9999F, 46);
+						
+						CyberwarePacketHandler.INSTANCE.sendToAllAround(new DodgePacket(e.getEntityId()), new TargetPoint(e.worldObj.provider.getDimension(), e.posX, e.posY, e.posZ, 50));
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public int getPowerConsumption(ItemStack stack)
+	{
+		return stack.getItemDamage() == 3 ? LibConstants.CONTEXTUALIZER_CONSUMPTION :
+			 stack.getItemDamage() == 4 ? LibConstants.MATRIX_CONSUMPTION: 0;
 	}
 }

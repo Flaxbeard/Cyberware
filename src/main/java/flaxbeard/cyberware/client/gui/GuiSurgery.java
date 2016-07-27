@@ -6,15 +6,18 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
@@ -23,12 +26,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
+import flaxbeard.cyberware.client.render.ModelBox;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
@@ -37,7 +44,7 @@ import flaxbeard.cyberware.common.network.SurgeryRemovePacket;
 @SideOnly(Side.CLIENT)
 public class GuiSurgery extends GuiContainer
 {
-	private class GuiButtonSurgeryLocation extends GuiButton
+	private static class GuiButtonSurgeryLocation extends GuiButton
 	{
 		private static final int buttonSize = 16;
 		private float x3;
@@ -69,25 +76,18 @@ public class GuiSurgery extends GuiContainer
 					trans = 0.6F;
 				}
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, trans);
-				
-				OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-				GlStateManager.disableTexture2D();
-				OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
 				
 				mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
 				GL11.glTranslatef(xPos, yPos, 0);
 				this.drawTexturedModalRect(0, 0, 194, 0, this.width, this.height);
-				
-				OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-				GlStateManager.enableTexture2D();
-				OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-				
+
 				GL11.glPopMatrix();
 			}
 		}
 	}
 	
-	private class GuiButtonSurgery extends GuiButton
+	private static class GuiButtonSurgery extends GuiButton
 	{
 		private float lastHover = 0;
 		
@@ -142,54 +142,89 @@ public class GuiSurgery extends GuiContainer
 		}
 	}
 	
-	private class PageConfiguration
+	private static class PageConfiguration
 	{
-		private float targetRotation;
-		private float targetX;
-		private float targetY;
-		private float targetScale;
+		private float rotation;
+		private float x;
+		private float y;
+		private float scale;
+		private float boxWidth;
+		private float boxHeight;
+		private float boxX;
+		private float boxY;
 		
-		private PageConfiguration(float targetRotation, float targetX, float targetY, float targetScale)
+		private PageConfiguration(float rotation, float x, float y, float scale)
 		{
-			this.targetRotation = targetRotation;
-			this.targetX = targetX;
-			this.targetY = targetY;
-			this.targetScale = targetScale;
+			this(rotation, x, y, scale, 0, 0, 0, 0);
 		}
+		
+		private PageConfiguration(float rotation, float x, float y, float scale, float boxWidth, float boxHeight, float boxX, float boxY)
+		{
+			this.rotation = rotation;
+			this.x = x;
+			this.y = y;
+			this.scale = scale;
+			this.boxHeight = boxHeight;
+			this.boxWidth = boxWidth;
+			this.boxX = boxX;
+			this.boxY = boxY;
+		}
+
+		public PageConfiguration copy()
+		{
+			return new PageConfiguration(rotation, x, y, scale, boxWidth, boxHeight, boxX, boxY);
+		}
+
 	}
 	
 	private static final ResourceLocation SURGERY_GUI_TEXTURES = new ResourceLocation(Cyberware.MODID + ":textures/gui/surgery.png");
-	
+	private static final ResourceLocation GREY_TEXTURE = new ResourceLocation(Cyberware.MODID + ":textures/gui/greypx.png");
+	private static final ResourceLocation BLUE_TEXTURE = new ResourceLocation(Cyberware.MODID + ":textures/gui/bluepx.png");
+	public static final ResourceLocation BONE_TEXTURE = new ResourceLocation(Cyberware.MODID + ":textures/models/skin.png");
+
 	private final InventoryPlayer playerInventory;
 	private final TileEntitySurgery surgery;
 	
-	private Entity dummy;
+	private Entity skeleton;
+	private ModelBox box;
+
 	private float partialTicks;
 	
-	private GuiButtonSurgery[] bodyIcons = new GuiButtonSurgery[6];
+	private GuiButtonSurgery[] bodyIcons = new GuiButtonSurgery[7];
 	private GuiButtonSurgeryLocation[] headIcons = new GuiButtonSurgeryLocation[3];
-	private GuiButtonSurgeryLocation[] torsoIcons = new GuiButtonSurgeryLocation[3];
+	private GuiButtonSurgeryLocation[] torsoIcons = new GuiButtonSurgeryLocation[4];
+	private GuiButtonSurgeryLocation[] crossSectionIcons = new GuiButtonSurgeryLocation[3];
+	private GuiButtonSurgeryLocation[] armIcons = new GuiButtonSurgeryLocation[2];
+	private GuiButtonSurgeryLocation[] legIcons = new GuiButtonSurgeryLocation[2];
 
-	private float rotation;
-	private float targetRotation;
-	private float easeRotate;
+	private PageConfiguration current;
+	private PageConfiguration target;
+	private PageConfiguration ease;
+	
+	private float lastTicks;
+	private float addedRotate;
+	//private float rotation;
+	//private float targetRotation;
+	//private float easeRotate;
 	private float oldRotate;
 	
-	private float scale;
-	private float targetScale;
-	private float easeScale;
+	//private float scale;
+	//private float targetScale;
+	//private float easeScale;
 	
-	private float xOffset;
-	private float targetX;
-	private float easeX;
+	//private float xOffset;
+	//private float targetX;
+	//private float easeX;
 	
-	private float yOffset;
-	private float targetY;
-	private float easeY;
+	//private float yOffset;
+	//private float targetY;
+	//private float easeY;
 	
 	private float transitionStart = 0;
 	private float operationTime = 0;
 	private float amountDone = 0;
+	
+	private float openTime = 0;
 	
 	private int page;
 	private boolean mouseDown;
@@ -197,7 +232,7 @@ public class GuiSurgery extends GuiContainer
 	private float[] lastDownX = new float[5];
 	private float rotateVelocity = 0;
 	
-	private PageConfiguration[] configs = new PageConfiguration[17];
+	private PageConfiguration[] configs = new PageConfiguration[25];
 	List<SlotSurgery> visibleSlots = new ArrayList<SlotSurgery>();
 	private int parent;
 	
@@ -209,26 +244,38 @@ public class GuiSurgery extends GuiContainer
 		this.playerInventory = playerInv;
 		this.surgery = surgery;
 		this.ySize = 222;
-		rotation = targetRotation = 0;
-		scale = targetScale = 50;
-		xOffset = targetX = 0;
-		yOffset = targetY = 0;
 		page = 0;
 		amountDone = 1;
 		
-		configs[0] = new PageConfiguration(0, 0, 0, 50);
-		configs[1] = new PageConfiguration(50, 0, 210, 150);
-		configs[2] = new PageConfiguration(15, 0, 100, 130);
-		configs[3] = new PageConfiguration(-50, 0, 100, 130);
-		configs[4] = new PageConfiguration(50, 0, 100, 130);
-		configs[5] = new PageConfiguration(-70, 0, 10, 130);
-		configs[6] = new PageConfiguration(70, 0, 10, 130);
+		configs[0] = new PageConfiguration(0, 0, 0, 50, 35, 35, -50, 10);
+		configs[1] = new PageConfiguration(50, 0, 210, 150, 0, 0, -150, 0);
+		configs[2] = new PageConfiguration(15, 0, 100, 130, 0, 0, -150, 0);
+		configs[3] = new PageConfiguration(-50, 0, 100, 130, 0, 0, -150, 0);
+		configs[4] = new PageConfiguration(50, 0, 100, 130, 0, 0, -150, 0);
+		configs[5] = new PageConfiguration(-70, 0, 10, 130, 0, 0, -150, 0);
+		configs[6] = new PageConfiguration(70, 0, 10, 130, 0, 0, -150, 0);
+		configs[7] = new PageConfiguration(0, 0, 0, 50, 170, 125, 0, 0);
+
 		configs[11] = new PageConfiguration(160, 0, 300, 200);
 		configs[12] = new PageConfiguration(5, 0, 330, 220);
 		configs[13] = new PageConfiguration(5, 0, 330, 220);
 		configs[14] = new PageConfiguration(-20, 0, 220, 210);
 		configs[15] = new PageConfiguration(0, 0, 180, 180);
 		configs[16] = new PageConfiguration(0, 0, 180, 180);
+		configs[17] = new PageConfiguration(0, 0, 125, 180);
+		configs[18] = new PageConfiguration(0, 0, 0, 50, 190, 180, 0, 0);
+		configs[19] = new PageConfiguration(0, 0, 0, 50, 170, 180, 0, 0);
+		configs[20] = new PageConfiguration(0, 0, 0, 50, 170, 180, 0, 0);
+
+		configs[21] = new PageConfiguration(-70, 0, 180, 200);
+		configs[22] = new PageConfiguration(-70, 0, 120, 220);
+		
+		configs[23] = new PageConfiguration(10, 0, 20, 200);
+		configs[24] = new PageConfiguration(10, 0, -30, 220);
+
+		current = ease = target = configs[0].copy();
+		
+
 
 	}
 	
@@ -244,13 +291,26 @@ public class GuiSurgery extends GuiContainer
 		this.buttonList.add(bodyIcons[3] = new GuiButtonSurgery(4, i + (this.xSize / 2) - 8 - 21, j + 35, 16, 38));
 		this.buttonList.add(bodyIcons[4] = new GuiButtonSurgery(5, i + (this.xSize / 2) - 6 + 7, j + 73, 12, 39));
 		this.buttonList.add(bodyIcons[5] = new GuiButtonSurgery(6, i + (this.xSize / 2) - 6 - 7, j + 73, 12, 39));
+		
+		this.buttonList.add(bodyIcons[6] = new GuiButtonSurgery(7, 
+				i + (int) (xSize / 2 + configs[0].boxX - (configs[0].boxWidth / 2)),
+				j + (int) ((125F / 2F) + 3F + configs[0].boxY - (configs[0].boxHeight / 2)),
+				(int) configs[0].boxWidth, (int) configs[0].boxHeight)); // CAW
+
 		this.buttonList.add(headIcons[0] = new GuiButtonSurgeryLocation(11, -2F, 19, 0));
 		this.buttonList.add(headIcons[1] = new GuiButtonSurgeryLocation(12, 4F, 21, 2.F));
 		this.buttonList.add(headIcons[2] = new GuiButtonSurgeryLocation(13, 4F, 21, -2F));
 		this.buttonList.add(torsoIcons[0] = new GuiButtonSurgeryLocation(14, 1F, 8, -1F));
 		this.buttonList.add(torsoIcons[1] = new GuiButtonSurgeryLocation(15, 0F, 9, -2F));
 		this.buttonList.add(torsoIcons[2] = new GuiButtonSurgeryLocation(16, 0F, 9, 2F));
-
+		this.buttonList.add(torsoIcons[3] = new GuiButtonSurgeryLocation(17, 0F, 13, 0F));
+		this.buttonList.add(crossSectionIcons[0] = new GuiButtonSurgeryLocation(18, -12F, -8, -1F));
+		this.buttonList.add(crossSectionIcons[1] = new GuiButtonSurgeryLocation(19, 12F, -1, 2F));
+		this.buttonList.add(crossSectionIcons[2] = new GuiButtonSurgeryLocation(20, 3F, 5, 12F));
+		this.buttonList.add(armIcons[0] = new GuiButtonSurgeryLocation(21, 0F, 10, -5.3F));
+		this.buttonList.add(armIcons[1] = new GuiButtonSurgeryLocation(22, 0F, 16, -6.0F));
+		this.buttonList.add(legIcons[0] = new GuiButtonSurgeryLocation(23, 0F, 1, -2.2F));
+		this.buttonList.add(legIcons[1] = new GuiButtonSurgeryLocation(24, 0F, 6.4F, -2.2F));
 		//this.buttonList.add(headIcons[0] = new GuiButtonSurgeryLocation(6, 4F, 19, 0));
 		updateSlots(true);
 	}
@@ -259,44 +319,33 @@ public class GuiSurgery extends GuiContainer
 	{
 		transitionStart = ticksExisted() + partialTicks;
 
-		scale = easeScale;
-		yOffset = easeY;
-		xOffset = easeX;
-		rotation = easeRotate;
+		current = ease;
 		operationTime = amountDone * time;
 		
 		showHideRelevantButtons(false);
 		page = targetPage;
-		targetRotation = configs[page].targetRotation;
-		targetScale = configs[page].targetScale;
-		targetY = configs[page].targetY;
-		targetX = configs[page].targetX;
+		target = configs[page].copy();
 	}
 	
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		if (button.enabled)
 		{
-			float er = (easeRotate + 360 * 10) % 360;
+			
+			openTime = 1;
+			float er = (ease.rotation + 360 * 10) % 360;
 			if (button.id > 10)
 			{
 				parent = page;
 			}
-			if (button.id == 3 && er > 180)
-			{
-				prepTransition(20, 4);
-			}
-			else if (button.id == 4 && er > 180)
+			
+			if (button.id == 4)
 			{
 				prepTransition(20, 3);
 			}
-			else if (button.id == 6 &&  er > 180)
+			else if (button.id == 6)
 			{
 				prepTransition(20, 5);
-			}
-			else if (button.id == 5 && er  > 180)
-			{
-				prepTransition(20, 6);
 			}
 			else if (button.id == 13)
 			{
@@ -331,6 +380,15 @@ public class GuiSurgery extends GuiContainer
 			case 2:
 				list = torsoIcons;
 				break;
+			case 7:
+				list = crossSectionIcons;
+				break;
+			case 5:
+				list = legIcons;
+				break;
+			case 3:
+				list = armIcons;
+				break;
 		}
 		
 		for (int i = 0; i < list.length; i++)
@@ -356,16 +414,32 @@ public class GuiSurgery extends GuiContainer
 			case 2:
 				list = torsoIcons;
 				break;
+			case 7:
+				list = crossSectionIcons;
+				break;
+			case 5:
+				list = legIcons;
+				break;
+			case 3:
+				list = armIcons;
+				break;
+		}
+		
+		if (page == 7)
+		{
+			rot += addedRotate;
 		}
 		
 		float radRot = (float) Math.toRadians(rot);
 		float sin = (float) Math.sin(radRot);
 		float cos = -(float) Math.cos(radRot);
+		float upDown = page == 7 ? (float) Math.sin(Math.toRadians(10)) : 0;
 		
 		for (int n = 0; n < list.length; n++)
 		{
 			list[n].xPos = (i + (sin * scale * list[n].x3 * 0.065F) + (cos * scale * (list[n].z3) * 0.065F) + (this.xSize / 2) - 2.0F) - (list[n].buttonSize / 2F);
-			list[n].yPos = (j + 2 - yOffset  + 0.065F * scale * list[n].y3  + (130 / 2)) - (list[n].buttonSize / 2F);
+			list[n].yPos = -upDown * (cos * scale * list[n].x3 * 0.065F) + upDown * (sin * scale * (list[n].z3) * 0.065F) +
+					(j + 2 - yOffset  + 0.065F * scale * list[n].y3  + (130 / 2)) - (list[n].buttonSize / 2F);
 			list[n].xPosition = Math.round(list[n].xPos);
 			list[n].yPosition = Math.round(list[n].yPos);
 
@@ -380,13 +454,11 @@ public class GuiSurgery extends GuiContainer
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
 		
-		int essence = (int) (1.0F * 50);
+		int essence = (int) ((surgery.essence * 1F / LibConstants.BASE_ESSENCE) * 49);
+		int criticalEssence = (int) ((LibConstants.CRITICAL_ESSENCE * 1F  / LibConstants.BASE_ESSENCE) * 49);
+		int warningEssence = (int) ((LibConstants.WARNING_ESSENCE * 1F  / LibConstants.BASE_ESSENCE) * 49);
 		this.zLevel = 200;
-		
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.disableTexture2D();
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-		
+
 
 		mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
 		
@@ -418,16 +490,53 @@ public class GuiSurgery extends GuiContainer
 		}
 		
 		// Draw the solid part of the essence bar
-		this.drawTexturedModalRect(i + 5, j + 5, 176, 61, 9, essence);
+		this.drawTexturedModalRect(i + 5, j + 5 + (49 - essence), 176, 61 + (49 - essence), 9, Math.max(0, essence - warningEssence));
 		
+		this.drawTexturedModalRect(i + 5, j + 5 + (49 - Math.min(warningEssence, essence)), 229, 61 + (49 - Math.min(warningEssence, essence)), 9, Math.max(0, Math.min(warningEssence, essence) - criticalEssence));
+
+		this.drawTexturedModalRect(i + 5, j + 5 + (49 - Math.min(criticalEssence, essence)), 220, 61 + (49 - Math.min(criticalEssence, essence)), 9, Math.max(0, Math.min(criticalEssence, essence)));
+
+		// Draw the grey, emptied essence
+		this.drawTexturedModalRect(i + 5, j + 5, 211, 61, 9, 49 - essence);
 		
 		List<String> missingSlots = new ArrayList<String>();
+		if (surgery.essence < 0)
+		{
+			missingSlots.add(I18n.format("cyberware.gui.noEssence"));
+		}
+		else if (surgery.essence < LibConstants.CRITICAL_ESSENCE)
+		{
+			missingSlots.add(I18n.format("cyberware.gui.criticalEssence"));
+		}
 		for (int k = 0; k < surgery.isEssentialMissing.length; k++)
 		{
-			if (surgery.isEssentialMissing[k])
+			EnumSlot slot = EnumSlot.values()[k / 2];
+			
+			if (slot.isSided())
 			{
-				missingSlots.add(I18n.format("cyberware.gui.missingEssential." + EnumSlot.values()[k].getName()));
+				if (k % 2 ==0)
+				{
+					if (surgery.isEssentialMissing[k])
+					{
+						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".left"));
+					}
+				}
+				else
+				{
+					if (surgery.isEssentialMissing[k])
+					{
+						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".right"));
+					}
+				}
 			}
+			else if (k % 2 ==0)
+			{
+				if (surgery.isEssentialMissing[k])
+				{
+					missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName()));
+				}
+			}
+
 		}
 		
 		if (missingSlots.size() > 0)
@@ -442,9 +551,7 @@ public class GuiSurgery extends GuiContainer
 			this.drawTexturedModalRect(i + pos.xDisplayPosition - 1, j + pos.yDisplayPosition - 1, 176 + 18, 43, 18, 18);		// Blue slot
 			this.drawTexturedModalRect(i + pos.xDisplayPosition - 1, j + pos.yDisplayPosition - 1 - 26, 176 + 18, 18, 18, 18);	// Red 'slot'
 		}
-		
-		// Draw the more transparent, emptied essence
-		this.drawTexturedModalRect(i + 5, j + 5 + essence, 176, 61 + essence, 9, 50 - essence);
+
 		
 		GL11.glDisable(GL11.GL_BLEND);
 
@@ -482,18 +589,47 @@ public class GuiSurgery extends GuiContainer
 		
 		this.zLevel = 0;
 
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.enableTexture2D();
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
 		GL11.glPopMatrix();
 	}
+	
+	private static ItemStackHandler lastLastInv = new ItemStackHandler(120);
+	private static ItemStackHandler lastInv = new ItemStackHandler(120);
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		this.partialTicks = partialTicks;
 		float time = ticksExisted() + partialTicks;
+		
+		// Only play animation if the player's body has changed since last opening
+		if (this.openTime == 0)
+		{
+			boolean isEqual = true;
+			ItemStackHandler newSlots = new ItemStackHandler(surgery.slotsPlayer.getSlots());
+			for (int i = 0; i < surgery.slotsPlayer.getSlots(); i++)
+			{
+				ItemStack surgeryItem = surgery.slotsPlayer.getStackInSlot(i);
+				ItemStack thisItem = lastLastInv.getStackInSlot(i);
+				
+				if (!ItemStack.areItemsEqual(surgeryItem, thisItem))
+				{
+					isEqual = false;
+				}
+				
+				newSlots.setStackInSlot(i, surgeryItem);
+			}
+			if (!isEqual)
+			{
+				openTime = time;
+				lastLastInv = lastInv;
+				lastInv = newSlots;
+			}
+			else
+			{
+				openTime = 1;
+			}
+		}
+		
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
 		int i = (this.width - this.xSize) / 2;
@@ -502,50 +638,52 @@ public class GuiSurgery extends GuiContainer
 		int i2 = this.width / 2;
 		int j2 = this.height;
 
+		this.zLevel = 0;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+		this.zLevel = 0;
 		
 		World world = Minecraft.getMinecraft() != null ? Minecraft.getMinecraft().theWorld : null;
-		if (dummy == null || dummy.isDead)
+		if (skeleton == null || skeleton.isDead)
 		{
-			dummy = new EntitySkeleton(world);
+			skeleton = new EntitySkeleton(world);
 		}
 		else
 		{
-			dummy.worldObj = world;
+			skeleton.worldObj = world;
 		}
+		
+		if (box == null)
+		{
+			box = new ModelBox();
+		}
+		
 				
 		GL11.glPushMatrix();
 		
-		easeScale = targetScale;
-		easeY = targetY;
-		easeX = targetX;
 
 		// If doing a transition
 		if (transitionStart != 0)
 		{
 			// Ensure we rotate the right way
-			rotation = rotation % 360;
-			if (Math.abs(rotation + 360 - targetRotation) < Math.abs(rotation - targetRotation))
+			current.rotation = current.rotation % 360;
+			
+			if (Math.abs(current.rotation + 360 - target.rotation) < Math.abs(current.rotation - target.rotation))
 			{
-				rotation = rotation + 360;
+				current.rotation = current.rotation + 360;
 			}
-			else if (Math.abs(rotation - (targetRotation + 360)) < Math.abs(rotation - targetRotation))
+			else if (Math.abs(current.rotation - (target.rotation + 360)) < Math.abs(current.rotation - target.rotation))
 			{
-				rotation = rotation - 360;
+				current.rotation = current.rotation - 360;
 			}
 			
 			amountDone = (time - transitionStart) / operationTime;
-			easeScale = ease(Math.min(1.0F, amountDone), scale, targetScale);
-			easeY = ease(Math.min(1.0F, amountDone), yOffset, targetY);
-			easeX = ease(Math.min(1.0F, amountDone), xOffset, targetX);
-			easeRotate = ease(Math.min(1.0F, amountDone), rotation, targetRotation);
-
+			ease = interpolate(amountDone, current, target);
 			// If we're done, mark that we're done
 			if (amountDone >= 1.0F)
 			{
 				transitionStart = 0;
-				easeRotate = targetRotation;
-
+				ease = target;
+				
 				showHideRelevantButtons(true);
 			}
 		}
@@ -553,7 +691,7 @@ public class GuiSurgery extends GuiContainer
 		// Rotate the screen if the player drags (as long as we're not viewing slots)
 		if (mouseDown && page <= 10)
 		{
-			easeRotate = oldRotate + (mouseX - mouseDownX)  % 360;
+			ease.rotation = oldRotate + (mouseX - mouseDownX)  % 360;
 			for (int n = 1; n < 5; n++)
 			{
 				lastDownX[n] = lastDownX[n - 1];
@@ -566,28 +704,122 @@ public class GuiSurgery extends GuiContainer
 			{
 				rotateVelocity = 0;
 			}
-			easeRotate += rotateVelocity % 360;
+			ease.rotation += rotateVelocity % 360;
 			rotateVelocity *= 0.8F;
 		}
 
 		
+		
+
+		float percentageSkele = Math.min(1.0F, (time - openTime) / 40F);
+		if (percentageSkele < 1.0F)
+		{
+			ease.rotation = (float) (Math.sin(Math.PI * (percentageSkele) / 2F) * 360F);
+		}
+		
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		scissor(i + 3, j + 3, 170, 125);
 
-		float endRotate = easeRotate;// + (float) (5F * Math.sin((time) / 25F)))
-		renderEntity(dummy, i + (this.xSize / 2) + easeX, j + 110 + easeY, easeScale, endRotate);
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-		
-		updateLocationButtons(endRotate, easeScale, easeY);
+		float endRotate = ease.rotation;// + (float) (5F * Math.sin((time) / 25F)))
 
-		drawSlots(mouseX, mouseY);
+		mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
 
-		/*
+		// Scan line
+		if (percentageSkele < 0.9F)
+		{
+			this.zLevel = 90;
+			GL11.glPushMatrix();
+
+			GL11.glTranslatef(i + xSize / 2 - 40, j + (int) (percentageSkele * 125F) + 2, 0F);
+			this.drawTexturedModalRect(0, 0, 176, 110, 80, 1);
+			GL11.glPopMatrix();
+			this.zLevel = 0;
+		}
 		
-		float transparent = Math.abs(1F - ((Minecraft.getMinecraft().thePlayer.ticksExisted + partialTicks) % 40) / 20F);
-		transparent = .5F;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, transparent);
+
+		if (ease.boxHeight >= 35)
+		{
+			
+			// Draw the skin cross section and box
+			GL11.glPushMatrix();
+			
+			float height = Math.min(125, ease.boxHeight);
+			float width = Math.min(170, ease.boxWidth);
+			this.mc.getTextureManager().bindTexture(GREY_TEXTURE);
+	
+			this.zLevel = page == 0 ? 90 : 70;
+			GL11.glTranslatef(i + xSize / 2 + ease.boxX - (width / 2F), j + (125F / 2F) + 3F + ease.boxY - (height / 2F), 0F);
+			
+			GL11.glPushMatrix();
+			GL11.glScalef(width,height, 1F);
+			this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			GL11.glPopMatrix();
+			
+			this.mc.getTextureManager().bindTexture(BLUE_TEXTURE);
+			
+			GL11.glPushMatrix();
+			GL11.glScalef(width, 1F, 1F);
+			this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			GL11.glTranslatef(0F, height - 1F, 0F);
+			this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			GL11.glPopMatrix();
+			
+			GL11.glPushMatrix();
+			GL11.glScalef(1F, height, 1F);
+			this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			GL11.glTranslatef(width - 1F, 0F, 0F);
+			this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+			GL11.glPopMatrix();
+			
+			GL11.glPopMatrix();
+			
+			if (ease.boxHeight == 35)
+			{
+				GL11.glPushMatrix();
+				
+				// Draw the connectors for the box
+				GL11.glTranslatef(i + xSize / 2 + ease.boxX - (ease.boxWidth / 2F), j + (125F / 2F) + 3F + ease.boxY - (ease.boxHeight / 2F), 0F);
+	
+				GL11.glPushMatrix();
+				this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+				GL11.glTranslatef((configs[0].boxWidth / 2F), -12F, 0F);
+				GL11.glScalef(1F, 12F, 1F);
+				this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+				GL11.glPopMatrix();
+				
+				GL11.glPushMatrix();
+				this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+				GL11.glTranslatef((configs[0].boxWidth / 2F) + 1, -12F, 0F);
+				GL11.glScalef(25F, 1F, 1F);
+				this.drawTexturedModalRect(0, 0, 0, 0, 1, 1);
+				GL11.glPopMatrix();
+				
+				GL11.glPopMatrix();
+			}
+			
+			this.zLevel = 0;
+			
+			ClientUtils.bindTexture( "cyberware:textures/models/skin" + ".png");
+			
+			if (!mouseDown && page < 10)
+			{
+				this.addedRotate = (addedRotate + (ticksExisted() + partialTicks - lastTicks) * 2f) % 360;
+			}
+			this.lastTicks = ticksExisted() + partialTicks;
+			renderModel(box, 
+					i + xSize / 2 + ease.boxX,
+					j + (125F / 2F) + 3F + ease.boxY,
+					(ease.boxHeight / 50F) * 40F, endRotate + addedRotate);
 		
+		}
+		
+		scissor(i + 3, j + 3, 170, (int) (percentageSkele * 125));
+		
+		renderEntity(skeleton, i + (this.xSize / 2) + ease.x, j + 110 + ease.y, ease.scale, endRotate);
+
+
+		scissor(i + 3, j + 3 + (int) (percentageSkele * 125), 170, 125 - (int) (percentageSkele * 125));
+				
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		
 		float f = player.renderYawOffset;
@@ -597,19 +829,30 @@ public class GuiSurgery extends GuiContainer
 		float f4 = player.rotationYawHead;
 		
 		player.renderYawOffset = player.rotationYaw = player.rotationPitch = player.prevRotationYawHead = 0;
-		player.rotationYaw = dummy.rotationYaw;
-		player.rotationYawHead = dummy.getRotationYawHead();
+		player.rotationYaw = skeleton.rotationYaw;
+		player.rotationYawHead = skeleton.getRotationYawHead();
 		float sp = player.swingProgress;
 		player.swingProgress = 0F;
 	  
-		renderEntity(player, i + (this.xSize / 2) + easeX, j + 115 + (easeY) * (60F / 63F), easeScale * (57F / 50F), easeRotate  + (float) (5F * Math.sin((time) / 25F)));
+		renderEntity(player, i + (this.xSize / 2) + ease.x, j + 115 + (ease.y) * (60F / 63F), ease.scale * (57F / 50F), ease.rotation  + (float) (5F * Math.sin((time) / 25F)));
 		
 		player.swingProgress = sp;
 		player.renderYawOffset = f;
 		player.rotationYaw = f1;
 		player.rotationPitch = f2;
 		player.prevRotationYawHead = f3;
-		player.rotationYawHead = f4;*/
+		player.rotationYawHead = f4;
+		
+		
+		
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+
+		
+		updateLocationButtons(endRotate, ease.scale, ease.y);
+		
+		
+
+		drawSlots(mouseX, mouseY);
 		
 		
 		GL11.glPopMatrix();
@@ -624,7 +867,7 @@ public class GuiSurgery extends GuiContainer
 		// Rotation
 		if (mouseButton == 0 && mouseX >= i && mouseX < i + this.xSize && mouseY >= j && mouseY < j + 130)
 		{
-			oldRotate = easeRotate;
+			oldRotate = ease.rotation;
 			mouseDown = true;
 			mouseDownX = mouseX;
 			for (int n = 0; n < 5; n++)
@@ -634,7 +877,7 @@ public class GuiSurgery extends GuiContainer
 		}
 		
 		// Right click to go back
-		if (mouseButton == 1 && (page != 0 || easeRotate != 0) && this.getSlotAtPosition(mouseX, mouseY) == null && mouseY < j + 130)
+		if (mouseButton == 1 && (page != 0 || ease.rotation != 0) && this.getSlotAtPosition(mouseX, mouseY) == null && mouseY < j + 130)
 		{
 			int pageToGoTo = page <= 10 ? 0 : parent;
 			prepTransition(20, pageToGoTo);
@@ -688,8 +931,23 @@ public class GuiSurgery extends GuiContainer
 		return Minecraft.getMinecraft() != null ? Minecraft.getMinecraft().thePlayer != null ? Minecraft.getMinecraft().thePlayer.ticksExisted : 0 : 0;
 	}
 	
+	
+	private static PageConfiguration interpolate(float amountDone, PageConfiguration start, PageConfiguration end)
+	{
+		return new PageConfiguration(
+				ease(Math.min(1.0F, amountDone), start.rotation, end.rotation),
+				ease(Math.min(1.0F, amountDone), start.x, end.x),
+				ease(Math.min(1.0F, amountDone), start.y, end.y),
+				ease(Math.min(1.0F, amountDone), start.scale, end.scale),
+				ease(Math.min(1.0F, amountDone), start.boxWidth, end.boxWidth),
+				ease(Math.min(1.0F, amountDone), start.boxHeight, end.boxHeight),
+				ease(Math.min(1.0F, amountDone), start.boxX, end.boxX),
+				ease(Math.min(1.0F, amountDone), start.boxY, end.boxY)
+				);
+	}
+	
 	// http://stackoverflow.com/a/8317722/1754640
-	private float ease(float percent, float startValue, float endValue)
+	private static float ease(float percent, float startValue, float endValue)
 	{
 		endValue -= startValue;
 		float total = 100;
@@ -715,8 +973,35 @@ public class GuiSurgery extends GuiContainer
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
 		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		GlStateManager.enableTexture2D();
 	}
+	
+	public void renderModel(ModelBase model, float x, float y, float scale, float rotation)
+	{
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 120F);
+		GlStateManager.scale(-scale, scale, scale);
+		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+		GlStateManager.rotate(10.0F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(rotation, 0.0F, 1.0F, 0.0F);
+		RenderHelper.enableStandardItemLighting();
+		float f1 = 0.7F;
+		GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(f1, f1, f1, 1.0F));
+		model.render(null, 0, 0, 0, 0, 0, .0625f);
+		GlStateManager.popMatrix();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableRescaleNormal();
+		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		GlStateManager.enableTexture2D();
+
+	}
+	
+
 	
 	private void scissor(int x, int y, int xSize, int ySize)
 	{
@@ -733,20 +1018,23 @@ public class GuiSurgery extends GuiContainer
 	{
 		Iterator<Slot> iterator = inventorySlots.inventorySlots.iterator();
 		
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.disableTexture2D();
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		RenderHelper.enableGUIStandardItemLighting();
+
 		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, 0, 900F);
 		if (page == 0 && this.transitionStart == 0)
 		{
 			String s = "_" + Minecraft.getMinecraft().thePlayer.getName().toUpperCase();
-			this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 115, 0x1C7C8D);
+			this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 115, 0x1C7B8C);
 		}
+		
+		String s = surgery.essence + " / " + LibConstants.BASE_ESSENCE;
+		this.fontRendererObj.drawString(s, 18, 6, 0x1C7B8C);
 
 		
 		GL11.glPopMatrix();
+		
 		
 		GL11.glEnable(GL11.GL_BLEND);
 
@@ -763,8 +1051,18 @@ public class GuiSurgery extends GuiContainer
 		{
 			GL11.glPushMatrix();
 
-			this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, pos.getPlayerStack(), pos.xDisplayPosition, pos.yDisplayPosition - 26);
+			ItemStack stack = pos.getPlayerStack();
+			this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, stack, pos.xDisplayPosition, pos.yDisplayPosition - 26);
 			
+			if (stack != null && stack.stackSize > 1)
+			{
+				FontRenderer font = stack.getItem().getFontRenderer(stack);
+				if (font == null) font = fontRendererObj;
+				
+				this.itemRender.renderItemOverlayIntoGUI(font, stack, pos.xDisplayPosition, pos.yDisplayPosition - 26, Integer.toString(stack.stackSize));
+			}
+
+
 			if (pos.getStack() == null && !pos.slotDiscarded())
 			{
 				this.itemRender.zLevel = 50;
@@ -772,9 +1070,26 @@ public class GuiSurgery extends GuiContainer
 				GL11.glColorMask(true, true, true, false);
 				
 				this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, pos.getPlayerStack(), pos.xDisplayPosition, pos.yDisplayPosition);
+				
+				if (stack != null && stack.stackSize > 1)
+				{
+					FontRenderer font = stack.getItem().getFontRenderer(stack);
+					if (font == null) font = fontRendererObj;
+					
+					this.itemRender.renderItemOverlayIntoGUI(font, stack, pos.xDisplayPosition, pos.yDisplayPosition, Integer.toString(stack.stackSize));
+				}
+				
 				GL11.glColorMask(true, true, true, true);
 				this.itemRender.zLevel = 500;
 
+			}
+			else if (stack != null && pos.getStack() != null && pos.getStack().getItem() == stack.getItem() && pos.getStack().getItemDamage() == stack.getItemDamage())
+			{
+				FontRenderer font = stack.getItem().getFontRenderer(stack);
+				if (font == null) font = fontRendererObj;
+				String str = pos.getStack().stackSize == 1 ? "+1" : "+";
+				int width = pos.getStack().stackSize == 1 ? 0 : font.getStringWidth(Integer.toString(pos.getStack().stackSize));
+				this.itemRender.renderItemOverlayIntoGUI(font, stack, pos.xDisplayPosition - width, pos.yDisplayPosition, str);
 			}
 			GL11.glPopMatrix();
 		}
@@ -785,10 +1100,7 @@ public class GuiSurgery extends GuiContainer
 		this.zLevel = 0;
 		this.itemRender.zLevel = 0;
 
-		
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.enableTexture2D();
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
 		
 	}
 

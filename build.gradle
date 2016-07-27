@@ -20,9 +20,17 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "pre1"
+version = "beta-0.1.0"
 group= "flaxbeard.cyberware" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cyberware"
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 minecraft {
     version = "1.9.4-12.17.0.1954"
@@ -68,10 +76,10 @@ dependencies {
 }
 
 repositories {
-    maven { url "http://maven.amadornes.com/" }
+    maven { url 'http://maven.epoxide.xyz' }
 }
 dependencies {
-    deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_74:universal"
+    compile "net.darkhax.tesla:Tesla:1.9.4-1.1.0.24"
 }
 
 processResources
@@ -92,4 +100,6 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+
 }

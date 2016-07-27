@@ -1,7 +1,14 @@
 package flaxbeard.cyberware.api;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;
@@ -12,8 +19,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -22,13 +33,255 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	public static final IStorage<ICyberwareUserData> STORAGE = new CyberwareUserDataStorage();
 
 	private ItemStack[][] wares = new ItemStack[EnumSlot.values().length][LibConstants.WARE_PER_SLOT];
-	private boolean[] missingEssentials = new boolean[LibConstants.WARE_PER_SLOT];
+	private boolean[] missingEssentials = new boolean[EnumSlot.values().length * 2];
 	
+	private int storedPower = 0;
+	private int powerCap = 0;
+	private Map<ItemStack, Integer> powerBuffer = new HashMap<ItemStack, Integer>();
+	private Map<ItemStack, Integer> powerBufferLast = new HashMap<ItemStack, Integer>();
+	private List<ItemStack> outOfPower = new ArrayList<ItemStack>();
+	private List<Integer> outOfPowerTimes = new ArrayList<Integer>();
+	private List<ItemStack> specialBatteries = new ArrayList<ItemStack>();
+	private int essence = 0;
+
 	public CyberwareUserDataImpl()
 	{
+		essence = LibConstants.BASE_ESSENCE;
 		for (int i = 0; i < wares.length; i++)
 		{
 			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]);
+		}
+		this.updateCapacity();
+	}
+	
+	@Override
+	public List<ItemStack> getPowerOutages()
+	{
+		return outOfPower;
+	}
+	
+	@Override
+	public List<Integer> getPowerOutageTimes()
+	{
+		return outOfPowerTimes;
+	}
+	
+	@Override
+	public int getCapacity()
+	{
+		int specialCap = 0;
+		for (ItemStack item : this.specialBatteries)
+		{
+			ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(item);
+			specialCap += battery.getCapacity(item);
+		}
+		return powerCap + specialCap;
+	}
+	
+	@Override
+	public int getStoredPower()
+	{
+		int specialStored = 0;
+		for (ItemStack item : this.specialBatteries)
+		{
+			ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(item);
+			specialStored += battery.getStoredEnergy(item);
+		}
+		return storedPower + specialStored;
+	}
+	
+	@Override
+	public float getPercentFull()
+	{
+		if (getCapacity() == 0) return -1F;
+		return getStoredPower() / (1F * getCapacity());
+	}
+	
+	@Override
+	public boolean isAtCapacity(ItemStack stack)
+	{
+		return isAtCapacity(stack, 0);
+	}
+	
+	@Override
+	public boolean isAtCapacity(ItemStack stack, int buffer)
+	{
+		// buffer = Math.min(powerCap - 1, buffer); TODO
+		int leftOverSpaceNormal = powerCap - storedPower;
+
+		if (leftOverSpaceNormal > buffer) return false;
+		
+		int leftOverSpaceSpecial = 0;
+
+		for (ItemStack batteryStack : this.specialBatteries)
+		{
+			ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(batteryStack);
+			int spaceInThisSpecial = battery.add(batteryStack, stack, buffer + 1, true);
+			leftOverSpaceSpecial += spaceInThisSpecial;
+			
+			if (leftOverSpaceNormal + leftOverSpaceSpecial > buffer) return false;
+		}
+		
+		return true;
+	}
+	
+	
+	
+	@Override
+	public void addPower(int amount, ItemStack inputter)
+	{
+		if (amount < 0)
+		{
+			throw new IllegalArgumentException("Amount must be positive!");
+		}
+		//if (powerCap < storedPower + amount)
+		//{
+		
+		int amountAlready = 0;
+		ItemStack stack = null;
+		if (inputter != null)
+		{
+			stack = new ItemStack(inputter.getItem(), 1, inputter.getItemDamage());
+		}
+		if (powerBuffer.containsKey(stack))
+		{
+			amountAlready = powerBuffer.get(stack);
+		}
+		powerBuffer.put(stack, amount + amountAlready);
+		//}
+		//storedPower = Math.min(powerCap, storedPower + amount);
+	}
+	
+	private boolean canGiveOut = true;
+	
+	@Override
+	public boolean usePower(ItemStack stack, int amount)
+	{
+		return this.usePower(stack, amount, true);
+	}
+	
+	private int addMap(Map<ItemStack, Integer> map)
+	{
+		int total = 0;
+		for (ItemStack key : map.keySet())
+		{
+			total += map.get(key);
+		}
+		return total;
+	}
+	
+	private void subtractFromBufferLast(int amount)
+	{
+		for (ItemStack key : powerBufferLast.keySet())
+		{
+			int get = powerBufferLast.get(key);
+			int amountToSubtract = Math.min(get, amount);
+			amount -= amountToSubtract;
+			powerBufferLast.put(key, get - amountToSubtract);
+			if (amount <= 0) break;
+		}
+	}
+
+	@Override
+	public boolean usePower(ItemStack stack, int amount, boolean isPassive)
+	{
+		if (isImmune) return true;
+		
+		if (!canGiveOut)
+		{
+			if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+			{
+				setOutOfPower(stack);
+			}
+			return false;
+		}
+		
+		int getPowerBufferLast = addMap(powerBufferLast);
+		//System.out.println("BEFORE: " + getPowerBufferLast + " " + amount);
+		int amountAvailable = storedPower + getPowerBufferLast;
+		
+		int amountAvailableSpecial = 0;
+		if (amountAvailable < amount)
+		{
+
+			int toGo = amount - amountAvailable;
+
+			for (ItemStack batteryStack : this.specialBatteries)
+			{
+				ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(batteryStack);
+
+				int extract = battery.extract(batteryStack, toGo, true);
+
+				toGo -= extract;
+				amountAvailableSpecial += extract;
+				
+				
+				if (toGo <= 0) break;
+			}
+			
+			if (amountAvailableSpecial + amountAvailable >= amount)
+			{
+				toGo = amount - amountAvailable;
+				
+				for (ItemStack batteryStack : this.specialBatteries)
+				{
+					ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(batteryStack);
+					int extract = battery.extract(batteryStack, toGo, false);
+					toGo -= extract;
+					
+					if (toGo <= 0) break;
+				}
+				
+				amount -= amountAvailableSpecial;
+			}
+			
+		}
+		
+		if (amountAvailable < amount)
+		{
+			
+			if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+			{
+				setOutOfPower(stack);
+			}
+			if (isPassive)
+			{
+				canGiveOut = false;
+			}
+			return false;
+		}
+		
+		int leftAfterBuffer = Math.max(0, amount - getPowerBufferLast);
+		subtractFromBufferLast(amount);
+		storedPower -= leftAfterBuffer;
+		//System.out.println("AFTER: " + addMap(powerBufferLast));
+		return true;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void setOutOfPower(ItemStack stack)
+	{
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if (p != null && stack != null)
+		{
+			int i = -1;
+			int n = 0;
+			for (ItemStack e : outOfPower)
+			{
+				if (e != null && e.getItem() == stack.getItem() && e.getItemDamage() == stack.getItemDamage())
+				{
+					i = n;
+					break;
+				}
+				n++;
+			}
+			if (i != -1)
+			{
+				outOfPower.remove(i);
+				outOfPowerTimes.remove(i);
+			}
+			outOfPower.add(stack);
+			outOfPowerTimes.add(p.ticksExisted);
 		}
 	}
 	
@@ -41,24 +294,111 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	@Override
 	public boolean hasEssential(EnumSlot slot)
 	{
-		return !missingEssentials[slot.ordinal()];
+		return !missingEssentials[slot.ordinal() * 2];
 	}
 	
 	@Override
-	public void setHasEssential(EnumSlot slot, boolean has)
+	public boolean hasEssential(EnumSlot slot, EnumSide side)
 	{
-		missingEssentials[slot.ordinal()] = !has;
+		return !missingEssentials[slot.ordinal() * 2 + (side == EnumSide.LEFT ? 0 : 1)];
+	}
+	
+	@Override
+	public void setHasEssential(EnumSlot slot, boolean hasLeft, boolean hasRight)
+	{
+		missingEssentials[slot.ordinal() * 2] = !hasLeft;
+		missingEssentials[slot.ordinal() * 2 + 1] = !hasRight;
 	}
 
 	@Override
-	public void setInstalledCyberware(EnumSlot slot, List<ItemStack> cyberware)
+	public void setInstalledCyberware(EntityLivingBase entity, EnumSlot slot, List<ItemStack> cyberware)
 	{
-		wares[slot.ordinal()] = cyberware.toArray(new ItemStack[0]);
+		setInstalledCyberware(entity, slot, cyberware.toArray(new ItemStack[0]));
 	}
 	
 	@Override
-	public void setInstalledCyberware(EnumSlot slot, ItemStack[] cyberware)
+	public void updateCapacity()
 	{
+		powerCap = 0;
+		specialBatteries = new ArrayList<ItemStack>();
+		
+		for (EnumSlot slot : EnumSlot.values())
+		{
+			for (ItemStack wareStack : getInstalledCyberware(slot))
+			{
+				if (CyberwareAPI.isCyberware(wareStack))
+				{
+					ICyberware ware = CyberwareAPI.getCyberware(wareStack);
+					
+					
+					if (ware instanceof ISpecialBattery)
+					{
+						this.specialBatteries.add(wareStack);
+					}
+					else
+					{
+						powerCap += ware.getCapacity(wareStack);
+					}
+				}
+			}
+		}
+		
+		storedPower = Math.min(storedPower, powerCap);
+	}
+	
+	@Override
+	public void setInstalledCyberware(EntityLivingBase entity, EnumSlot slot, ItemStack[] cyberware)
+	{
+		List<ItemStack> newWares = Arrays.asList(cyberware);
+		List<ItemStack> oldWares = Arrays.asList(wares[slot.ordinal()]);
+		
+		if (entity != null)
+		{
+			for (ItemStack oldWare : oldWares)
+			{
+				if (CyberwareAPI.isCyberware(oldWare))
+				{
+					boolean found = false;
+					for (ItemStack newWare : newWares)
+					{
+						if (newWare != null && newWare.getItem() == oldWare.getItem() && newWare.getItemDamage() == oldWare.getItemDamage() && newWare.stackSize == oldWare.stackSize)
+						{
+							found = true;
+							break;
+						}
+					}
+					
+					if (!found)
+					{
+						
+						CyberwareAPI.getCyberware(oldWare).onRemoved(entity, oldWare);
+					}
+				}
+			}
+			
+			for (ItemStack newWare : newWares)
+			{
+				if (CyberwareAPI.isCyberware(newWare))
+				{
+					boolean found = false;
+					for (ItemStack oldWare : oldWares)
+					{
+						if (oldWare != null && newWare.getItem() == oldWare.getItem() && newWare.getItemDamage() == oldWare.getItemDamage() && newWare.stackSize == oldWare.stackSize)
+						{
+							found = true;
+							break;
+						}
+					}
+					
+					if (!found)
+					{
+						
+						CyberwareAPI.getCyberware(newWare).onAdded(entity, newWare);
+					}
+				}
+			}
+		}
+		
 		wares[slot.ordinal()] = cyberware;
 	}
 	
@@ -124,13 +464,65 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			essentialList.appendTag(new NBTTagByte((byte) (this.missingEssentials[i] ? 1 : 0)));
 		}
 		compound.setTag("discard", essentialList);
-		
+		compound.setTag("powerBuffer", writeMap(this.powerBuffer));
+		compound.setTag("powerBufferLast", writeMap(this.powerBufferLast));
+		compound.setInteger("powerCap", this.powerCap);
+		compound.setInteger("storedPower", this.storedPower);
+		compound.setInteger("essence", essence);
 		return compound;
+	}
+	
+	private NBTTagList writeMap(Map<ItemStack, Integer> map)
+	{
+		NBTTagList list = new NBTTagList();
+		
+		for (ItemStack stack : map.keySet())
+		{
+			NBTTagCompound temp = new NBTTagCompound();
+			NBTTagCompound item = new NBTTagCompound();
+			temp.setBoolean("null", stack == null);
+			if (stack != null)
+			{
+				stack.writeToNBT(item);
+				temp.setTag("item", item);
+			}
+			temp.setInteger("value", map.get(stack));
+
+			list.appendTag(temp);
+		}
+		
+		return list;
+	}
+	
+	private Map<ItemStack, Integer> readMap(NBTTagList list)
+	{
+		Map<ItemStack, Integer> map = new HashMap<ItemStack, Integer>();
+		for (int i = 0; i < list.tagCount(); i++)
+		{
+			NBTTagCompound temp = list.getCompoundTagAt(i);
+			boolean isNull = temp.getBoolean("null");
+			ItemStack stack = null;
+			if (!isNull)
+			{
+				stack = ItemStack.loadItemStackFromNBT(temp.getCompoundTag("item"));
+			}
+			
+			map.put(stack, temp.getInteger("value"));
+		}
+		
+		return map;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound tag)
 	{
+		powerBuffer = readMap((NBTTagList) tag.getTag("powerBuffer"));
+		powerCap = tag.getInteger("powerCap");
+		powerBufferLast = readMap((NBTTagList) tag.getTag("powerBufferLast"));
+
+		storedPower = tag.getInteger("storedPower");
+		essence = tag.getInteger("essence");
+		
 		NBTTagList essentialList = (NBTTagList) tag.getTag("discard");
 		for (int i = 0; i < essentialList.tagCount(); i++)
 		{
@@ -151,9 +543,11 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 				cyberware[j] = ItemStack.loadItemStackFromNBT(list2.getCompoundTagAt(j));
 			}
 			
-			setInstalledCyberware(slot, cyberware);
+			setInstalledCyberware(null, slot, cyberware);
 		}
-		
+		updateCapacity();
+	
+
 	}
 	
 	private static class CyberwareUserDataStorage implements IStorage<ICyberwareUserData>
@@ -213,6 +607,52 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			cap.deserializeNBT(nbt);
 		}
 		
+	}
+	
+	private void storePower(Map<ItemStack, Integer> map)
+	{
+		for (ItemStack item : this.specialBatteries)
+		{
+			for (ItemStack key : map.keySet())
+			{
+				ISpecialBattery battery = (ISpecialBattery) CyberwareAPI.getCyberware(item);
+				int keyAmount = map.get(key);
+				int amountTaken = battery.add(item, key, keyAmount, false);
+				map.put(key, keyAmount - amountTaken);
+			}
+		}
+		this.storedPower = Math.min(this.powerCap, storedPower + addMap(map));
+	}
+
+	@Override
+	public void resetBuffer()
+	{
+		canGiveOut = true;
+		storePower(powerBufferLast);
+		powerBufferLast = powerBuffer;
+		powerBuffer = new HashMap<ItemStack, Integer>();
+		this.isImmune = false;
+
+	}
+
+	@Override
+	public void setImmune()
+	{
+		this.isImmune = true;
+	}
+	
+	private boolean isImmune = false;
+
+	@Override
+	public int getEssence()
+	{
+		return essence;
+	}
+
+	@Override
+	public void setEssence(int e)
+	{
+		essence = e;
 	}
 
 }

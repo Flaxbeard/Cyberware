@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
-import flaxbeard.sprockets.Sprockets;
 
 public class BlockSurgeryTable extends BlockBed
 {
@@ -35,7 +34,7 @@ public class BlockSurgeryTable extends BlockBed
 		
 		this.setUnlocalizedName(Cyberware.MODID + "." + name);
 
-		GameRegistry.registerTileEntity(TileEntitySurgery.class, Sprockets.MODID + ":" + name);
+		GameRegistry.registerTileEntity(TileEntitySurgery.class, Cyberware.MODID + ":" + name);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 	}

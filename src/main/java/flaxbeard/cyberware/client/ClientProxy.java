@@ -4,13 +4,17 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import flaxbeard.cyberware.client.render.RenderCyberZombie;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
+import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
 import flaxbeard.cyberware.common.item.ItemCyberware;
-import flaxbeard.sprockets.Sprockets;
 
 public class ClientProxy extends CommonProxy
 {
@@ -31,6 +35,7 @@ public class ClientProxy extends CommonProxy
 		}
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySurgeryChamber.class, new TileEntitySurgeryChamberRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCyberZombie.class, RenderCyberZombie::new);
 	}
 
 
@@ -39,6 +44,8 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init();
 		KeyBinds.init();
+		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandlerClient.INSTANCE);
+		
 	}
 	
 	

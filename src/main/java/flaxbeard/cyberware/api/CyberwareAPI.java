@@ -174,6 +174,23 @@ public final class CyberwareAPI
 	}
 	
 	/**
+	 * A shortcut method for event handlers and the like to quickly determine what level of
+	 * Cyberware is installed. Returns 0 if none. Can handle null entites and entities without
+	 * ICyberwareUserData.
+	 * 
+	 * @param targetEntity	The entity you want to check
+	 * @param stack			The Cyberware you want to check for
+	 * @return				If the entity has the Cyberware, the level, or 0 if not
+	 */
+	public static int getCyberwareRank(@Nullable Entity targetEntity, ItemStack stack)
+	{
+		if (!hasCapability(targetEntity)) return 0;
+		
+		ICyberwareUserData cyberware = getCapability(targetEntity);
+		return cyberware.getCyberwareRank(stack);
+	}
+	
+	/**
 	 * A shortcut method for event handlers and the like to get the itemstack for a piece
 	 * of cyberware. Useful for NBT data. Can handle null entites and entities without
 	 * ICyberwareUserData.
@@ -201,7 +218,7 @@ public final class CyberwareAPI
 			if (targetEntity instanceof EntityPlayer)
 			{
 				CyberwarePacketHandler.INSTANCE.sendTo(new CyberwareSyncPacket(nbt, targetEntity.getEntityId()), (EntityPlayerMP) targetEntity);
-				System.out.println("Sent data for player " + ((EntityPlayer) targetEntity).getName() + " to that player's client");
+				//System.out.println("Sent data for player " + ((EntityPlayer) targetEntity).getName() + " to that player's client");
 			}
 
 			for (EntityPlayer trackingPlayer : world.getEntityTracker().getTrackingPlayers(targetEntity))
@@ -210,7 +227,7 @@ public final class CyberwareAPI
 				
 				if (targetEntity instanceof EntityPlayer)
 				{
-					System.out.println("Sent data for player " + ((EntityPlayer) targetEntity).getName() + " to player " + trackingPlayer.getName());
+					//System.out.println("Sent data for player " + ((EntityPlayer) targetEntity).getName() + " to player " + trackingPlayer.getName());
 				}
 			}
 		}

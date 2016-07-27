@@ -1,16 +1,15 @@
 package flaxbeard.cyberware.common.item;
 
-import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberwareUserData;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
+import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemCyberheart extends ItemCyberware
 {
@@ -43,6 +42,27 @@ public class ItemCyberheart extends ItemCyberware
 			e.removePotionEffect(MobEffects.WEAKNESS);
 		}
 		
+	}
+	
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void power(LivingUpdateEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		ItemStack test = new ItemStack(this);
+		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			if (!CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)))
+			{
+				e.attackEntityFrom(EssentialsMissingHandler.heartless, Integer.MAX_VALUE);
+			}
+		}
+	}
+	
+	
+	@Override
+	public int getPowerConsumption(ItemStack stack)
+	{
+		return LibConstants.HEART_CONSUMPTION;
 	}
 
 }

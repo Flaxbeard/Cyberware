@@ -78,8 +78,8 @@ public class CyberwareSyncPacket implements IMessage
 				CyberwareAPI.getCapability(targetEntity).deserializeNBT(data);
 				if (targetEntity instanceof EntityPlayer)
 				{
-					System.out.println("Got data for player " + ((EntityPlayer) targetEntity).getName());
-					if (targetEntity != Minecraft.getMinecraft().thePlayer)
+					//System.out.println("Got data for player " + ((EntityPlayer) targetEntity).getName());
+					/*if (targetEntity != Minecraft.getMinecraft().thePlayer)
 					{
 						ItemStack[] oldWares = CyberwareAPI.getCapability(targetEntity).getInstalledCyberware(EnumSlot.EYES);
 						for (ItemStack i : oldWares)
@@ -93,7 +93,7 @@ public class CyberwareSyncPacket implements IMessage
 								System.out.print(i.getItem().getRegistryName() + "[" + i.stackSize + "] ");
 							}
 						}
-					}
+					}*/
 				}
 			}
 			

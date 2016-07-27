@@ -10,12 +10,15 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class CyberwareConfig
 {
+	public static float DROP_RARITY = 50F;
+	public static float ZOMBIE_RARITY = 15F;
+	public static boolean NO_ZOMBIES = false;
+	public static boolean SURGERY_CRAFTING = false;
 	private static String[][] defaultStartingItems;
 	private static String[][] startingItems;
 	private static ItemStack[][] startingStacks;
@@ -25,9 +28,26 @@ public class CyberwareConfig
 		startingItems = defaultStartingItems = new String[EnumSlot.values().length][0];
 		startingStacks = new ItemStack[EnumSlot.values().length][LibConstants.WARE_PER_SLOT];
 		
-		for (int i = 0; i < 4; i++)
+		int j = 0;
+		for (int i = 0; i < EnumSlot.values().length; i++)
 		{
-			defaultStartingItems[i] = new String[] { "cyberware:bodyPart 1 " + i };
+			if (EnumSlot.values()[i].hasEssential())
+			{
+				if (EnumSlot.values()[i].isSided())
+				{
+					defaultStartingItems[i] = new String[] { "cyberware:bodyPart 1 " + j, "cyberware:bodyPart 1 " + (j + 1)  };
+					j += 2;
+				}
+				else
+				{
+					defaultStartingItems[i] = new String[] { "cyberware:bodyPart 1 " + j };
+					j++;
+				}
+			}
+			else
+			{
+				defaultStartingItems[i] = new String[0];
+			}
 		}
 		Configuration config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		config.load();
@@ -39,7 +59,11 @@ public class CyberwareConfig
 					"Defaults", defaultStartingItems[index], "Use format 'id amount metadata'");
 		}
 		
-		
+		NO_ZOMBIES = config.getBoolean("Disable cyberzombies", "Mobs", NO_ZOMBIES, "");
+		ZOMBIE_RARITY = config.getFloat("Percent of zombies that are Cyberzombies", "Mobs", ZOMBIE_RARITY, 0F, 100F, "");
+		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", "Mobs", DROP_RARITY, 0F, 100F, "");
+		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", "Other", SURGERY_CRAFTING, "Normally only found in Nether fortresses");
+
 		config.save();
 		
 	}
