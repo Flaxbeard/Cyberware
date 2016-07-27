@@ -1,5 +1,6 @@
 package flaxbeard.cyberware.common;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -7,6 +8,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareUserDataImpl;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.handler.CyberwareDataHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
 import flaxbeard.cyberware.common.handler.GuiHandler;
@@ -34,5 +36,12 @@ public class CommonProxy
 	public void postInit()
 	{
 		CyberwareConfig.postInit();
+	}
+
+	public void wrong(TileEntitySurgery tileEntitySurgery) {}
+
+	public boolean workingOnPlayer(EntityLivingBase targetEntity)
+	{
+		return false;
 	}
 }

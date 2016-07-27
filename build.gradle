@@ -20,7 +20,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "beta-0.1.0"
+version = "beta-0.1.2"
 group= "flaxbeard.cyberware" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cyberware"
 
@@ -46,6 +46,12 @@ minecraft {
     mappings = "snapshot_20160518"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
+
+
+jar {
+    archiveName = "${baseName}-1.9.4-1.10.2-${version}.jar"
+}
+
 
 dependencies {
     compile files(

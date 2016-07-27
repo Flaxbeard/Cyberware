@@ -1,7 +1,9 @@
 package flaxbeard.cyberware.client;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,6 +13,7 @@ import flaxbeard.cyberware.client.render.RenderCyberZombie;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
@@ -80,6 +83,18 @@ public class ClientProxy extends CommonProxy
 			ModelLoader.setCustomModelResourceLocation(item, 
 					0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		}
+	}
+
+	@Override
+	public void wrong(TileEntitySurgery tileEntitySurgery)
+	{
+		tileEntitySurgery.ticksWrong = Minecraft.getMinecraft().thePlayer.ticksExisted;
+	}
+	
+	@Override
+	public boolean workingOnPlayer(EntityLivingBase targetEntity)
+	{
+		return targetEntity == Minecraft.getMinecraft().thePlayer;
 	}
 
 }

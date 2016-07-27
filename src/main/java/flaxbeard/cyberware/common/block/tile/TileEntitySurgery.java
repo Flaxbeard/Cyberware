@@ -17,9 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.ItemStackHandler;
+import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
@@ -157,15 +156,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	public void setWrongSlot(int index)
 	{
 		this.wrongSlot = index;
-		if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-		{
-			wrong();
-		}
-	}
-	
-	public void wrong()
-	{
-		this.ticksWrong = Minecraft.getMinecraft().thePlayer.ticksExisted;
+		Cyberware.proxy.wrong(this);
 	}
 	
 	public void disableDependants(ItemStack stack, EnumSlot slot, int n)
@@ -405,7 +396,6 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	{
 		if (inProgress && progressTicks < 80)
 		{
-			EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
 			if (targetEntity != null && !targetEntity.isDead && CyberwareAPI.hasCapability(targetEntity))
 			{
 				BlockPos pos = getPos();
@@ -427,7 +417,9 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 				}
 				
 				progressTicks++;
-				if (targetEntity == thePlayer)
+				
+				
+				if (Cyberware.proxy.workingOnPlayer(targetEntity))
 				{
 					workingOnPlayer = true;
 					playerProgressTicks = progressTicks;
@@ -437,7 +429,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			{
 				inProgress = false;
 				progressTicks = 0;
-				if (targetEntity == thePlayer)
+				if (Cyberware.proxy.workingOnPlayer(targetEntity))
 				{
 					workingOnPlayer = false;
 				}
@@ -452,9 +444,8 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		}
 		else if (inProgress)
 		{
-			EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
 
-			if (targetEntity == thePlayer)
+			if (Cyberware.proxy.workingOnPlayer(targetEntity))
 			{
 				workingOnPlayer = false;
 			}
