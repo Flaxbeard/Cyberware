@@ -1,7 +1,7 @@
 # BLOCKS
 tile.cyberware.surgery.name=Robosurgeon
 item.cyberware.surgeryChamber.name=Surgery Chamber
-item.cyberware.charger.name=Cyberware Charger
+tile.cyberware.charger.name=Cyberware Charger
 
 # ITEMS
 item.cyberware.bodyPart.brain.name=Human Brain
@@ -40,6 +40,7 @@ item.cyberware.brainUpgrades.consciousnessTransmitter.name=Consciousness Transmi
 item.cyberware.brainUpgrades.neuralContextualizer.name=Neural Contextualizer
 item.cyberware.brainUpgrades.matrix.name=Threat Matrix Calculator
 item.cyberware.cyberheart.name=Cardiomechanic Pump
+item.cyberware.creativeBattery.name=Creative Capacitor
 item.cyberware.heartUpgrades.defibrillator.name=Internal Defibrillator
 item.cyberware.heartUpgrades.platelets.name=Platelet Dispatcher
 item.cyberware.heartUpgrades.medkit.name=Stem Cell Synthesizer
@@ -153,6 +154,7 @@ cyberware.tooltip.brainUpgrades.2=Keep some XP after death
 cyberware.tooltip.brainUpgrades.3=Automatically switch to the right tool
 cyberware.tooltip.brainUpgrades.4=High chance to dodge attacks\nwhen in light or no armor
 cyberware.tooltip.cyberheart=Immunity to weakness
+cyberware.tooltip.creativeBattery=Limitless potential
 cyberware.tooltip.heartUpgrades.0=Prevents certain death once
 cyberware.tooltip.heartUpgrades.0.powerConsumption=Uses%1$d power units to revive
 cyberware.tooltip.heartUpgrades.1=Heals when close to full health
