@@ -1031,7 +1031,6 @@ public class GuiSurgery extends GuiContainer
 		
 		String s = surgery.essence + " / " + LibConstants.BASE_ESSENCE;
 		this.fontRendererObj.drawString(s, 18, 6, 0x1C7B8C);
-
 		
 		GL11.glPopMatrix();
 		
