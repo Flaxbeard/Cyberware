@@ -22,6 +22,7 @@ public class CyberwareConfig
 	private static String[][] defaultStartingItems;
 	private static String[][] startingItems;
 	private static ItemStack[][] startingStacks;
+	public static int TESLA_PER_POWER = 1;
 
 	public static void loadConfig(FMLPreInitializationEvent event)
 	{
@@ -63,7 +64,7 @@ public class CyberwareConfig
 		ZOMBIE_RARITY = config.getFloat("Percent of zombies that are Cyberzombies", "Mobs", ZOMBIE_RARITY, 0F, 100F, "");
 		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", "Mobs", DROP_RARITY, 0F, 100F, "");
 		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", "Other", SURGERY_CRAFTING, "Normally only found in Nether fortresses");
-
+		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", "Other", TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
 		config.save();
 		
 	}

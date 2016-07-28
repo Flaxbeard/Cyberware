@@ -15,11 +15,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Optional;
-import cofh.api.energy.IEnergyConnection;
-import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 @Optional.Interface(iface = " cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI|energy")
@@ -85,9 +84,9 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 				
 				ICyberwareUserData data = CyberwareAPI.getCapability(entity);
 				
-				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() < LibConstants.TESLA_PER_POWER || true))
+				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() < CyberwareConfig.TESLA_PER_POWER))
 				{
-					container.takePower(LibConstants.TESLA_PER_POWER, false);
+					container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
 					data.addPower(20, null);
 					
 					if (entity.ticksExisted % 5 == 0)

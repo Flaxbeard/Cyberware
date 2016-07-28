@@ -26,6 +26,5 @@ public class LibConstants
 	public static final int BASE_ESSENCE = 100;
 	public static final int CRITICAL_ESSENCE = 25;
 	public static final int WARNING_ESSENCE = 25;
-	public static final long TESLA_PER_POWER = 1;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
 }
