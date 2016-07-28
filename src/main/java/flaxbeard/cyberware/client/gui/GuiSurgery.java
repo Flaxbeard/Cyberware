@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelBase;
@@ -31,6 +32,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import scala.actors.threadpool.Arrays;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
@@ -100,44 +102,43 @@ public class GuiSurgery extends GuiContainer
 		public void drawButton(Minecraft mc, int mouseX, int mouseY)
 		{
 			if (this.visible)
-			{/*
+			{
+			}
+		}
+	}
+	
+	private static class BackButton extends GuiButton
+	{
+	
+		public BackButton(int p_i46316_1_, int p_i46316_2_, int p_i46316_3_, boolean p_i46316_4_)
+		{
+			super(p_i46316_1_, p_i46316_2_, p_i46316_3_, 23, 13, "");
+		}
+	
+		/**
+		 * Draws this button to the screen.
+		 */
+		public void drawButton(Minecraft mc, int mouseX, int mouseY)
+		{
+			if (this.visible)
+			{
+				GL11.glPushMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+				float trans = 0.4F;
 				boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-				if (flag && lastHover == 0)
-				{
-					lastHover = ticksExisted() + partialTicks;
-				}
-				else if (!flag)
-				{
-					lastHover = 0;
-				}
+				if (flag) trans = 0.6F;
 				
-				float elapsed = ticksExisted() + partialTicks - lastHover;
-				for (int i = 0; i < (elapsed > 15 ? 2 : 1); i++)
-				{
-					GL11.glPushMatrix();
-					GL11.glEnable(GL11.GL_BLEND);
-		
-					
-		
-					float timeSince = flag ? (elapsed + (15F * i)) % 30F : 0F;
-					float scale = 0.8F + timeSince * 0.04F;
-					float trans = .5F - timeSince * 0.02F;
-				
-					
-					float move = ((1 - scale) * this.drawSize) / 2F;
-					GL11.glTranslatef(xPosition, yPosition, 0.0F);
-					GL11.glTranslatef((this.width - this.drawSize) / 2, (this.width - this.drawSize) / 2, 0.0F);
-					GL11.glTranslatef(move, move, 0.0F);
-					GL11.glColor4f(1.0F, 1.0F, 1.0F, trans);
-					GL11.glScalef(scale, scale, scale);
-					mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
-		
-		
-					this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, this.width, this.height);
-					GL11.glDisable(GL11.GL_BLEND);
-					GL11.glPopMatrix();
-				}*/
+				GlStateManager.color(1.0F, 1.0F, 1.0F, trans);
+				mc.getTextureManager().bindTexture(SURGERY_GUI_TEXTURES);
 
+	
+				this.drawTexturedModalRect(this.xPosition, this.yPosition, 176 + 18, 111, 18, 13);
+				
+				
+				GlStateManager.color(1.0F, 1.0F, 1.0F, trans / 2F);
+				this.drawTexturedModalRect(this.xPosition, this.yPosition, 176, 111, 18, 13);
+
+				GL11.glPopMatrix();
 			}
 		}
 	}
@@ -279,6 +280,8 @@ public class GuiSurgery extends GuiContainer
 
 	}
 	
+	private BackButton back;
+	
 	@Override
 	public void initGui()
 	{
@@ -291,6 +294,8 @@ public class GuiSurgery extends GuiContainer
 		this.buttonList.add(bodyIcons[3] = new GuiButtonSurgery(4, i + (this.xSize / 2) - 8 - 21, j + 35, 16, 38));
 		this.buttonList.add(bodyIcons[4] = new GuiButtonSurgery(5, i + (this.xSize / 2) - 6 + 7, j + 73, 12, 39));
 		this.buttonList.add(bodyIcons[5] = new GuiButtonSurgery(6, i + (this.xSize / 2) - 6 - 7, j + 73, 12, 39));
+		this.buttonList.add(back = new BackButton(7, i + this.xSize - 25, j + 5, true));
+		back.visible = false;
 		
 		this.buttonList.add(bodyIcons[6] = new GuiButtonSurgery(7, 
 				i + (int) (xSize / 2 + configs[0].boxX - (configs[0].boxWidth / 2)),
@@ -325,12 +330,29 @@ public class GuiSurgery extends GuiContainer
 		showHideRelevantButtons(false);
 		page = targetPage;
 		target = configs[page].copy();
+		if (page == 0)
+		{
+			back.visible = false;
+		}
+		else
+		{
+			back.visible = true;
+		}
 	}
 	
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		if (button.enabled)
 		{
+			if (button.id == 7)
+			{
+				if (page != 0 || ease.rotation != 0)
+				{
+					int pageToGoTo = page <= 10 ? 0 : parent;
+					prepTransition(20, pageToGoTo);
+				}
+				return;
+			}
 			
 			openTime = 1;
 			float er = (ease.rotation + 360 * 10) % 360;
@@ -541,7 +563,7 @@ public class GuiSurgery extends GuiContainer
 		
 		if (missingSlots.size() > 0)
 		{
-			this.drawTexturedModalRect(i + this.xSize - 21, j + 5, 212, 43, 16, 16);
+			this.drawTexturedModalRect(i + this.xSize - 23, j + (page == 0 ? 5 : 20), 212, 43, 16, 16);
 		}
 		
 		// Draw the more-transparent slot backs
@@ -579,10 +601,15 @@ public class GuiSurgery extends GuiContainer
 		
 		if (missingSlots.size() > 0)
 		{			
-			if (this.isPointInRegion(this.xSize - 21, 5, 16, 16, mouseX, mouseY))
+			if (this.isPointInRegion(this.xSize - 23, (page == 0 ? 5 : 20), 16, 16, mouseX, mouseY))
 			{
 				this.drawHoveringText(missingSlots, mouseX, mouseY, fontRendererObj);
 			}
+		}
+		
+		if (page != 0 && this.isPointInRegion(this.xSize - 25, 5, 18, 10, mouseX, mouseY))
+		{
+			this.drawHoveringText(Arrays.asList(new String[] { I18n.format("cyberware.gui.back") } ), mouseX, mouseY, fontRendererObj);
 		}
 		
 

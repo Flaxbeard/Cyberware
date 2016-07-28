@@ -101,6 +101,7 @@ cyberware.gui.missingEssential.foot.right=Missing right foot, will be unusable
 
 cyberware.gui.noEssence=No essence, will cause death
 cyberware.gui.noEssence=Low essence, will cause rejection
+cyberware.gui.back=Back (or Right Mouse Button)
 
 cyberware.tooltip.shiftPrompt=Hold shift for more info
 cyberware.tooltip.requires=Requires
