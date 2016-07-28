@@ -118,21 +118,24 @@ public class EssentialsMissingHandler
 				numMissingLegs++;
 			}
 			
-			if (numMissingLegsVisible == 2)
+			if (e instanceof EntityPlayer)
 			{
-				e.height = 1.8F - (10F / 16F);
-				((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
-				AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
-				e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
-				last = true;
-
-			}
-			else if (last)
-			{
-				e.height = 1.8F;
-				((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
-				AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
-				e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+				if (numMissingLegsVisible == 2)
+				{
+					e.height = 1.8F - (10F / 16F);
+					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
+					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
+					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+					last = true;
+	
+				}
+				else if (last)
+				{
+					e.height = 1.8F;
+					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
+					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
+					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+				}
 			}
 			
 			if (numMissingLegs >= 1 && e.onGround)

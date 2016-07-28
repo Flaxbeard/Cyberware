@@ -74,14 +74,19 @@ public class CyberwareDataHandler
 				allWares.removeAll(Collections.singleton(null));
 				
 				ItemStack drop = null;
-				while (drop == null || drop.getItem() == CyberwareContent.creativeBattery || drop.getItem() == CyberwareContent.bodyPart)
+				int count = 0;
+				while (count < 50 && (drop == null || drop.getItem() == CyberwareContent.creativeBattery || drop.getItem() == CyberwareContent.bodyPart))
 				{
 					int random = e.worldObj.rand.nextInt(allWares.size());
-					drop = allWares.get(random).copy();
+					drop = ItemStack.copyItemStack(allWares.get(random));
 					drop.stackSize = 1;
+					count++;
 				}
-				EntityItem ei = new EntityItem(e.worldObj, e.posX, e.posY, e.posZ, drop);
-				e.worldObj.spawnEntityInWorld(ei);
+				if (count < 50)
+				{
+					EntityItem ei = new EntityItem(e.worldObj, e.posX, e.posY, e.posZ, drop);
+					e.worldObj.spawnEntityInWorld(ei);
+				}
 			}
 		}
 	}
