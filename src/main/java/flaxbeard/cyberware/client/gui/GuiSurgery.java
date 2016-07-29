@@ -38,6 +38,7 @@ import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
 import flaxbeard.cyberware.client.render.ModelBox;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
@@ -476,9 +477,10 @@ public class GuiSurgery extends GuiContainer
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
 		
-		int essence = (int) ((surgery.essence * 1F / LibConstants.BASE_ESSENCE) * 49);
-		int criticalEssence = (int) ((LibConstants.CRITICAL_ESSENCE * 1F  / LibConstants.BASE_ESSENCE) * 49);
-		int warningEssence = (int) ((LibConstants.WARNING_ESSENCE * 1F  / LibConstants.BASE_ESSENCE) * 49);
+		int essence = (int) ((surgery.essence * 1F / surgery.maxEssence) * 49);
+		int criticalEssence = (int) ((CyberwareConfig.CRITICAL_ESSENCE * 1F  / surgery.maxEssence) * 49);
+		// TODO int warningEssence = (int) ((LibConstants.WARNING_ESSENCE * 1F  / surgery.maxEssence) * 49);
+		int warningEssence = criticalEssence;
 		this.zLevel = 200;
 
 
@@ -526,10 +528,17 @@ public class GuiSurgery extends GuiContainer
 		{
 			missingSlots.add(I18n.format("cyberware.gui.noEssence"));
 		}
-		else if (surgery.essence < LibConstants.CRITICAL_ESSENCE)
+		else if (surgery.essence < CyberwareConfig.CRITICAL_ESSENCE)
 		{
 			missingSlots.add(I18n.format("cyberware.gui.criticalEssence"));
 		}
+		
+		if (surgery.missingPower)
+		{
+			missingSlots.add(I18n.format("cyberware.gui.noPower"));
+		}
+		
+		
 		for (int k = 0; k < surgery.isEssentialMissing.length; k++)
 		{
 			EnumSlot slot = EnumSlot.values()[k / 2];
@@ -1056,7 +1065,7 @@ public class GuiSurgery extends GuiContainer
 			this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 115, 0x1C7B8C);
 		}
 		
-		String s = surgery.essence + " / " + LibConstants.BASE_ESSENCE;
+		String s = surgery.essence + " / " + surgery.maxEssence;
 		this.fontRendererObj.drawString(s, 18, 6, 0x1C7B8C);
 		
 		GL11.glPopMatrix();

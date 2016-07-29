@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +24,10 @@ import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
+import flaxbeard.cyberware.common.item.ItemCyberware;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class TileEntitySurgery extends TileEntity implements ITickable
@@ -36,8 +37,11 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	public boolean[] discardSlots = new boolean[120];
 	public boolean[] isEssentialMissing = new boolean[EnumSlot.values().length * 2];
 	public int essence = 0;
+	public int maxEssence = 0;
 	public int wrongSlot = -1;
 	public int ticksWrong = 0;
+	public int lastEntity = -1;
+	public boolean missingPower = false;
 
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
@@ -49,6 +53,14 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		markDirty();
 		if (CyberwareAPI.hasCapability(entity))
 		{
+			if (entity.getEntityId() != lastEntity)
+			{
+				for (int i = 0; i < discardSlots.length; i++)
+				{
+					discardSlots[i] = false;
+				}
+				lastEntity = entity.getEntityId();
+			}
 			ICyberwareUserData c = CyberwareAPI.getCapability(entity);
 			
 			// Update slotsPlayer with the items in the player's body
@@ -307,6 +319,9 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		}
 		
 		this.essence = compound.getInteger("essence");
+		this.maxEssence = compound.getInteger("maxEssence");
+		this.lastEntity = compound.getInteger("lastEntity");
+		this.missingPower = compound.getBoolean("missingPower");
 	}
 	
 	@Override
@@ -322,6 +337,10 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 		compound = super.writeToNBT(compound);
 	
 		compound.setInteger("essence", essence);
+		compound.setInteger("maxEssence", maxEssence);
+		compound.setInteger("lastEntity", lastEntity);
+		compound.setBoolean("missingPower", missingPower);
+		
 		compound.setTag("inv", this.slots.serializeNBT());
 		compound.setTag("inv2", this.slotsPlayer.serializeNBT());
 		
@@ -585,8 +604,10 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 	public void updateEssence()
 	{
-		this.essence = LibConstants.BASE_ESSENCE;
-
+		this.maxEssence = this.essence = CyberwareConfig.ESSENCE; // TODO
+		boolean hasConsume = false;
+		boolean hasProduce = false;
+		
 		for (EnumSlot slot : EnumSlot.values())
 		{
 			for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
@@ -614,8 +635,20 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					ICyberware ware = CyberwareAPI.getCyberware(ret);
 
 					this.essence -= ware.getEssenceCost(ret);
+					
+					if (ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerConsumption(ret) > 0)
+					{
+						hasConsume = true;
+					}
+					if (ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerProduction(ret) > 0)
+					{
+						hasProduce = true;
+					}
+						
 				}
 			}
 		}
+		
+		this.missingPower = hasConsume && !hasProduce;
 	}
 }

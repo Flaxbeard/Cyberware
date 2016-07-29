@@ -40,4 +40,6 @@ public interface ICyberwareUserData
 	public boolean hasEssential(EnumSlot slot, EnumSide side);
 	public int getEssence();
 	public void setEssence(int e);
+	void resetWare();
+	int getMaxEssence();
 }

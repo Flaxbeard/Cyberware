@@ -15,6 +15,8 @@ import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class CyberwareConfig
 {
+	public static int ESSENCE = 100;
+	public static int CRITICAL_ESSENCE = 25;
 	public static float DROP_RARITY = 50F;
 	public static float ZOMBIE_RARITY = 15F;
 	public static boolean NO_ZOMBIES = false;
@@ -65,6 +67,8 @@ public class CyberwareConfig
 		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", "Mobs", DROP_RARITY, 0F, 100F, "");
 		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", "Other", SURGERY_CRAFTING, "Normally only found in Nether fortresses");
 		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", "Other", TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
+		ESSENCE = config.getInt("Maximum Essence", "Essence", ESSENCE, 0, Integer.MAX_VALUE, "");
+		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", "Essence", CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
 		config.save();
 		
 	}

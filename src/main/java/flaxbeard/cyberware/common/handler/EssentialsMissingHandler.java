@@ -41,6 +41,7 @@ import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.item.ItemCyberlimb;
@@ -82,7 +83,7 @@ public class EssentialsMissingHandler
 				e.attackEntityFrom(brainless, Integer.MAX_VALUE);
 			}
 			
-			if (cyberware.getEssence() < LibConstants.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
+			if (cyberware.getEssence() < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
 			{
 				e.attackEntityFrom(noessence, 2F);
 			}

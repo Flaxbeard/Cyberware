@@ -100,8 +100,9 @@ cyberware.gui.missingEssential.foot.left=Missing left foot, will be unusable
 cyberware.gui.missingEssential.foot.right=Missing right foot, will be unusable
 
 cyberware.gui.noEssence=No essence, will cause death
-cyberware.gui.noEssence=Low essence, will cause rejection
+cyberware.gui.criticalEssence=Low essence, will cause rejection
 cyberware.gui.back=Back (or Right Mouse Button)
+cyberware.gui.noPower=No power production
 
 cyberware.tooltip.shiftPrompt=Hold shift for more info
 cyberware.tooltip.requires=Requires
@@ -116,6 +117,7 @@ cyberware.tooltip.powerProduction=Produces%1$s pow/s when in use
 cyberware.tooltip.capacity=%1$d power units capacity
 cyberware.tooltip.maxInstall=Can install up to %1$d
 cyberware.tooltip.essence=Essence cost:%1$s
+
 # KEYBINDS
 cyberware.keybinds.category=Cyberware
 cyberware.keybinds.zoom=Zoom
@@ -192,3 +194,7 @@ death.attack.cyberware.surgery=%1$s didn't return from the operation
 death.attack.cyberware.spineless=%1$s was spineless
 death.attack.cyberware.nomuscles=%1$s couldn't hold themselves together
 death.attack.cyberware.noessence=%1$s lost their humanity
+
+# COMMAND
+cyberware.commands.clearCyberware.usage=Usage: /clearcyberware [player]
+cyberware.commands.clearCyberware.success=Cleared the Cyberware of %1$s

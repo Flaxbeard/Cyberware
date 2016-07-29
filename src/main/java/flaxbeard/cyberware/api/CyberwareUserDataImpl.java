@@ -43,10 +43,17 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private List<Integer> outOfPowerTimes = new ArrayList<Integer>();
 	private List<ItemStack> specialBatteries = new ArrayList<ItemStack>();
 	private int essence = 0;
+	private int maxEssence = 0;
 
 	public CyberwareUserDataImpl()
 	{
-		essence = LibConstants.BASE_ESSENCE;
+		resetWare();
+	}
+	
+	@Override
+	public void resetWare()
+	{
+		essence = maxEssence = CyberwareConfig.ESSENCE;
 		for (int i = 0; i < wares.length; i++)
 		{
 			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]);
@@ -647,6 +654,13 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	public int getEssence()
 	{
 		return essence;
+	}
+	
+	@Override
+	public int getMaxEssence()
+	{
+		return CyberwareConfig.ESSENCE;
+		//return maxEssence; TODO
 	}
 
 	@Override

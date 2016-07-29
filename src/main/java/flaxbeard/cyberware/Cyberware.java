@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.api.ICyberwareTabItem;
@@ -23,6 +24,7 @@ import flaxbeard.cyberware.api.ICyberwareTabItem.EnumCategory;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.misc.CommandClearCyberware;
 
 @Mod(modid = Cyberware.MODID, version = Cyberware.VERSION)
 public class Cyberware
@@ -129,4 +131,12 @@ public class Cyberware
 			}
 		}
 	};
+	
+	
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent event)
+	{
+		event.registerServerCommand(new CommandClearCyberware());
+	}
+
 }

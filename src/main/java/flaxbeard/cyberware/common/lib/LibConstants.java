@@ -23,8 +23,6 @@ public class LibConstants
 	public static final float DODGE_ARMOR = .70F;
 	public static final float DODGE_NO_ARMOR = .65F;
 	public static final int LIMB_CONSUMPTION = 10;
-	public static final int BASE_ESSENCE = 100;
-	public static final int CRITICAL_ESSENCE = 25;
 	public static final int WARNING_ESSENCE = 25;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
 }
