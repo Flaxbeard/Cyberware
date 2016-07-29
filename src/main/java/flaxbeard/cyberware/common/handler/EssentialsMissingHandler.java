@@ -62,7 +62,7 @@ public class EssentialsMissingHandler
 	
 	private static final UUID speedId = UUID.fromString("fe00fdea-5044-11e6-beb8-9e71128cae77");
 
-	private static boolean last = false;
+	private Map<EntityLivingBase, Boolean> last = new HashMap<EntityLivingBase, Boolean>();
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void handleMissingEssentials(LivingUpdateEvent event)
@@ -127,10 +127,10 @@ public class EssentialsMissingHandler
 					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
 					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
 					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
-					last = true;
+					last.put(e,  true);
 	
 				}
-				else if (last)
+				else if (last(e))
 				{
 					e.height = 1.8F;
 					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
@@ -192,6 +192,15 @@ public class EssentialsMissingHandler
 			
 			
 		}
+	}
+	
+	private boolean last(EntityLivingBase e)
+	{
+		if (!last.containsKey(e))
+		{
+			last.put(e, false);
+		}
+		return last.get(e);
 	}
 
 	@SubscribeEvent
