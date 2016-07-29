@@ -294,7 +294,7 @@ public class GuiSurgery extends GuiContainer
 		this.buttonList.add(bodyIcons[3] = new GuiButtonSurgery(4, i + (this.xSize / 2) - 8 - 21, j + 35, 16, 38));
 		this.buttonList.add(bodyIcons[4] = new GuiButtonSurgery(5, i + (this.xSize / 2) - 6 + 7, j + 73, 12, 39));
 		this.buttonList.add(bodyIcons[5] = new GuiButtonSurgery(6, i + (this.xSize / 2) - 6 - 7, j + 73, 12, 39));
-		this.buttonList.add(back = new BackButton(7, i + this.xSize - 25, j + 5, true));
+		this.buttonList.add(back = new BackButton(8, i + this.xSize - 25, j + 5, true));
 		back.visible = false;
 		
 		this.buttonList.add(bodyIcons[6] = new GuiButtonSurgery(7, 
@@ -344,7 +344,7 @@ public class GuiSurgery extends GuiContainer
 	{
 		if (button.enabled)
 		{
-			if (button.id == 7)
+			if (button.id == 8)
 			{
 				if (page != 0 || ease.rotation != 0)
 				{
