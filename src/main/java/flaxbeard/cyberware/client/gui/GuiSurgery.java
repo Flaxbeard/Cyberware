@@ -2,13 +2,13 @@ package flaxbeard.cyberware.client.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelBase;
@@ -30,9 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
-import scala.actors.threadpool.Arrays;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
