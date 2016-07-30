@@ -637,11 +637,11 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 					this.essence -= ware.getEssenceCost(ret);
 					
-					if ((ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerConsumption(ret) > 0) || ware == CyberwareContent.creativeBattery)
+					if (ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerConsumption(ret) > 0)
 					{
 						hasConsume = true;
 					}
-					if (ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerProduction(ret) > 0)
+					if (ware instanceof ItemCyberware && (((ItemCyberware) ware).getPowerProduction(ret) > 0 || ware == CyberwareContent.creativeBattery))
 					{
 						hasProduce = true;
 					}
