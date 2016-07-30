@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
@@ -126,6 +127,8 @@ public class ItemBrainUpgrade extends ItemCyberware
 		{
 			IBlockState state = event.getState();
 			ItemStack tool = p.getHeldItem(EnumHand.MAIN_HAND);
+			
+			if (tool != null && (tool.getItem() instanceof ItemSword || tool.getItem().getUnlocalizedName().contains("sword"))) return;
 			
 			if (isToolEffective(tool, state)) return;
 			
