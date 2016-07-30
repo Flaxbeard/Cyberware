@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -56,8 +57,9 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		essence = maxEssence = CyberwareConfig.ESSENCE;
 		for (int i = 0; i < wares.length; i++)
 		{
-			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]);
+			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]).clone();
 		}
+		this.updateEssential();
 		this.updateCapacity();
 	}
 	
@@ -83,6 +85,43 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			specialCap += battery.getCapacity(item);
 		}
 		return powerCap + specialCap;
+	}
+	
+	public void updateEssential()
+	{
+		missingEssentials = new boolean[EnumSlot.values().length * 2];
+		for (int slotNum = 0; slotNum < EnumSlot.values().length; slotNum++)
+		{
+			EnumSlot slot = EnumSlot.values()[slotNum];
+			for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
+			{
+				ItemStack stack = wares[slotNum][i];
+				
+				if (stack != null)
+				{
+					ICyberware ware = CyberwareAPI.getCyberware(stack);
+					if (ware.isEssential(stack))
+					{
+						if (slot.isSided() && ware instanceof ISidedLimb)
+						{
+							if (((ISidedLimb) ware).getSide(stack) == EnumSide.LEFT )
+							{
+								setHasEssential(slot, true, this.hasEssential(slot, EnumSide.RIGHT));
+							}
+							else
+							{
+								setHasEssential(slot, this.hasEssential(slot, EnumSide.LEFT), true);
+							}
+						}
+						else
+						{
+							setHasEssential(slot, true, true);
+						}
+					}
+					
+				}
+			}
+		}
 	}
 	
 	@Override

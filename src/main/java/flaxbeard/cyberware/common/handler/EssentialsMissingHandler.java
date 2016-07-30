@@ -63,7 +63,8 @@ public class EssentialsMissingHandler
 	private static final UUID speedId = UUID.fromString("fe00fdea-5044-11e6-beb8-9e71128cae77");
 
 	private Map<EntityLivingBase, Boolean> last = new HashMap<EntityLivingBase, Boolean>();
-	
+	private Map<EntityLivingBase, Boolean> lastClient = new HashMap<EntityLivingBase, Boolean>();
+
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void handleMissingEssentials(LivingUpdateEvent event)
 	{
@@ -105,6 +106,7 @@ public class EssentialsMissingHandler
 			{
 				numMissingLegs++;
 				numMissingLegsVisible++;
+
 			}
 			
 			ItemStack legLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 2));
@@ -119,23 +121,43 @@ public class EssentialsMissingHandler
 				numMissingLegs++;
 			}
 			
+
 			if (e instanceof EntityPlayer)
 			{
+		
+				
 				if (numMissingLegsVisible == 2)
 				{
 					e.height = 1.8F - (10F / 16F);
 					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
 					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
 					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
-					last.put(e,  true);
+					
+					if (e.worldObj.isRemote)
+					{
+						lastClient.put(e, true);
+					}
+					else
+					{
+						last.put(e, true);
+					}
 	
 				}
-				else if (last(e))
+				else if (last(e.worldObj.isRemote, e))
 				{
 					e.height = 1.8F;
 					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
 					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
 					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+					
+					if (e.worldObj.isRemote)
+					{
+						lastClient.put(e, false);
+					}
+					else
+					{
+						last.put(e, false);
+					}
 				}
 			}
 			
@@ -194,14 +216,26 @@ public class EssentialsMissingHandler
 		}
 	}
 	
-	private boolean last(EntityLivingBase e)
+	private boolean last(boolean remote, EntityLivingBase e)
 	{
-		if (!last.containsKey(e))
+		if (remote)
 		{
-			last.put(e, false);
+			if (!lastClient.containsKey(e))
+			{
+				lastClient.put(e, false);
+			}
+			return lastClient.get(e);
 		}
-		return last.get(e);
+		else
+		{
+			if (!last.containsKey(e))
+			{
+				last.put(e, false);
+			}
+			return last.get(e);
+		}
 	}
+	
 
 	@SubscribeEvent
 	public void handleJump(LivingJumpEvent event)
