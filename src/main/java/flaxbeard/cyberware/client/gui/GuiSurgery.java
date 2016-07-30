@@ -1181,7 +1181,7 @@ public class GuiSurgery extends GuiContainer
 		if (slotIn instanceof SlotSurgery)
 		{
 			SlotSurgery surgerySlot = (SlotSurgery) slotIn;
-			if (surgerySlot.getStack() == null && surgerySlot.getPlayerStack() != null)
+			if (surgerySlot.getStack() == null && surgerySlot.getPlayerStack() != null && this.mc.thePlayer.inventory.getItemStack() == null)
 			{
 				int number = surgerySlot.slotNumber;
 				
