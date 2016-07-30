@@ -179,9 +179,9 @@ public class CyberwareContent
 		handUpgrades.setWeights(RARE, RARE, RARE);
 		
 		legUpgrades = new ItemLegUpgrade("legUpgrades", EnumSlot.LEG,
-				new String[] { "jumpBoost" });
-		legUpgrades.setEssenceCost(3);
-		legUpgrades.setWeights(UNCOMMON);
+				new String[] { "jumpBoost", "aquaticLegs" });
+		legUpgrades.setEssenceCost(3, 2);
+		legUpgrades.setWeights(UNCOMMON, UNCOMMON);
 		
 		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
 				new String[] { "spurs" });
