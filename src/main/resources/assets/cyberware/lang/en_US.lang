@@ -103,6 +103,8 @@ cyberware.gui.noEssence=No essence, will cause death
 cyberware.gui.criticalEssence=Low essence, will cause rejection
 cyberware.gui.back=Back (or Right Mouse Button)
 cyberware.gui.noPower=No power production
+cyberware.gui.remove=(Click to remove)
+cyberware.gui.add=(Click to add %1$s)
 
 cyberware.tooltip.shiftPrompt=Hold shift for more info
 cyberware.tooltip.requires=Requires

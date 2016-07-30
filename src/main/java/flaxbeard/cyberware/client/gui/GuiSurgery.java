@@ -24,7 +24,9 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
@@ -584,25 +586,55 @@ public class GuiSurgery extends GuiContainer
 		
 		GL11.glDisable(GL11.GL_BLEND);
 
+		boolean ghost = false;
+		boolean add = false;
+		
 		// See if a red 'slot' is hovered
 		Slot slot = getSlotAtPosition(mouseX, mouseY + 26);
 		if (slot == null || !(slot instanceof SlotSurgery))
 		{
 			// Otherwise, see if a blue slot is hovered and a ghost item carries over
+			ghost = true;
 			slot = getSlotAtPosition(mouseX, mouseY);
-			if (slot != null && (slot.getStack() != null || (slot instanceof SlotSurgery && ((SlotSurgery) slot).slotDiscarded())))
+			if (slot != null && (slot.getStack() != null))
 			{
 				slot = null;
 			}
+			
+			if ((slot instanceof SlotSurgery && ((SlotSurgery) slot).slotDiscarded()))
+			{
+				if (((SlotSurgery) slot).getPlayerStack() != null)
+				{
+					if (this.mc.thePlayer.inventory.getItemStack() == null)
+					{
+						add = true;
+					}
+					else
+					{
+						slot = null;
+					}
+				}
+				
+			}
 		}
-		
+			
 		// Draw the tooltip if there is a red slot item or ghost item that needs one drawn
 		if (slot != null && slot instanceof SlotSurgery)
 		{
+
 			ItemStack stack = ((SlotSurgery) slot).getPlayerStack();
-			if (stack != null)
+			if (add)
 			{
-				this.renderToolTip(stack, mouseX, mouseY);
+				List<String> l = new ArrayList<String>();
+				l.add(I18n.format("cyberware.gui.add", I18n.format(stack.getUnlocalizedName() + ".name")));
+				this.drawHoveringText(l, mouseX, mouseY, fontRendererObj);
+			}
+			else
+			{
+				if (stack != null)
+				{
+					this.renderToolTip(stack, mouseX, mouseY, ghost);
+				}
 			}
 		}
 		
@@ -1060,11 +1092,11 @@ public class GuiSurgery extends GuiContainer
 		if (page == 0 && this.transitionStart == 0)
 		{
 			String s = "_" + Minecraft.getMinecraft().thePlayer.getName().toUpperCase();
-			this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 115, 0x1C7B8C);
+			this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 115, 0x1DA9C1);
 		}
 		
 		String s = surgery.essence + " / " + surgery.maxEssence;
-		this.fontRendererObj.drawString(s, 18, 6, 0x1C7B8C);
+		this.fontRendererObj.drawString(s, 18, 6, 0x1DA9C1);
 		
 		GL11.glPopMatrix();
 		
@@ -1210,4 +1242,28 @@ public class GuiSurgery extends GuiContainer
 		}
 	}
 
+	protected void renderToolTip(ItemStack stack, int x, int y, boolean ghostItem)
+	{
+		List<String> list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+
+		for (int i = 0; i < list.size(); ++i)
+		{
+			if (i == 0)
+			{
+				list.set(i, stack.getRarity().rarityColor + (String)list.get(i));
+			}
+			else
+			{
+				list.set(i, TextFormatting.GRAY + (String)list.get(i));
+			}
+		}
+		
+		if (ghostItem)
+		{
+			list.add(1, I18n.format("cyberware.gui.remove"));
+		}
+
+		FontRenderer font = stack.getItem().getFontRenderer(stack);
+		this.drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
+	}
 }
