@@ -25,6 +25,7 @@ import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
 import flaxbeard.cyberware.common.item.ItemCyberware;
@@ -636,7 +637,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 					this.essence -= ware.getEssenceCost(ret);
 					
-					if (ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerConsumption(ret) > 0)
+					if ((ware instanceof ItemCyberware && ((ItemCyberware) ware).getPowerConsumption(ret) > 0) || ware == CyberwareContent.creativeBattery)
 					{
 						hasConsume = true;
 					}
