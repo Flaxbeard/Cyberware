@@ -105,6 +105,11 @@ cyberware.gui.back=Back (or Right Mouse Button)
 cyberware.gui.noPower=No power production
 cyberware.gui.remove=(Click to remove)
 cyberware.gui.add=(Click to add %1$s)
+cyberware.gui.index=Index
+cyberware.gui.click=Click to view
+cyberware.gui.installed=Cyberware Post-Surgery
+cyberware.gui.added=(Will be added)
+cyberware.gui.removed=(Will be removed)
 
 cyberware.tooltip.shiftPrompt=Hold shift for more info
 cyberware.tooltip.requires=Requires
