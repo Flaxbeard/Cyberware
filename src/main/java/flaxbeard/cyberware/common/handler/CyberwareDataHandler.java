@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -94,7 +95,7 @@ public class CyberwareDataHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleSpawn(SpecialSpawn event)
 	{
-		if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie))
+		if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
 			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (CyberwareConfig.ZOMBIE_RARITY / 100F))) return;
 			
