@@ -23,6 +23,7 @@ import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
+import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
 import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
 import flaxbeard.cyberware.common.item.ItemBrainUpgrade;
@@ -219,6 +220,11 @@ public class CyberwareContent
 		if (Loader.isModLoaded("Botania"))
 		{
 			BotaniaIntegration.preInit();
+		}
+		
+		if (Loader.isModLoaded("ToughAsNails"))
+		{
+			ToughAsNailsIntegration.preInit();
 		}
 	}
 	

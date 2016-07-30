@@ -1,5 +1,6 @@
 package flaxbeard.cyberware.common.lib;
 
+
 public class LibConstants
 {
 	public static final int WARE_PER_SLOT = 10;
@@ -25,4 +26,7 @@ public class LibConstants
 	public static final int LIMB_CONSUMPTION = 10;
 	public static final int WARNING_ESSENCE = 25;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
+	
+	// Tough As Nails
+	public static final int SWEAT_TEMP = 18;
 }

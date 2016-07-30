@@ -64,6 +64,8 @@ item.cyberware.handUpgrades.claws.name=Retractable Claws
 item.cyberware.handUpgrades.mining.name=Reinforced Fist
 item.cyberware.footUpgrades.spurs.name=Implanted Spurs
 item.cyberware.legUpgrades.jumpBoost.name=Linear Actuators
+item.cyberware.toughAsNailsUpgrades.sweat.name=Supercooled Sweat Glands
+item.cyberware.toughAsNailsUpgrades.blubber.name=Blubber
 
 item.cyberware.neuropozyne.name=Neuropozyne
 
@@ -186,6 +188,8 @@ cyberware.tooltip.handUpgrades.1=Stronger unarmed attacks
 cyberware.tooltip.handUpgrades.2=Hands mine at stone level
 cyberware.tooltip.footUpgrades.0=Speed up horses
 cyberware.tooltip.legUpgrades.0=Jump higher\nShift jump to launch yourself\nMore powerful with two Cyberlegs
+cyberware.tooltip.toughAsNailsUpgrades.0=Cool off when hot\nusing thirst
+cyberware.tooltip.toughAsNailsUpgrades.1=Keeps you warm
 
 # DAMAGE TYPE
 death.attack.cyberware.brainless=If only %1$s had a brain
