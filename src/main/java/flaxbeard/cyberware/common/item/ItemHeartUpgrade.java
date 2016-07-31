@@ -241,21 +241,29 @@ public class ItemHeartUpgrade extends ItemCyberware
 	
 	private int getPlateletTime(EntityLivingBase e)
 	{
-		if (!timesPlatelets.containsKey(e))
+		if (e != null)
 		{
-			timesPlatelets.put(e, e.ticksExisted);
+			if (!timesPlatelets.containsKey(e))
+			{
+				timesPlatelets.put(e, e.ticksExisted);
+			}
+			return e.ticksExisted - timesPlatelets.get(e);
 		}
-		return e.ticksExisted - timesPlatelets.get(e);
+		return 0;
 	}
 	
 	private int getMedkitTime(EntityLivingBase e)
 	{
-		if (!timesMedkit.containsKey(e))
+		if (e != null)
 		{
-			timesMedkit.put(e, e.ticksExisted);
-			damageMedkit.put(e, 0F);
+			if (!timesMedkit.containsKey(e))
+			{
+				timesMedkit.put(e, e.ticksExisted);
+				damageMedkit.put(e, 0F);
+			}
+			return e.ticksExisted - timesMedkit.get(e);
 		}
-		return e.ticksExisted - timesMedkit.get(e);
+		return 0;
 	}
 	
 	@SubscribeEvent
