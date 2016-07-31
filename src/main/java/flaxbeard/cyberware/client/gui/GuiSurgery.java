@@ -34,7 +34,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
 import flaxbeard.cyberware.client.render.ModelBox;

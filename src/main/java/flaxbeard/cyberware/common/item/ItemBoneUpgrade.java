@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket;

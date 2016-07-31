@@ -14,16 +14,18 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.ICyberware;
-import flaxbeard.cyberware.api.ICyberwareTabItem;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem;
+import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
 
-public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
+public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem, IDeconstructable
 {
 	private EnumSlot[] slots;
 	public String[] subnames;
 	private int[] essence;
+	private ItemStack[][] components;
 	
 	public ItemCyberware(String name, EnumSlot[] slots, String[] subnames)
 	{		
@@ -40,6 +42,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 		this.setHasSubtypes(this.subnames.length > 0);
 		this.setMaxDamage(0);
 		this.essence = new int[subnames.length + 1];
+		this.components = new ItemStack[0][0];
 
         CyberwareContent.items.add(this);
 	}
@@ -69,6 +72,12 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 	public ItemCyberware setEssenceCost(int... essence)
 	{
 		this.essence = essence;
+		return this;
+	}
+	
+	public ItemCyberware setComponents(ItemStack[]... components)
+	{
+		this.components = components;
 		return this;
 	}
 	
@@ -309,5 +318,17 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 
 	@Override
 	public void onRemoved(EntityLivingBase entity, ItemStack stack) {}
+
+	@Override
+	public boolean canDestroy(ItemStack stack)
+	{
+		return stack.getItemDamage() < this.components.length;
+	}
+
+	@Override
+	public ItemStack[] getComponents(ItemStack stack)
+	{
+		return components[Math.min(this.components.length - 1, stack.getItemDamage())];
+	}
 	
 }

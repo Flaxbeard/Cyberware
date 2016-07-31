@@ -34,8 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Objects;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.render.RenderCyberlimbHand;
 import flaxbeard.cyberware.client.render.RenderPlayerCyberware;

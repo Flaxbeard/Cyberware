@@ -10,7 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class CyberwareConfig

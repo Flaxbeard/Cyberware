@@ -48,7 +48,7 @@ public class BlockCharger extends BlockContainer
 		this.setCreativeTab(Cyberware.creativeTab);
 		GameRegistry.registerTileEntity(TileEntityCharger.class, Cyberware.MODID + ":" + name);
 		
-        CyberwareContent.blocks.add(this);
+		CyberwareContent.blocks.add(this);
 	}
 
 	@Override

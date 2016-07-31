@@ -1,6 +1,6 @@
 package flaxbeard.cyberware.common.block.item;
 
-import flaxbeard.cyberware.api.ICyberwareTabItem;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;

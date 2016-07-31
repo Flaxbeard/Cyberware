@@ -1,7 +1,7 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import io.netty.buffer.ByteBuf;
 
 import java.util.concurrent.Callable;

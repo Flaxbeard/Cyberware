@@ -2,8 +2,8 @@ package flaxbeard.cyberware.common.item;
 
 import net.minecraft.item.ItemStack;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 
 public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 {

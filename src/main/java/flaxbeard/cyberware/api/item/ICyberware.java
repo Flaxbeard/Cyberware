@@ -1,4 +1,4 @@
-package flaxbeard.cyberware.api;
+package flaxbeard.cyberware.api.item;
 
 import java.util.List;
 

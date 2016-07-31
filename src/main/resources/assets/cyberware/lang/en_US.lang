@@ -2,6 +2,7 @@
 tile.cyberware.surgery.name=Robosurgeon
 item.cyberware.surgeryChamber.name=Surgery Chamber
 tile.cyberware.charger.name=Cyberware Charger
+tile.cyberware.engineeringTable.name=Cyberware Engineering Table
 
 # ITEMS
 item.cyberware.bodyPart.brain.name=Human Brain
@@ -111,6 +112,11 @@ cyberware.gui.installed=Cyberware Post-Surgery
 cyberware.gui.added=(Will be added)
 cyberware.gui.removed=(Will be removed)
 
+cyberware.gui.destroy=Void Warranty
+cyberware.gui.toDestroy=Insert Cyberware to Destroy
+cyberware.gui.paper=Insert Paper
+cyberware.gui.blueprint=Insert Cyberware Blueprint
+
 cyberware.tooltip.shiftPrompt=Hold shift for more info
 cyberware.tooltip.requires=Requires
 cyberware.tooltip.joiner=,
@@ -205,3 +211,6 @@ death.attack.cyberware.noessence=%1$s lost their humanity
 # COMMAND
 cyberware.commands.clearCyberware.usage=Usage: /clearcyberware [player]
 cyberware.commands.clearCyberware.success=Cleared the Cyberware of %1$s
+
+# MISC
+cyberware.container.engineering=Cyberware Engineering

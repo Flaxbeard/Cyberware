@@ -1,7 +1,7 @@
-package flaxbeard.cyberware.api;
+package flaxbeard.cyberware.api.item;
 
 import net.minecraft.item.ItemStack;
-import flaxbeard.cyberware.api.ICyberwareTabItem.EnumCategory;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem.EnumCategory;
 
 public interface ICyberwareTabItem
 {	

@@ -37,8 +37,8 @@ import com.google.common.collect.HashMultimap;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.CyberwareConfig;

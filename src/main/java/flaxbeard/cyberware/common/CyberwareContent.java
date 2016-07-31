@@ -16,8 +16,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.BlockCharger;
+import flaxbeard.cyberware.common.block.BlockEngineeringTable;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
@@ -55,6 +56,9 @@ public class CyberwareContent
 	public static Block surgeryApparatus;
 	public static BlockSurgeryChamber surgeryChamber;
 	public static Block charger;
+	public static Block engineering;
+	
+	
 	public static Item bodyPart;
 	public static ItemCyberware cybereyes;
 	public static ItemCyberware cybereyeUpgrades;
@@ -106,6 +110,7 @@ public class CyberwareContent
 		surgeryApparatus = new BlockSurgery();
 		surgeryChamber = new BlockSurgeryChamber();
 		charger = new BlockCharger();
+		engineering = new BlockEngineeringTable();
 		
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 
@@ -117,6 +122,7 @@ public class CyberwareContent
 		cybereyes = new ItemCybereyes("cybereyes", EnumSlot.EYES);
 		cybereyes.setEssenceCost(10);
 		cybereyes.setWeights(UNCOMMON);
+		cybereyes.setComponents(new ItemStack[] { new ItemStack(Items.IRON_INGOT, 2, 0), new ItemStack(Items.REDSTONE, 2, 0), new ItemStack(Blocks.GLASS, 1, 0) });
 		
 		cybereyeUpgrades = new ItemCybereyeUpgrade("cybereyeUpgrades", EnumSlot.EYES,
 				new String[] { "nightVision", "underwaterVision", "hudjack", "targeting", "zoom" });

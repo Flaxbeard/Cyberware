@@ -6,11 +6,13 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -18,22 +20,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
-import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
+import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 
-public class BlockSurgery extends BlockContainer
+public class BlockEngineeringTable extends BlockContainer
 {
 
-	public BlockSurgery()
+	public BlockEngineeringTable()
 	{
 		super(Material.IRON);
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setSoundType(SoundType.METAL);
 		
-		String name = "surgery";
+		String name = "engineeringTable";
 		
 		this.setRegistryName(name);
 		GameRegistry.register(this);
@@ -45,15 +46,29 @@ public class BlockSurgery extends BlockContainer
 		this.setUnlocalizedName(Cyberware.MODID + "." + name);
 
 		this.setCreativeTab(Cyberware.creativeTab);
-		GameRegistry.registerTileEntity(TileEntitySurgery.class, Cyberware.MODID + ":" + name);
+		GameRegistry.registerTileEntity(TileEntityEngineeringTable.class, Cyberware.MODID + ":" + name);
 		
 		CyberwareContent.blocks.add(this);
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		if (stack.hasDisplayName())
+		{
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+
+			if (tileentity instanceof TileEntityEngineeringTable)
+			{
+				((TileEntityEngineeringTable) tileentity).setCustomInventoryName(stack.getDisplayName());
+			}
+		}
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileEntitySurgery();
+		return new TileEntityEngineeringTable();
 	}
 	
 	@Override
@@ -67,27 +82,9 @@ public class BlockSurgery extends BlockContainer
 	{
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if (tileentity instanceof TileEntitySurgery)
+		if (tileentity instanceof TileEntityEngineeringTable)
 		{
-			TileEntitySurgery surgery = (TileEntitySurgery) tileentity;
-			/*if (player.isSneaking())
-			{
-				if (CyberwareAPI.hasCapability(player))
-				{
-					surgery.targetEntity = player;
-					surgery.processUpdate();
-					surgery.targetEntity = null;
-					
-				}
-				
-			}
-			else
-			{*/
-
-				surgery.updatePlayerSlots(player);
-				player.openGui(Cyberware.INSTANCE, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-			//}
-			
+			player.openGui(Cyberware.INSTANCE, 2, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;
@@ -99,13 +96,13 @@ public class BlockSurgery extends BlockContainer
 	{ 
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity instanceof TileEntitySurgery && !worldIn.isRemote)
+		if (tileentity instanceof TileEntityEngineeringTable && !worldIn.isRemote)
 		{
-			TileEntitySurgery surgery = (TileEntitySurgery) tileentity;
+			TileEntityEngineeringTable engineering = (TileEntityEngineeringTable) tileentity;
 			
-			for (int i = 0; i < surgery.slots.getSlots(); i++)
+			for (int i = 0; i < engineering.slots.getSlots(); i++)
 			{
-				ItemStack stack = surgery.slots.getStackInSlot(i);
+				ItemStack stack = engineering.slots.getStackInSlot(i);
 				if (stack != null)
 				{
 					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);

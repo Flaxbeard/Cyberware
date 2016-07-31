@@ -16,8 +16,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemCyberlimb extends ItemCyberware implements ISidedLimb

@@ -23,9 +23,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
 

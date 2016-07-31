@@ -17,6 +17,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.oredict.OreDictionary;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
@@ -95,6 +97,38 @@ public final class CyberwareAPI
 		}
 		
 		throw new RuntimeException("Cannot call getCyberware on a non-cyberware item!");
+	}
+	
+	/**
+	 * Determines if the inputted item stack can be destroyed in the Engineering Table,
+	 * meaning it implements IDeconstructable.
+	 * 
+	 * @param stack	The ItemStack to test
+	 * @return		If the stack can be deconstructed.
+	 */
+	public static boolean canDeconstruct(ItemStack stack)
+	{
+		return stack != null && (stack.getItem() instanceof IDeconstructable) && ((IDeconstructable) stack.getItem()).canDestroy(stack);
+	}
+
+	/**
+	 * Returns a list of ItemStacks containing the components of a destructable
+	 * item.
+	 * 
+	 * @param stack	The ItemStack to test
+	 * @return		The components of the item
+	 */
+	public static ItemStack[] getComponents(ItemStack stack)
+	{
+		if (stack != null)
+		{
+			if (stack.getItem() instanceof IDeconstructable)
+			{
+				return ((IDeconstructable) stack.getItem()).getComponents(stack);
+			}
+		}
+		
+		throw new RuntimeException("Cannot call getComponents on a non-cyberware item!");
 	}
 	
 	private static ICyberware getLinkedWare(ItemStack stack)

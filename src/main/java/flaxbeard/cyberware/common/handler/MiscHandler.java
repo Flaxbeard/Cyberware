@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.misc.CommandClearCyberware;
 

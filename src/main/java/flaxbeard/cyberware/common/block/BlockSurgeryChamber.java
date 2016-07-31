@@ -128,34 +128,34 @@ public class BlockSurgeryChamber extends BlockContainer
 	}
 	
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+	{
 		boolean top = state.getValue(HALF) == EnumChamberHalf.UPPER;
 		if (canOpen(top ? pos : pos.up(), worldIn))
 		{
 			toggleDoor(top, state, pos, worldIn);
-	        
-	        notifySurgeon(top ? pos : pos.up(), worldIn);
+			
+			notifySurgeon(top ? pos : pos.up(), worldIn);
 		}
-        
-        return true;
-    }
+		
+		return true;
+	}
 	
 	public void toggleDoor(boolean top, IBlockState state, BlockPos pos, World worldIn)
 	{
 		state = state.cycleProperty(OPEN);
-        worldIn.setBlockState(pos, state, 2);
-        
-        BlockPos otherPos = pos.up();
-        if (top)
+		worldIn.setBlockState(pos, state, 2);
+		
+		BlockPos otherPos = pos.up();
+		if (top)
 		{
-        	otherPos = pos.down();
+			otherPos = pos.down();
 		}
-        IBlockState otherState = worldIn.getBlockState(otherPos);
+		IBlockState otherState = worldIn.getBlockState(otherPos);
 
-        if (otherState.getBlock() == this)
+		if (otherState.getBlock() == this)
 		{
-        	otherState = otherState.cycleProperty(OPEN);
-        	worldIn.setBlockState(otherPos, otherState, 2);
+			otherState = otherState.cycleProperty(OPEN);
+			worldIn.setBlockState(otherPos, otherState, 2);
 		}
 	}
 	
