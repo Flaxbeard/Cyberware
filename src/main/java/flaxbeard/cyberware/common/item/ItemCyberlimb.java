@@ -1,7 +1,7 @@
 package flaxbeard.cyberware.common.item;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -68,13 +68,13 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 		return stack.getTagCompound().getBoolean("active");
 	}
 	
-	private List<Integer> didFall = new ArrayList<Integer>();
+	private Set<Integer> didFall = new HashSet<Integer>();
 	
 	@SubscribeEvent
 	public void handleFallDamage(LivingAttackEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
-		if (e.worldObj.isRemote && CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 2)) || CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 3)) && event.getSource() == DamageSource.fall)
+		if (e.worldObj.isRemote && (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 2)) || CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 3))) && event.getSource() == DamageSource.fall)
 		{
 			if (!didFall.contains(e.getEntityId()))
 			{
