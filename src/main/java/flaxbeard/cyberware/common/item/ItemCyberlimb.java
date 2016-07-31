@@ -1,9 +1,17 @@
 package flaxbeard.cyberware.common.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -58,6 +66,51 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 			stack.getTagCompound().setBoolean("active", true);
 		}
 		return stack.getTagCompound().getBoolean("active");
+	}
+	
+	private List<Integer> didFall = new ArrayList<Integer>();
+	
+	@SubscribeEvent
+	public void handleFallDamage(LivingAttackEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		if (e.worldObj.isRemote && CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 2)) || CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 3)) && event.getSource() == DamageSource.fall)
+		{
+			if (!didFall.contains(e.getEntityId()))
+			{
+				didFall.add(e.getEntityId());
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void handleSound(PlaySoundAtEntityEvent event)
+	{
+		Entity e = event.getEntity();
+		if (event.getSound() == SoundEvents.ENTITY_PLAYER_HURT && e.worldObj.isRemote)
+		{
+			if (didFall.contains(e.getEntityId()))
+			{
+				int numLegs = 0;
+				
+				if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 2)))
+				{
+					numLegs++;
+				}
+				
+				if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 3)))
+				{
+					numLegs++;
+				}
+				
+				if (numLegs > 0)
+				{	
+					event.setSound(SoundEvents.ENTITY_IRONGOLEM_HURT);
+					event.setPitch(event.getPitch() + 1F);
+					didFall.remove((Integer) e.getEntityId());
+				}
+			}
+		}	
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
