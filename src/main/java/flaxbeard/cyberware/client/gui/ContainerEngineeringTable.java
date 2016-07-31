@@ -11,6 +11,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -30,10 +32,17 @@ public class ContainerEngineeringTable extends Container
 			return true;
 		}
 		
+		
+		
 		@Override
 		public void onSlotChanged()
 		{
 			engineering.markDirty();
+			
+			if (this.slotNumber >= 2 && this.slotNumber <= 8)
+			{
+				engineering.updateRecipe();
+			}
 		}
 		
 		@Override
@@ -92,6 +101,8 @@ public class ContainerEngineeringTable extends Container
 		{
 			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
 		}
+		
+		engineering.updateRecipe();
 	}
 	
 	@Override
@@ -105,30 +116,64 @@ public class ContainerEngineeringTable extends Container
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(index);
-	
+		boolean doUpdate = false;
 		if (slot != null && slot.getHasStack())
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-	
-			if (!(slot instanceof SlotEngineering))
+
+			if (index == 9)
 			{
-			
-				
-				if (index >= 3 && index < 30)
+				if (!this.mergeItemStack(itemstack1, 10, 46, true))
 				{
-					if (!this.mergeItemStack(itemstack1, 30, 39, false))
+					return null;
+				}
+
+				engineering.subtractResources();
+				doUpdate = true;
+				//slot.onSlotChange(itemstack1, itemstack);
+				//engineering.updateRecipe();
+			}
+			else if (index > 9)
+			{
+				if (engineering.slots.isItemValidForSlot(1, itemstack1))
+				{
+					if (!this.mergeItemStack(itemstack1, 1, 2, false))
 					{
 						return null;
 					}
 				}
-				else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
+				if (engineering.slots.isItemValidForSlot(0, itemstack1))
+				{
+					if (!this.mergeItemStack(itemstack1, 0, 1, false))
+					{
+						return null;
+					}
+				}
+				else if (engineering.slots.isItemValidForSlot(8, itemstack1))
+				{
+					if (!this.mergeItemStack(itemstack1, 8, 9, false))
+					{
+						return null;
+					}
+				}
+				else if (index >= 10 && index < 37)
+				{
+					if (!this.mergeItemStack(itemstack1, 37, 46, false) && !this.mergeItemStack(itemstack1, 2, 8, false))
+					{
+						return null;
+					}
+				}
+				else if (index >= 37 && index < 46 && !this.mergeItemStack(itemstack1, 10, 37, false)  && !this.mergeItemStack(itemstack1, 2, 8, false))
 				{
 					return null;
 				}
 			}
-		
-	
+			else if (!this.mergeItemStack(itemstack1, 10, 46, false))
+			{
+				return null;
+			}
+
 			if (itemstack1.stackSize == 0)
 			{
 				slot.putStack((ItemStack)null);
@@ -137,15 +182,20 @@ public class ContainerEngineeringTable extends Container
 			{
 				slot.onSlotChanged();
 			}
-	
+
 			if (itemstack1.stackSize == itemstack.stackSize)
 			{
 				return null;
 			}
-	
+
 			slot.onPickupFromSlot(playerIn, itemstack1);
 		}
-	
+		
+		if (doUpdate)
+		{
+			engineering.updateRecipe();
+		}
+
 		return itemstack;
 	}
 }

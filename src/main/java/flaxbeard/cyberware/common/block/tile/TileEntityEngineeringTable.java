@@ -11,7 +11,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -24,18 +23,37 @@ public class TileEntityEngineeringTable extends TileEntity
 	public class ItemStackHandlerEngineering extends ItemStackHandler
 	{
 		public boolean overrideExtract = false;
+		private TileEntityEngineeringTable table;
 		
-		public ItemStackHandlerEngineering(int i)
+		public ItemStackHandlerEngineering(TileEntityEngineeringTable table, int i)
 		{
 			super(i);
+			this.table = table;
 		}
+		
+		@Override
+	    public void setStackInSlot(int slot, ItemStack stack)
+	    {
+			super.setStackInSlot(slot, stack);
+			
+			if (slot >= 2 && slot <= 8)
+			{
+				table.updateRecipe();
+			}
+	    }
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 		{
 			if (!isItemValidForSlot(slot, stack)) return stack;
 			
-			return super.insertItem(slot, stack, simulate);
+			ItemStack result = super.insertItem(slot, stack, simulate);
+			
+			if (slot >= 2 && slot <= 8 && !simulate)
+			{
+				table.updateRecipe();
+			}
+			return result;
 		}
 		
 		@Override
@@ -43,12 +61,26 @@ public class TileEntityEngineeringTable extends TileEntity
 		{
 			if (!canRemoveItem(slot)) return null;
 			
-			return super.extractItem(slot, amount, simulate);
+
+			ItemStack result = super.extractItem(slot, amount, simulate);
+			if (slot == 9 && result != null && !simulate)
+			{
+
+				table.subtractResources();
+				
+			}
+			if (slot >= 2 && slot <= 7 && !simulate)
+			{
+				table.updateRecipe();
+			}
+
+			return result;
 		}
 
 		public boolean canRemoveItem(int slot)
 		{
 			if (overrideExtract) return true;
+			if (getStackInSlot(8) != null && (slot >= 2 && slot <= 7)) return false;
 			if (slot == 1 || slot == 8) return false;
 			return true;
 		}
@@ -123,7 +155,7 @@ public class TileEntityEngineeringTable extends TileEntity
 		
 	}
 	
-	public ItemStackHandlerEngineering slots = new ItemStackHandlerEngineering(10);
+	public ItemStackHandlerEngineering slots = new ItemStackHandlerEngineering(this, 10);
 	private final RangedWrapper slotsTopSides = new RangedWrapper(slots, 0, 7);
 	private final SpecificWrapper slotsBottom = new SpecificWrapper(slots, 2, 3, 4, 5, 6, 7, 9);
 	public final GuiWrapper guiSlots = new GuiWrapper(slots);
@@ -139,6 +171,7 @@ public class TileEntityEngineeringTable extends TileEntity
 		return super.hasCapability(capability, facing);
 	}
 	
+
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
@@ -208,5 +241,54 @@ public class TileEntityEngineeringTable extends TileEntity
 	{
 		return (ITextComponent)(this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName(), new Object[0]));
 	}
+
+	public void updateRecipe()
+	{
+		ItemStack blueprintStack = slots.getStackInSlot(8);
+		if (blueprintStack != null && blueprintStack.getItem() instanceof IBlueprint)
+		{
+			IBlueprint blueprint = (IBlueprint) blueprintStack.getItem();
+			ItemStack[] toCheck = new ItemStack[6];
+			for (int i = 0; i < 6; i++)
+			{
+				toCheck[i] = ItemStack.copyItemStack(slots.getStackInSlot(i + 2));
+			}
+			ItemStack result = ItemStack.copyItemStack(blueprint.getResult(blueprintStack, toCheck));
+			if (result != null)
+			{
+				result.stackSize = 1;
+			}
+			this.slots.setStackInSlot(9, result);
+		}
+		else
+		{
+			this.slots.setStackInSlot(9, null);
+		}
+	}
+	
+	public void subtractResources()
+	{
+		ItemStack blueprintStack = slots.getStackInSlot(8);
+		if (blueprintStack != null && blueprintStack.getItem() instanceof IBlueprint)
+		{
+			IBlueprint blueprint = (IBlueprint) blueprintStack.getItem();
+			ItemStack[] toCheck = new ItemStack[6];
+			for (int i = 0; i < 6; i++)
+			{
+				toCheck[i] = ItemStack.copyItemStack(slots.getStackInSlot(i + 2));
+			}
+			ItemStack[] result = blueprint.consumeItems(blueprintStack, toCheck);
+			for (int i = 0; i < 6; i++)
+			{
+				slots.setStackInSlot(i + 2, result[i]);
+			}
+			this.updateRecipe();
+		}
+		else
+		{
+			throw new IllegalStateException("Tried to subtract resources when no blueprint was available!");
+		}
+	}
+
 	
 }

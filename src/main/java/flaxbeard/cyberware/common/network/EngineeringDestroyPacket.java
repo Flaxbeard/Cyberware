@@ -2,6 +2,7 @@ package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
+import flaxbeard.cyberware.common.item.ItemBlueprint;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
@@ -90,8 +91,8 @@ public class EngineeringDestroyPacket implements IMessage
 					ItemStack paperSlot = engineering.slots.getStackInSlot(1);
 					boolean doBlueprint = paperSlot != null && paperSlot.stackSize > 0;
 					
-					ItemStack[] components = CyberwareAPI.getComponents(toDestroy);
-					
+					ItemStack[] components = CyberwareAPI.getComponents(toDestroy).clone();
+
 					List<ItemStack> random = new ArrayList<ItemStack>();
 					for (ItemStack component : components)
 					{
@@ -105,7 +106,6 @@ public class EngineeringDestroyPacket implements IMessage
 							}
 						}
 					}
-					
 					
 					int numToRemove = world.getDifficulty().getDifficultyId() + 1;
 					for (int i = 0; i < numToRemove; i++)
@@ -145,8 +145,7 @@ public class EngineeringDestroyPacket implements IMessage
 					// Check if blueprint will fit
 					if (doBlueprint)
 					{
-						ItemStack left = new ItemStack(Items.PAPER);
-						left.setStackDisplayName("Blueprint");
+						ItemStack left = ItemBlueprint.getBlueprintForItem(toDestroy);
 						boolean wasAble = false;
 						for (int slot = 0; slot < 6; slot++)
 						{
@@ -169,8 +168,7 @@ public class EngineeringDestroyPacket implements IMessage
 					{
 						if (doBlueprint && engineering.getWorld().rand.nextFloat() < 0.33F)
 						{
-							ItemStack blue = new ItemStack(Items.PAPER);
-							blue.setStackDisplayName("Blueprint");
+							ItemStack blue = ItemBlueprint.getBlueprintForItem(toDestroy);
 							random.add(blue);
 							
 							ItemStack current = engineering.slots.getStackInSlot(1);
@@ -185,6 +183,18 @@ public class EngineeringDestroyPacket implements IMessage
 						for (ItemStack drop : random)
 						{
 							ItemStack dropLeft = drop.copy();
+							for (int slot = 2; slot < 8; slot++)
+							{
+								if (engineering.slots.getStackInSlot(slot) != null)
+								{
+									dropLeft = engineering.slots.insertItem(slot, dropLeft, false);
+									if (dropLeft == null)
+									{
+										break;
+									}
+								}
+							}
+							
 							for (int slot = 2; slot < 8; slot++)
 							{
 								dropLeft = engineering.slots.insertItem(slot, dropLeft, false);
@@ -202,6 +212,7 @@ public class EngineeringDestroyPacket implements IMessage
 							current = null;
 						}
 						engineering.slots.setStackInSlot(0, current);
+						engineering.updateRecipe();
 					}
 				}
 

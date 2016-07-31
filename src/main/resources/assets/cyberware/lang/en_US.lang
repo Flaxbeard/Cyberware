@@ -67,6 +67,8 @@ item.cyberware.footUpgrades.spurs.name=Implanted Spurs
 item.cyberware.legUpgrades.jumpBoost.name=Linear Actuators
 
 item.cyberware.neuropozyne.name=Neuropozyne
+item.cyberware.blueprint.name=Blank Blueprint
+item.cyberware.blueprint.notBlank.name=%1$s Blueprint
 
 # TOOLTIPS
 itemGroup.cyberware=Cyberware
@@ -124,6 +126,8 @@ cyberware.tooltip.joinerOr=or
 
 cyberware.tooltip.neuropozyne=Anti-Rejection (20:00)
 cyberware.potion.neuropozyne=Anti-Rejection
+
+cyberware.tooltip.blueprint=Creates %1$s
 
 cyberware.tooltip.powerConsumption=Requires%1$s pow/s when in use
 cyberware.tooltip.powerProduction=Produces%1$s pow/s when in use

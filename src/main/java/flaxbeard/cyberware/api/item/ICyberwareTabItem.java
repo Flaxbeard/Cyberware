@@ -21,8 +21,6 @@ public interface ICyberwareTabItem
 		HAND,
 		LEG,
 		FOOT;
-		
-		private EnumCategory() {}
 	}
 
 	public EnumCategory getCategory(ItemStack stack);

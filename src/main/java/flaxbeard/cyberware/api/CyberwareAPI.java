@@ -124,7 +124,7 @@ public final class CyberwareAPI
 		{
 			if (stack.getItem() instanceof IDeconstructable)
 			{
-				return ((IDeconstructable) stack.getItem()).getComponents(stack);
+				return ((IDeconstructable) stack.getItem()).getComponents(stack).clone();
 			}
 		}
 		

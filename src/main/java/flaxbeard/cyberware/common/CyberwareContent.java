@@ -24,6 +24,7 @@ import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
+import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
 import flaxbeard.cyberware.common.item.ItemBrainUpgrade;
@@ -78,6 +79,7 @@ public class CyberwareContent
 	public static ItemCyberware cyberlimbs;
 	public static ItemCyberware creativeBattery;
 	public static Item neuropozyne;
+	public static Item blueprint;
 
 	public static Potion neuropozyneEffect;
 
@@ -113,6 +115,7 @@ public class CyberwareContent
 		engineering = new BlockEngineeringTable();
 		
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
+		blueprint = new ItemBlueprint("blueprint");
 
 		bodyPart = new ItemBodyPart("bodyPart", 
 				new EnumSlot[] { EnumSlot.EYES, EnumSlot.CRANIUM, EnumSlot.HEART, EnumSlot.LUNGS, EnumSlot.LOWER_ORGANS, EnumSlot.SKIN, EnumSlot.MUSCLE, EnumSlot.BONE, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },

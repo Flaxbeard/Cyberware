@@ -304,7 +304,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 	@Override
 	public EnumCategory getCategory(ItemStack stack)
 	{
-		return EnumCategory.values()[this.getSlot(stack).ordinal() + 2];
+		return EnumCategory.values()[this.getSlot(stack).ordinal()];
 	}
 
 	@Override
