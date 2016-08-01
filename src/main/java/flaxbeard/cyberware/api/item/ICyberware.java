@@ -1,5 +1,6 @@
 package flaxbeard.cyberware.api.item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,25 +33,30 @@ public interface ICyberware
 	public Quality getQuality(ItemStack stack);
 	
 	public ItemStack setQuality(ItemStack stack, Quality quality);
-	
+	public boolean canHoldQuality(ItemStack stack, Quality quality);
+
 	public class Quality
 	{
 		private static Map<String, Quality> mapping = new HashMap<String, Quality>();
+		public static List<Quality> qualities = new ArrayList<Quality>();
 		private String unlocalizedName;
 		private ChatFormatting color;
 		private String nameModifier;
-		
+		private String spriteSuffix;
+
 		public Quality(String unlocalizedName, ChatFormatting color)
 		{
-			this(unlocalizedName, color, null);
+			this(unlocalizedName, color, null, null);
 		}
 		
-		public Quality(String unlocalizedName, ChatFormatting color, String nameModifier)
+		public Quality(String unlocalizedName, ChatFormatting color, String nameModifier, String spriteSuffix)
 		{
 			this.unlocalizedName = unlocalizedName;
 			this.color = color;
 			this.nameModifier = nameModifier;
+			this.spriteSuffix = spriteSuffix;
 			mapping.put(unlocalizedName, this);
+			qualities.add(this);
 		}
 		
 		public String getUnlocalizedName()
@@ -75,6 +81,11 @@ public interface ICyberware
 		public String getNameModifier()
 		{
 			return nameModifier;
+		}
+		
+		public String getSpriteSuffix()
+		{
+			return spriteSuffix;
 		}
 	}
 

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
+import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem.EnumCategory;
 import flaxbeard.cyberware.common.CyberwareContent;
@@ -70,7 +71,11 @@ public class TabCyberware extends CreativeTabs
 							{
 								if (CyberwareAPI.isCyberware(stack))
 								{
-									stack = CyberwareAPI.getCyberware(stack).setQuality(stack, q);
+									ICyberware ware = CyberwareAPI.getCyberware(stack);
+									if (ware.canHoldQuality(stack, q))
+									{
+										stack = ware.setQuality(stack, q);
+									}
 								}
 								EnumCategory cat = ((ICyberwareTabItem) stack.getItem()).getCategory(stack);
 								subLists.get(cat).add(stack);

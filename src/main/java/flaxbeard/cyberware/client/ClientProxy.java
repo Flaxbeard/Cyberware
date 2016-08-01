@@ -1,14 +1,20 @@
 package flaxbeard.cyberware.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import flaxbeard.cyberware.api.item.ICyberware.Quality;
+import flaxbeard.cyberware.client.render.CyberwareMeshDefinition;
 import flaxbeard.cyberware.client.render.RenderCyberZombie;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
@@ -72,14 +78,45 @@ public class ClientProxy extends CommonProxy
 	
 	private void registerRenders(Item item)
 	{
-		if (item instanceof ItemCyberware && ((ItemCyberware) item).subnames.length > 0)
+		if (item instanceof ItemCyberware)
 		{
 			ItemCyberware ware = (ItemCyberware) item;
-			for (int i = 0; i < ware.subnames.length; i++)
+			List<ModelResourceLocation> models = new ArrayList<ModelResourceLocation>();
+			if (ware.subnames.length > 0)
 			{
-				ModelLoader.setCustomModelResourceLocation(item, 
-						i, new ModelResourceLocation(item.getRegistryName() + "_" + ware.subnames[i], "inventory"));
+				for (int i = 0; i < ware.subnames.length; i++)
+				{
+					String name = ware.getRegistryName() + "_" + ware.subnames[i];
+					for (Quality q : Quality.qualities)
+					{
+						if (q.getSpriteSuffix() != null && ware.canHoldQuality(new ItemStack(ware, 1, i), q))
+						{
+							System.out.println(name + "_" + q.getSpriteSuffix());
+							models.add(new ModelResourceLocation(name + "_" + q.getSpriteSuffix(), "inventory"));
+						}
+					}
+					System.out.println(name);
+					models.add(new ModelResourceLocation(name, "inventory"));
+				}
 			}
+			else
+			{
+				String name = ware.getRegistryName() + "";
+
+				for (Quality q : Quality.qualities)
+				{
+					if (q.getSpriteSuffix() != null && ware.canHoldQuality(new ItemStack(ware), q))
+					{
+						System.out.println(name + "_" + q.getSpriteSuffix());
+						models.add(new ModelResourceLocation(name + "_" + q.getSpriteSuffix(), "inventory"));
+					}
+				}
+				System.out.println(name);
+				models.add(new ModelResourceLocation(name, "inventory"));
+
+			}
+			ModelLoader.registerItemVariants(item, models.toArray(new ModelResourceLocation[0]));
+			ModelLoader.setCustomMeshDefinition(item, new CyberwareMeshDefinition());
 		}
 		else if (item instanceof ItemBlueprint)
 		{

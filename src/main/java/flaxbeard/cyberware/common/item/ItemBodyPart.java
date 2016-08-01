@@ -60,4 +60,9 @@ public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 		return null;
 	}
 	
+	@Override
+	public boolean canHoldQuality(ItemStack stack, Quality quality)
+	{
+		return false;
+	}
 }

@@ -374,4 +374,10 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 		}
 		return ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
 	}
+
+	@Override
+	public boolean canHoldQuality(ItemStack stack, Quality quality)
+	{
+		return true;
+	}
 }

@@ -160,6 +160,12 @@ public class VanillaWares
 		{
 			return stack;
 		}
+
+		@Override
+		public boolean canHoldQuality(ItemStack stack, Quality quality)
+		{
+			return false;
+		}
 		
 	}
 }
