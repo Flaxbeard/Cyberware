@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/xpCapsule"
+        "layer0": "cyberware:items/expCapsule"
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/underwaterVision"
+        "layer0": "cyberware:items/cybereyeUpgrades_underwaterVision"
     }
 }

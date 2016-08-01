@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/armLeft"
+        "layer0": "cyberware:items/bodyPart_armLeft"
     }
 }

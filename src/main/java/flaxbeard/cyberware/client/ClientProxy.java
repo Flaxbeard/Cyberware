@@ -91,11 +91,9 @@ public class ClientProxy extends CommonProxy
 					{
 						if (q.getSpriteSuffix() != null && ware.canHoldQuality(new ItemStack(ware, 1, i), q))
 						{
-							System.out.println(name + "_" + q.getSpriteSuffix());
 							models.add(new ModelResourceLocation(name + "_" + q.getSpriteSuffix(), "inventory"));
 						}
 					}
-					System.out.println(name);
 					models.add(new ModelResourceLocation(name, "inventory"));
 				}
 			}
@@ -107,11 +105,9 @@ public class ClientProxy extends CommonProxy
 				{
 					if (q.getSpriteSuffix() != null && ware.canHoldQuality(new ItemStack(ware), q))
 					{
-						System.out.println(name + "_" + q.getSpriteSuffix());
 						models.add(new ModelResourceLocation(name + "_" + q.getSpriteSuffix(), "inventory"));
 					}
 				}
-				System.out.println(name);
 				models.add(new ModelResourceLocation(name, "inventory"));
 
 			}

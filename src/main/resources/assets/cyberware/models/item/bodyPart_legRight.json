@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/rightLeg"
+        "layer0": "cyberware:items/bodyPart_legRight"
     }
 }

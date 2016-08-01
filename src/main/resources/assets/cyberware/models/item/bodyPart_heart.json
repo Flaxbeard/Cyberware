@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/heart"
+        "layer0": "cyberware:items/bodyPart_heart"
     }
 }
