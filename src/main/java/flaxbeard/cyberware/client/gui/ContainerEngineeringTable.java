@@ -159,12 +159,12 @@ public class ContainerEngineeringTable extends Container
 				}
 				else if (index >= 10 && index < 37)
 				{
-					if (!this.mergeItemStack(itemstack1, 37, 46, false) && !this.mergeItemStack(itemstack1, 2, 8, false))
+					if (!this.mergeItemStack(itemstack1, 2, 8, false) && !this.mergeItemStack(itemstack1, 37, 46, false))
 					{
 						return null;
 					}
 				}
-				else if (index >= 37 && index < 46 && !this.mergeItemStack(itemstack1, 10, 37, false)  && !this.mergeItemStack(itemstack1, 2, 8, false))
+				else if (index >= 37 && index < 46 && !this.mergeItemStack(itemstack1, 2, 8, false) && !this.mergeItemStack(itemstack1, 10, 37, false) )
 				{
 					return null;
 				}

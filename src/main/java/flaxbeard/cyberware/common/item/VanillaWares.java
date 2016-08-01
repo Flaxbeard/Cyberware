@@ -148,6 +148,18 @@ public class VanillaWares
 		{
 			return 5;
 		}
+
+		@Override
+		public Quality getQuality(ItemStack stack)
+		{
+			return null;
+		}
+
+		@Override
+		public ItemStack setQuality(ItemStack stack, Quality quality)
+		{
+			return stack;
+		}
 		
 	}
 }

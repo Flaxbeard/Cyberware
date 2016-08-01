@@ -17,18 +17,123 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.oredict.OreDictionary;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
 public final class CyberwareAPI
 {
+	/**
+	 * Store any functional data of your Cyberware in NBT under this tag, which will be cleared when new items are added or removed
+	 * to ensure stacking and such works
+	 */
+	public static final String DATA_TAG = "cyberwareFunctionData";
+	
+	public static final String QUALITY_TAG = "cyberwareFunctionData";
+
+	/**
+	 * Quality for Cyberware scavenged from mobs
+	 */
+	public static final Quality QUALITY_SCAVENGED = new Quality("cyberware.quality.scavenged", ChatFormatting.GRAY, "cyberware.quality.scavenged.nameModifier");
+	
+	/**
+	 * Quality for Cyberware built at the Engineering Table
+	 */
+	public static final Quality QUALITY_MANUFACTURED = new Quality("cyberware.quality.manufactured", ChatFormatting.GOLD);
+
 	@CapabilityInject(ICyberwareUserData.class)
 	public static final Capability<ICyberwareUserData> CYBERWARE_CAPABILITY = null;
 	
 	public static Map<ItemStack, ICyberware> linkedWare = new HashMap<ItemStack, ICyberware>();
 	
+	/**
+	 * Can be used by your ICyberware implementation's setQuality function. Helper method that
+	 * writes a quality to an easily accessible NBT tag. See the partner function, readQualityTag
+	 * 
+	 * @param stack	The stack to write to
+	 * @return		The modified stack
+	 */
+	public static ItemStack writeQualityTag(ItemStack stack, Quality quality)
+	{
+		if (stack == null) return stack;
+		if (!stack.hasTagCompound())
+		{
+			stack.setTagCompound(new NBTTagCompound());
+		}
+		stack.getTagCompound().setString(QUALITY_TAG, quality.getUnlocalizedName());
+		return stack;
+	}
+	
+	public static Quality getQualityTag(ItemStack stack)
+	{
+		if (stack == null) return null;
+		if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey(QUALITY_TAG))
+		{
+			return null;
+		}
+		return Quality.getQualityFromString(stack.getTagCompound().getString(QUALITY_TAG));
+	}
+	
+	/**
+	 * Clears all NBT data from Cyberware related to its function, things like power storage or oxygen storage
+	 * This ensures that removed Cyberware will stack. This should only be called on Cyberware that is being removed
+	 * from the body or otherwise reset - otherwise it may interrupt functionality.
+	 * 
+	 * @param stack	The ItemStack to sanitize
+	 * @return		A sanitized version of the stack
+	 */
+	public static ItemStack sanitize(ItemStack stack)
+	{
+		if (stack != null)
+		{
+			if (stack.hasTagCompound() && stack.getTagCompound().hasKey(DATA_TAG))
+			{
+				stack.getTagCompound().removeTag(DATA_TAG);
+			}
+			if (stack.hasTagCompound() && stack.getTagCompound().hasNoTags())
+			{
+				stack.setTagCompound(null);
+			}
+		}
+		
+		return stack;
+	}
+	
+	/**
+	 * Gets the NBT data for Cyberware related to its function. This data is removed when a piece of Cyberware
+	 * is removed, and is not counted when determining whether Cyberware stacks are the same for purposes of merging
+	 * and such. This function will create a data tag if one does not exist.
+	 * 
+	 * @param stack	The ItemStack for which you want the data
+	 * @return		The data, in the form of an NBTTagCompound
+	 */
+	public static NBTTagCompound getCyberwareNBT(ItemStack stack)
+	{
+		if (!stack.hasTagCompound())
+		{
+			stack.setTagCompound(new NBTTagCompound());
+		}
+		if (!stack.getTagCompound().hasKey(DATA_TAG))
+		{
+			stack.getTagCompound().setTag(DATA_TAG, new NBTTagCompound());
+		}
+		
+		return stack.getTagCompound().getCompoundTag(DATA_TAG);
+	}
+	
+	public static boolean areCyberwareStacksEqual(ItemStack stack1, ItemStack stack2)
+	{
+		if (stack1 == null || stack2 == null) return false;
+		
+		ItemStack sanitized1 = sanitize(ItemStack.copyItemStack(stack1));
+		ItemStack sanitized2 = sanitize(ItemStack.copyItemStack(stack2));
+		return sanitized1.getItem() == sanitized2.getItem() && sanitized1.getItemDamage() == sanitized2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+	}
 	
 	/**
 	 * Links an ItemStack to an instance of ICyberware. This option is generally worse than

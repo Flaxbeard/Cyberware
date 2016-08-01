@@ -54,4 +54,10 @@ public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 		return stack.getItemDamage() % 2 == 0 ? EnumSide.LEFT : EnumSide.RIGHT;
 	}
 	
+	@Override
+	public Quality getQuality(ItemStack stack)
+	{
+		return null;
+	}
+	
 }

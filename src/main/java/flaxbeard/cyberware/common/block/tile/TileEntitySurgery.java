@@ -140,7 +140,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					
 					ItemStack otherStack = slotStack != null ? slotStack : (discardSlots[index] ? null : playerStack);
 					
-					// Automatically incompatible with the same item/damage
+					// Automatically incompatible with the same item/damage. Doesn't use areCyberwareStacksEqual because items conflict even if different grades.
 					if (otherStack != null && (otherStack.getItem() == stack.getItem() && otherStack.getItemDamage() == stack.getItemDamage()))
 					{
 						setWrongSlot(index);
@@ -502,7 +502,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 				if (newStack != null && newStack.stackSize > 0)
 				{
 					ItemStack ret = newStack.copy();
-					if (targetEntityStack != null && ret.getItem() == targetEntityStack.getItem() && ret.getItemDamage() == targetEntityStack.getItemDamage())
+					if (CyberwareAPI.areCyberwareStacksEqual(ret, targetEntityStack))
 					{
 						int maxSize = CyberwareAPI.getCyberware(ret).installedStackSize(ret);
 
@@ -516,7 +516,8 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 					if (targetEntityStack != null && targetEntityStack.stackSize > 0)
 					{
-						targetEntityStack.setTagCompound(null);
+						targetEntityStack = CyberwareAPI.sanitize(targetEntityStack);
+
 						addItemStack(targetEntity, targetEntityStack);
 					}
 					
@@ -528,7 +529,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 				{
 					if (discardSlots[j])
 					{				
-						targetEntityStack.setTagCompound(null);
+						targetEntityStack = CyberwareAPI.sanitize(targetEntityStack);
 						addItemStack(targetEntity, targetEntityStack);
 						
 					}
@@ -623,7 +624,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 				{
 					
 					ItemStack ret = stack.copy();
-					if (slotStack != null && ret != null && playerStack != null && ret.getItem() == playerStack.getItem() && ret.getItemDamage() == playerStack.getItemDamage())
+					if (slotStack != null && ret != null && playerStack != null && CyberwareAPI.areCyberwareStacksEqual(playerStack, ret))
 					{
 						int maxSize = CyberwareAPI.getCyberware(ret).installedStackSize(ret);
 

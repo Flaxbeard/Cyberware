@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,7 @@ public class ItemBlueprint extends Item implements IBlueprint
 		
 		this.setCreativeTab(Cyberware.creativeTab);
 				
-		this.setMaxDamage(0);
+		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 
 		CyberwareContent.items.add(this);
@@ -59,14 +60,24 @@ public class ItemBlueprint extends Item implements IBlueprint
 								tooltip.add(item.stackSize + " x " + item.getDisplayName());
 							}
 						}
+						return;
 					}
 				}
 				else
 				{
 					tooltip.add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt"));
+					return;
 				}
 			}
 		}
+		tooltip.add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.craftBlueprint"));
+	}
+	
+	@Override
+	public void getSubItems(Item item, CreativeTabs tab, List list)
+	{
+
+		list.add(new ItemStack(this, 1, 1));
 	}
 	
 	public static ItemStack getBlueprintForItem(ItemStack stack)
@@ -74,8 +85,11 @@ public class ItemBlueprint extends Item implements IBlueprint
 		if (stack != null && CyberwareAPI.canDeconstruct(stack))
 		{
 			ItemStack toBlue = stack.copy();
+			
+
 			toBlue.stackSize = 1;
 			toBlue.setTagCompound(null);
+			
 			ItemStack ret = new ItemStack(CyberwareContent.blueprint);
 			NBTTagCompound tag = new NBTTagCompound();
 			NBTTagCompound itemTag = new NBTTagCompound();

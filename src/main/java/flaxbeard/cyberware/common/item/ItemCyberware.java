@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import flaxbeard.cyberware.api.item.IDeconstructable;
@@ -64,6 +65,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 			ItemStack stack = new ItemStack(this, 1, meta);
 			int installedStackSize = installedStackSize(stack);
 			stack.stackSize = installedStackSize;
+			this.setQuality(stack, CyberwareAPI.QUALITY_SCAVENGED);
 			CyberwareContent.zombieItems.add(new ZombieItem(weight[meta], stack));
 		}
 		return this;
@@ -84,10 +86,20 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 	@Override
 	public int getEssenceCost(ItemStack stack)
 	{
-		return essence[Math.min(this.subnames.length, stack.getItemDamage())];
+		int cost = getUnmodifiedEssenceCost(stack);
+		if (getQuality(stack) == CyberwareAPI.QUALITY_SCAVENGED)
+		{
+			float tenPercent = cost / 10F;
+			cost = cost + (int) Math.ceil(tenPercent);
+		}
+		return cost;
 	}
 	
-	
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
+	{
+		return essence[Math.min(this.subnames.length, stack.getItemDamage())];
+	}
+
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
@@ -330,5 +342,36 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 	{
 		return components[Math.min(this.components.length - 1, stack.getItemDamage())];
 	}
+
+	@Override
+	public Quality getQuality(ItemStack stack)
+	{
+		Quality q = CyberwareAPI.getQualityTag(stack);
+		
+		if (q == null) return CyberwareAPI.QUALITY_MANUFACTURED;
+		
+		return q;
+	}
+
+	@Override
+	public ItemStack setQuality(ItemStack stack, Quality quality)
+	{
+		if (quality == CyberwareAPI.QUALITY_MANUFACTURED && stack != null && stack.hasTagCompound())
+		{
+			stack.getTagCompound().removeTag(CyberwareAPI.QUALITY_TAG);
+			return stack;
+		}
+		return CyberwareAPI.writeQualityTag(stack, quality);
+	}
 	
+	@Override
+	public String getItemStackDisplayName(ItemStack stack)
+	{
+		Quality q = getQuality(stack);
+		if (q != null && q.getNameModifier() != null)
+		{
+			return I18n.format(q.getNameModifier(), ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim()).trim();
+		}
+		return ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
+	}
 }

@@ -121,7 +121,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 						{
 							toRemove--;
 						}
-						stack.getTagCompound().setInteger("toRemove", toRemove);
+						CyberwareAPI.getCyberwareNBT(stack).setInteger("toRemove", toRemove);
 						
 						cyberware.addPower(getPowerProduction(test), test);
 					}
@@ -155,30 +155,28 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 				
 			}
 			
-			stack.getTagCompound().setBoolean("wasBelow", isBelow);
+			CyberwareAPI.getCyberwareNBT(stack).setBoolean("wasBelow", isBelow);
 		}
 	}
 	
 	private int getTicksTilRemove(ItemStack stack)
 	{
-		if (!stack.hasTagCompound())
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
+		if (!data.hasKey("toRemove"))
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("toRemove", LibConstants.METABOLIC_USES);
-			stack.setTagCompound(tag);
+			data.setInteger("toRemove", LibConstants.METABOLIC_USES);
 		}
-		return stack.getTagCompound().getInteger("toRemove");
+		return data.getInteger("toRemove");
 	}
 	
 	private boolean wasBelow(ItemStack stack)
 	{
-		if (!stack.hasTagCompound())
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
+		if (!data.hasKey("toRemove"))
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("wasBelow", false);
-			stack.setTagCompound(tag);
+			data.setBoolean("wasBelow", false);
 		}
-		return stack.getTagCompound().getBoolean("wasBelow");
+		return data.getBoolean("wasBelow");
 	}
 
 	@Override
@@ -207,7 +205,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 	}
 	
 	@Override
-	public int getEssenceCost(ItemStack stack)
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
 	{
 		if (stack.getItemDamage() == 2)
 		{
@@ -223,6 +221,6 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 					return 15;
 			}
 		}
-		return super.getEssenceCost(stack);
+		return super.getUnmodifiedEssenceCost(stack);
 	}
 }

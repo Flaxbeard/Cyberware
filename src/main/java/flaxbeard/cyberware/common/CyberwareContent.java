@@ -13,12 +13,15 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockEngineeringTable;
+import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
@@ -46,6 +49,7 @@ import flaxbeard.cyberware.common.item.ItemMuscleUpgrade;
 import flaxbeard.cyberware.common.item.ItemNeuropozyne;
 import flaxbeard.cyberware.common.item.ItemSkinUpgrade;
 import flaxbeard.cyberware.common.item.VanillaWares.SpiderEyeWare;
+import flaxbeard.cyberware.common.misc.BlueprintCraftingHandler;
 
 public class CyberwareContent
 {
@@ -58,7 +62,8 @@ public class CyberwareContent
 	public static BlockSurgeryChamber surgeryChamber;
 	public static Block charger;
 	public static Block engineering;
-	
+	public static Block scanner;
+
 	
 	public static Item bodyPart;
 	public static ItemCyberware cybereyes;
@@ -113,7 +118,8 @@ public class CyberwareContent
 		surgeryChamber = new BlockSurgeryChamber();
 		charger = new BlockCharger();
 		engineering = new BlockEngineeringTable();
-		
+		scanner = new BlockScanner();
+
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");
 
@@ -213,6 +219,11 @@ public class CyberwareContent
 				"IRI",
 				"III",
 				Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "blockRedstone", Character.valueOf('F'), new ItemStack(Blocks.IRON_BARS)
+				));
+		
+		GameRegistry.addRecipe(new BlueprintCraftingHandler());
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.PAPER),
+				new ItemStack(blueprint, 1, OreDictionary.WILDCARD_VALUE)
 				));
 		
 		if (CyberwareConfig.SURGERY_CRAFTING)

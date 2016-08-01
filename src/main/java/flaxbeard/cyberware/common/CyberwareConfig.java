@@ -15,6 +15,10 @@ import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class CyberwareConfig
 {
+	public static float ENGINEERING_CHANCE = 33.33F;
+	public static float SCANNER_CHANCE = 3F;
+	public static float SCANNER_CHANCE_ADDL = 2F;
+	public static int SCANNER_TIME = 24000;
 	public static int ESSENCE = 100;
 	public static int CRITICAL_ESSENCE = 25;
 	public static float DROP_RARITY = 50F;
@@ -69,6 +73,10 @@ public class CyberwareConfig
 		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", "Other", TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
 		ESSENCE = config.getInt("Maximum Essence", "Essence", ESSENCE, 0, Integer.MAX_VALUE, "");
 		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", "Essence", CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
+		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", "Machines", ENGINEERING_CHANCE, 0, 100F, "");
+		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", "Machines", SCANNER_CHANCE, 0, 100F, "");
+		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", "Machines", SCANNER_CHANCE_ADDL, 0, 100F, "");
+		SCANNER_TIME = config.getInt("Ticks taken per Scanner operation", "Machines", SCANNER_TIME, 0, Integer.MAX_VALUE, "24000 is one Minecraft day, 1200 is one real-life minute");
 		config.save();
 		
 	}

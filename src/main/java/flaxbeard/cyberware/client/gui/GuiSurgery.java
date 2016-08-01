@@ -34,6 +34,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
@@ -423,7 +424,7 @@ public class GuiSurgery extends GuiContainer
 					
 					if (playerStack != null)
 					{
-						if (playerStack.getItem() == surgeryStack.getItem() && playerStack.getItemDamage() == surgeryStack.getItemDamage())
+						if (CyberwareAPI.areCyberwareStacksEqual(playerStack, surgeryStack))
 						{
 							draw.stackSize += playerStack.stackSize;
 						}
@@ -1288,7 +1289,7 @@ public class GuiSurgery extends GuiContainer
 				this.itemRender.zLevel = 500;
 
 			}
-			else if (stack != null && pos.getStack() != null && pos.getStack().getItem() == stack.getItem() && pos.getStack().getItemDamage() == stack.getItemDamage())
+			else if (CyberwareAPI.areCyberwareStacksEqual(stack, pos.getStack()))
 			{
 				FontRenderer font = stack.getItem().getFontRenderer(stack);
 				if (font == null) font = fontRendererObj;

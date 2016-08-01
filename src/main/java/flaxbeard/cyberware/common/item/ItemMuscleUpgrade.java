@@ -259,7 +259,7 @@ public class ItemMuscleUpgrade extends ItemCyberware
 	}
 	
 	@Override
-	public int getEssenceCost(ItemStack stack)
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
 	{
 		if (stack.getItemDamage() == 0)
 		{
@@ -273,6 +273,6 @@ public class ItemMuscleUpgrade extends ItemCyberware
 					return 11;
 			}
 		}
-		return super.getEssenceCost(stack);
+		return super.getUnmodifiedEssenceCost(stack);
 	}
 }

@@ -16,7 +16,9 @@ import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
+import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 
 public class ClientProxy extends CommonProxy
@@ -48,7 +50,8 @@ public class ClientProxy extends CommonProxy
 		super.init();
 		KeyBinds.init();
 		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandlerClient.INSTANCE);
-		
+		MinecraftForge.EVENT_BUS.register(CreativeMenuHandler.INSTANCE);
+
 	}
 	
 	
@@ -76,6 +79,14 @@ public class ClientProxy extends CommonProxy
 			{
 				ModelLoader.setCustomModelResourceLocation(item, 
 						i, new ModelResourceLocation(item.getRegistryName() + "_" + ware.subnames[i], "inventory"));
+			}
+		}
+		else if (item instanceof ItemBlueprint)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				ModelLoader.setCustomModelResourceLocation(item, 
+						i, new ModelResourceLocation(item.getRegistryName() + (i == 1 ? "_blank" : ""), "inventory"));
 			}
 		}
 		else

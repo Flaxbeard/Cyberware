@@ -56,16 +56,12 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 	
 	public static boolean isPowered(ItemStack stack)
 	{
-		if (!stack.hasTagCompound())
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
+		if (!data.hasKey("active"))
 		{
-			NBTTagCompound comp = new NBTTagCompound();
-			stack.setTagCompound(comp);
+			data.setBoolean("active", true);
 		}
-		if (!stack.getTagCompound().hasKey("active"))
-		{
-			stack.getTagCompound().setBoolean("active", true);
-		}
-		return stack.getTagCompound().getBoolean("active");
+		return data.getBoolean("active");
 	}
 	
 	private Set<Integer> didFall = new HashSet<Integer>();
@@ -125,12 +121,8 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 			if (e.ticksExisted % 20 == 0 && installed != null)
 			{
 				boolean used = CyberwareAPI.getCapability(e).usePower(installed, getPowerConsumption(installed));
-				if (!installed.hasTagCompound())
-				{
-					NBTTagCompound comp = new NBTTagCompound();
-					installed.setTagCompound(comp);
-				}
-				installed.getTagCompound().setBoolean("active", used);
+				
+				CyberwareAPI.getCyberwareNBT(installed).setBoolean("active", used);
 			}
 		}
 

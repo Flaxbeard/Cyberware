@@ -1,8 +1,11 @@
 package flaxbeard.cyberware.client;
 
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -35,5 +38,10 @@ public class ClientUtils
 			System.out.println("[Cyberware] Registering new ResourceLocation: " + string);
 		}
 		Minecraft.getMinecraft().getTextureManager().bindTexture(textures.get(string));
+	}
+	
+	public static void drawHoveringText(GuiScreen gui, List<String> textLines, int x, int y, FontRenderer font)
+	{
+		net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, gui.width, gui.height, -1, font);
 	}
 }

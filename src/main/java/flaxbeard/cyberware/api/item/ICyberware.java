@@ -1,9 +1,13 @@
 package flaxbeard.cyberware.api.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public interface ICyberware
 {
@@ -14,6 +18,65 @@ public interface ICyberware
 	boolean isEssential(ItemStack stack);
 	public List<String> getInfo(ItemStack stack);
 	public int getCapacity(ItemStack wareStack);
+	
+	
+	/**
+	 * Returns a Quality object representing the quality of this stack - all
+	 * changes that this Quality has to function must be handled internally,
+	 * this is just for the tooltip and external factors. See CyberwareAPI for
+	 * the base Qualities.
+	 * 
+	 * @param stack	The ItemStack to check
+	 * @return		An instance of Quality
+	 */
+	public Quality getQuality(ItemStack stack);
+	
+	public ItemStack setQuality(ItemStack stack, Quality quality);
+	
+	public class Quality
+	{
+		private static Map<String, Quality> mapping = new HashMap<String, Quality>();
+		private String unlocalizedName;
+		private ChatFormatting color;
+		private String nameModifier;
+		
+		public Quality(String unlocalizedName, ChatFormatting color)
+		{
+			this(unlocalizedName, color, null);
+		}
+		
+		public Quality(String unlocalizedName, ChatFormatting color, String nameModifier)
+		{
+			this.unlocalizedName = unlocalizedName;
+			this.color = color;
+			this.nameModifier = nameModifier;
+			mapping.put(unlocalizedName, this);
+		}
+		
+		public String getUnlocalizedName()
+		{
+			return unlocalizedName;
+		}
+		
+		public ChatFormatting getColor()
+		{
+			return this.color;
+		}
+		
+		public static Quality getQualityFromString(String name)
+		{
+			if (mapping.containsKey(name))
+			{
+				return mapping.get(name);
+			}
+			return null;
+		}
+
+		public String getNameModifier()
+		{
+			return nameModifier;
+		}
+	}
 
 	public enum EnumSlot
 	{

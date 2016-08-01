@@ -1,6 +1,7 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +9,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -166,7 +166,7 @@ public class EngineeringDestroyPacket implements IMessage
 					
 					if (canInsert)
 					{
-						if (doBlueprint && engineering.getWorld().rand.nextFloat() < 0.33F)
+						if (doBlueprint && engineering.getWorld().rand.nextFloat() < CyberwareConfig.ENGINEERING_CHANCE)
 						{
 							ItemStack blue = ItemBlueprint.getBlueprintForItem(toDestroy);
 							random.add(blue);
