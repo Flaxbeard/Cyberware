@@ -221,6 +221,7 @@ death.attack.cyberware.surgery=%1$s didn't return from the operation
 death.attack.cyberware.spineless=%1$s was spineless
 death.attack.cyberware.nomuscles=%1$s couldn't hold themselves together
 death.attack.cyberware.noessence=%1$s lost their humanity
+death.attack.cyberware.lowessence=%1$s lost their humanity
 
 # COMMAND
 cyberware.commands.clearCyberware.usage=Usage: /clearcyberware [player]

@@ -54,7 +54,8 @@ public class EssentialsMissingHandler
 	public static final DamageSource surgery = new DamageSource("cyberware.surgery").setDamageBypassesArmor();
 	private static final DamageSource spineless = new DamageSource("cyberware.spineless").setDamageBypassesArmor().setDamageIsAbsolute();
 	private static final DamageSource nomuscles = new DamageSource("cyberware.nomuscles").setDamageBypassesArmor().setDamageIsAbsolute();
-	private static final DamageSource noessence = new DamageSource("cyberware.noessence").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource noessence = new DamageSource("cyberware.noessence").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource lowessence = new DamageSource("cyberware.lowessence").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public static final EssentialsMissingHandler INSTANCE = new EssentialsMissingHandler();
 
@@ -86,7 +87,7 @@ public class EssentialsMissingHandler
 			
 			if (cyberware.getEssence() < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
 			{
-				e.attackEntityFrom(noessence, 2F);
+				e.attackEntityFrom(lowessence, 2F);
 			}
 						
 			int numMissingLegs = 0;

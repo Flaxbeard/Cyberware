@@ -419,7 +419,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 					boolean found = false;
 					for (ItemStack newWare : newWares)
 					{
-						if (newWare != null && newWare.getItem() == oldWare.getItem() && newWare.getItemDamage() == oldWare.getItemDamage() && newWare.stackSize == oldWare.stackSize)
+						if (CyberwareAPI.areCyberwareStacksEqual(newWare, oldWare) && newWare.stackSize == oldWare.stackSize)
 						{
 							found = true;
 							break;
@@ -441,7 +441,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 					boolean found = false;
 					for (ItemStack oldWare : oldWares)
 					{
-						if (oldWare != null && newWare.getItem() == oldWare.getItem() && newWare.getItemDamage() == oldWare.getItemDamage() && newWare.stackSize == oldWare.stackSize)
+						if (CyberwareAPI.areCyberwareStacksEqual(newWare, oldWare) && newWare.stackSize == oldWare.stackSize)
 						{
 							found = true;
 							break;

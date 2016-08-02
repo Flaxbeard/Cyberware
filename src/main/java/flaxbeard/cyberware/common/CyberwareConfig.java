@@ -19,18 +19,25 @@ public class CyberwareConfig
 	public static float SCANNER_CHANCE = 3F;
 	public static float SCANNER_CHANCE_ADDL = 2F;
 	public static int SCANNER_TIME = 24000;
+	
 	public static int ESSENCE = 100;
 	public static int CRITICAL_ESSENCE = 25;
+	
 	public static float DROP_RARITY = 50F;
 	public static int ZOMBIE_WEIGHT = 15;
 	public static int ZOMBIE_MIN_PACK = 1;
 	public static int ZOMBIE_MAX_PACK = 1;
-
 	public static boolean NO_ZOMBIES = false;
+	
 	public static boolean SURGERY_CRAFTING = false;
+	
 	private static String[][] defaultStartingItems;
 	private static String[][] startingItems;
 	private static ItemStack[][] startingStacks;
+	
+	public static boolean DEFAULT_DROP = false;
+	public static boolean DEFAULT_KEEP = false;
+	
 	public static int TESLA_PER_POWER = 1;
 
 	public static void loadConfig(FMLPreInitializationEvent event)
@@ -82,6 +89,9 @@ public class CyberwareConfig
 		ESSENCE = config.getInt("Maximum Essence", "Essence", ESSENCE, 0, Integer.MAX_VALUE, "");
 		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", "Essence", CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
 		
+		DEFAULT_DROP = config.getBoolean("Default for gamerule cyberware_dropCyberware", "Gamerules", DEFAULT_DROP, "Determines if players drop their Cyberware on death. Does not change settings on existing worlds, use /gamerule for that. Overridden if cyberware_keepCyberware is true");
+		DEFAULT_KEEP = config.getBoolean("Default for gamerule cyberware_keepCyberware", "Gamerules", DEFAULT_KEEP, "Determines if players keep their Cyberware between lives. Does not change settings on existing worlds, use /gamerule for that.");
+
 		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", "Machines", ENGINEERING_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", "Machines", SCANNER_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", "Machines", SCANNER_CHANCE_ADDL, 0, 100F, "");

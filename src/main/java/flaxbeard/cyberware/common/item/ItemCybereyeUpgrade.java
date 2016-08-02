@@ -373,7 +373,6 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
 	{
 		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		
 		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 2)))
 		{
 			float currTime = p.ticksExisted + event.getPartialTicks();
