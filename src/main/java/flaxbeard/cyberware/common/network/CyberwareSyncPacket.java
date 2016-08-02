@@ -1,7 +1,7 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import io.netty.buffer.ByteBuf;
 
 import java.util.concurrent.Callable;
@@ -9,9 +9,7 @@ import java.util.concurrent.Callable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -72,7 +70,6 @@ public class CyberwareSyncPacket implements IMessage
 		public Void call() throws Exception
 		{
 			Entity targetEntity = Minecraft.getMinecraft().theWorld.getEntityByID(entityId);
-			
 			if (targetEntity != null && CyberwareAPI.hasCapability(targetEntity))
 			{
 				CyberwareAPI.getCapability(targetEntity).deserializeNBT(data);

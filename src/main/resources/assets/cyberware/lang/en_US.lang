@@ -1,6 +1,7 @@
 # BLOCKS
 tile.cyberware.surgery.name=Robosurgeon
 item.cyberware.surgeryChamber.name=Surgery Chamber
+tile.cyberware.surgeryChamber.name=Surgery Chamber
 tile.cyberware.charger.name=Cyberware Charger
 tile.cyberware.engineeringTable.name=Cyberware Engineering Table
 
@@ -225,10 +226,17 @@ death.attack.cyberware.noessence=%1$s lost their humanity
 cyberware.commands.clearCyberware.usage=Usage: /clearcyberware [player]
 cyberware.commands.clearCyberware.success=Cleared the Cyberware of %1$s
 
+# ENTITIES
+entity.cyberware.cyberzombie.name=Cyberzombie
+
 # SCANNER SAYINGS
 # FOR TRANSLATORS - YOU CAN HAVE AS MANY OR FEW OF THESE AS YOU WANT, BUT YOU NEED AT LEAST ONE
 # DON'T BOTHER TRANSLATING THESE PHRASES, INCLUDE SOMETHING THAT'D BE MILDLY HUMOROUS IN
 # THE LANGUAGE YOU'RE TRANSLATING TO
+
+# THIS MUST BE THE NUMBER OF THE LAST KEY + 1 TO INCLUDE THE 0 SAYING
+cyberware.gui.scannerSaying.count=67
+
 cyberware.gui.scannerSaying.0=Reticulating Splines
 cyberware.gui.scannerSaying.1=Resolving GUID Conflict
 cyberware.gui.scannerSaying.2=Perturbing Matrices

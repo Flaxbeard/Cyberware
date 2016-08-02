@@ -8,27 +8,24 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent.SpecialSpawn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUserDataImpl;
+import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.NumItems;
@@ -44,7 +41,7 @@ public class CyberwareDataHandler
 	@SubscribeEvent
 	public void attachCyberwareData(AttachCapabilitiesEvent.Entity event)
 	{
-		if (event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof EntityCyberZombie)
+		if (event.getEntity() instanceof EntityPlayer)
 		{
 			event.addCapability(CyberwareUserDataImpl.Provider.NAME, new CyberwareUserDataImpl.Provider());
 		}
@@ -59,11 +56,12 @@ public class CyberwareDataHandler
 	public void handleCyberzombieDrops(LivingDropsEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
-		if (e instanceof EntityCyberZombie && CyberwareAPI.hasCapability(e))
+		if (!CyberwareConfig.NO_ZOMBIES && e instanceof EntityCyberZombie && ((EntityCyberZombie) e).hasWare && !e.worldObj.isRemote)
 		{
-			if (e.worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F))
+			if (e.worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F) || true)
 			{
-				ICyberwareUserData data = CyberwareAPI.getCapability(e);
+				EntityCyberZombie zombie = ((EntityCyberZombie) e);
+				ICyberwareUserData data = CyberwareAPI.getCapability(zombie);
 				List<ItemStack> allWares = new ArrayList<ItemStack>();
 				for (EnumSlot slot : EnumSlot.values())
 				{
@@ -73,7 +71,7 @@ public class CyberwareDataHandler
 				}
 				
 				allWares.removeAll(Collections.singleton(null));
-				
+
 				ItemStack drop = null;
 				int count = 0;
 				while (count < 50 && (drop == null || drop.getItem() == CyberwareContent.creativeBattery || drop.getItem() == CyberwareContent.bodyPart))
@@ -83,18 +81,25 @@ public class CyberwareDataHandler
 					drop.stackSize = 1;
 					count++;
 				}
+
 				if (count < 50)
 				{
+					System.out.println("EI EI 0");
 					EntityItem ei = new EntityItem(e.worldObj, e.posX, e.posY, e.posZ, drop);
 					e.worldObj.spawnEntityInWorld(ei);
+				}
+				else
+				{
+					System.out.println("NO WARE?!");
 				}
 			}
 		}
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void handleSpawn(SpecialSpawn event)
+	public void handleCZSpawn(EntityJoinWorldEvent event)
 	{
+
 		/*if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
 			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (CyberwareConfig.ZOMBIE_RARITY / 100F))) return;
@@ -115,15 +120,16 @@ public class CyberwareDataHandler
 		}*/
 	}
 	
-	private void addRandomCyberware(EntityCyberZombie cyberZombie)
-	{
+	public static void addRandomCyberware(EntityCyberZombie cyberZombie)
+	{	
 		ICyberwareUserData data = CyberwareAPI.getCapability(cyberZombie);
-		
 		List<List<ItemStack>> wares = new ArrayList<List<ItemStack>>();
 		
 		for (EnumSlot slot : EnumSlot.values())
 		{
-			wares.add(new ArrayList(Arrays.asList(data.getInstalledCyberware(slot))));
+			List<ItemStack> toAdd = new ArrayList(Arrays.asList(data.getInstalledCyberware(slot)));
+			toAdd.removeAll(Collections.singleton(null));
+			wares.add(toAdd);
 		}
 		
 		
@@ -178,6 +184,7 @@ public class CyberwareDataHandler
 					{
 						ItemStack req = requiredCategory[cyberZombie.worldObj.rand.nextInt(requiredCategory.length)].copy();
 						ICyberware reqWare = CyberwareAPI.getCyberware(req);
+						reqWare.setQuality(req, CyberwareAPI.QUALITY_SCAVENGED);
 						req.stackSize = reqWare.installedStackSize(req);
 						wares.get(reqWare.getSlot(req).ordinal()).add(req);
 						installed.add(req);
@@ -190,11 +197,11 @@ public class CyberwareDataHandler
 		}
 		
 		
-		/*System.out.println("_____LIST_____ " + numberOfItemsToInstall);
+		System.out.println("_____LIST_____ " + numberOfItemsToInstall);
 		for (ItemStack stack : installed)
 		{
 			System.out.println(stack.getUnlocalizedName() + " " + stack.stackSize);
-		}*/
+		}
 		
 		for (EnumSlot slot : EnumSlot.values())
 		{
@@ -203,9 +210,12 @@ public class CyberwareDataHandler
 		data.updateCapacity();
 		
 		cyberZombie.setHealth(cyberZombie.getMaxHealth());
+		cyberZombie.hasWare = true;
+		
+		CyberwareAPI.updateData(cyberZombie);
 	}
 	
-	public boolean contains(List<ItemStack> items, ItemStack item)
+	public static boolean contains(List<ItemStack> items, ItemStack item)
 	{
 		for (ItemStack check : items)
 		{			

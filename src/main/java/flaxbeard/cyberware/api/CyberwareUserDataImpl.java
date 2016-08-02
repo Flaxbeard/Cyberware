@@ -360,7 +360,15 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	@Override
 	public void setInstalledCyberware(EntityLivingBase entity, EnumSlot slot, List<ItemStack> cyberware)
 	{
-		setInstalledCyberware(entity, slot, cyberware.toArray(new ItemStack[0]));
+		while (cyberware.size() > LibConstants.WARE_PER_SLOT)
+		{
+			cyberware.remove(cyberware.size() - 1);
+		}
+		while (cyberware.size() < LibConstants.WARE_PER_SLOT)
+		{
+			cyberware.add(null);
+		}
+		setInstalledCyberware(entity, slot, cyberware.toArray(new ItemStack[LibConstants.WARE_PER_SLOT]));
 	}
 	
 	@Override
@@ -368,7 +376,6 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	{
 		powerCap = 0;
 		specialBatteries = new ArrayList<ItemStack>();
-		
 		for (EnumSlot slot : EnumSlot.values())
 		{
 			for (ItemStack wareStack : getInstalledCyberware(slot))
@@ -396,6 +403,10 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	@Override
 	public void setInstalledCyberware(EntityLivingBase entity, EnumSlot slot, ItemStack[] cyberware)
 	{
+		if (cyberware.length != wares[slot.ordinal()].length)
+		{
+			System.out.println("ERROR!");
+		}
 		List<ItemStack> newWares = Arrays.asList(cyberware);
 		List<ItemStack> oldWares = Arrays.asList(wares[slot.ordinal()]);
 		
@@ -577,23 +588,24 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		}
 		
 		NBTTagList list = (NBTTagList) tag.getTag("cyberware");
-		
 		for (int i = 0; i < list.tagCount(); i++)
 		{
 			EnumSlot slot = EnumSlot.values()[i];
 			
 			NBTTagList list2 = (NBTTagList) list.get(i);
 			ItemStack[] cyberware = new ItemStack[LibConstants.WARE_PER_SLOT];
-			
+
 			for (int j = 0; j < list2.tagCount() && j < cyberware.length; j++)
 			{
+				
 				cyberware[j] = ItemStack.loadItemStackFromNBT(list2.getCompoundTagAt(j));
 			}
 			
 			setInstalledCyberware(null, slot, cyberware);
 		}
+
 		updateCapacity();
-	
+		updateEssential();
 
 	}
 	

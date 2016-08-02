@@ -115,7 +115,11 @@ public class CyberwareContent
 
 		zombieItems = new ArrayList<ZombieItem>();
 
-		EntityRegistry.registerModEntity(EntityCyberZombie.class, "cyberzombie", 0, Cyberware.INSTANCE, 80, 3, true);
+		if (!CyberwareConfig.NO_ZOMBIES)
+		{
+			EntityRegistry.registerModEntity(EntityCyberZombie.class, "cyberzombie", 0, Cyberware.INSTANCE, 80, 3, true);
+			EntityRegistry.registerEgg(EntityCyberZombie.class, 0x6B6B6B, 0x799C65);
+		}
 		
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
 
@@ -249,20 +253,25 @@ public class CyberwareContent
 	
 	public static void postInit()
 	{
-		List<Biome> biomes = new ArrayList<Biome>();
 		
-		for (ResourceLocation key : Biome.REGISTRY.getKeys())
+		if (!CyberwareConfig.NO_ZOMBIES)
 		{
-			Biome biome = Biome.REGISTRY.getObject(key);
-			for (SpawnListEntry entry : biome.getSpawnableList(EnumCreatureType.MONSTER))
+			List<Biome> biomes = new ArrayList<Biome>();
+			
+			for (ResourceLocation key : Biome.REGISTRY.getKeys())
 			{
-				if (entry.entityClass == EntityZombie.class)
+				Biome biome = Biome.REGISTRY.getObject(key);
+				for (SpawnListEntry entry : biome.getSpawnableList(EnumCreatureType.MONSTER))
 				{
-					biomes.add(biome);
+					if (entry.entityClass == EntityZombie.class)
+					{
+						biomes.add(biome);
+						System.out.println("EEE " + biome);
+					}
 				}
 			}
+			EntityRegistry.addSpawn(EntityCyberZombie.class, CyberwareConfig.ZOMBIE_WEIGHT, 1, 1, EnumCreatureType.MONSTER, biomes.toArray(new Biome[0]));
 		}
-		EntityRegistry.addSpawn(EntityCyberZombie.class, CyberwareConfig.ZOMBIE_WEIGHT, 1, 1, EnumCreatureType.MONSTER, biomes.toArray(new Biome[0]));
 
 	}
 	

@@ -134,13 +134,7 @@ public class GuiScanner extends GuiContainer
 		}
 		else
 		{
-			int count = 0;
-			String message = I18n.format("cyberware.gui.scannerSaying." + count);
-			while (!message.equals("cyberware.gui.scannerSaying." + count))
-			{
-				count++;
-				message = I18n.format("cyberware.gui.scannerSaying." + count);
-			}
+			int count = Integer.parseInt(I18n.format("cyberware.gui.scannerSaying.count")) - 1;
 			
 			langMax.put(language, count);
 			return count;
