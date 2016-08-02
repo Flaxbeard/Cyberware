@@ -22,8 +22,10 @@ public class CyberwareConfig
 	public static int ESSENCE = 100;
 	public static int CRITICAL_ESSENCE = 25;
 	public static float DROP_RARITY = 50F;
-	public static float ZOMBIE_RARITY = 15F;
 	public static int ZOMBIE_WEIGHT = 15;
+	public static int ZOMBIE_MIN_PACK = 1;
+	public static int ZOMBIE_MAX_PACK = 1;
+
 	public static boolean NO_ZOMBIES = false;
 	public static boolean SURGERY_CRAFTING = false;
 	private static String[][] defaultStartingItems;
@@ -68,12 +70,18 @@ public class CyberwareConfig
 		}
 		
 		NO_ZOMBIES = config.getBoolean("Disable cyberzombies", "Mobs", NO_ZOMBIES, "");
-		ZOMBIE_RARITY = config.getFloat("Percent of zombies that are Cyberzombies", "Mobs", ZOMBIE_RARITY, 0F, 100F, "");
+		ZOMBIE_WEIGHT = config.getInt("Spawning weight of Cyberzombies", "Mobs", ZOMBIE_WEIGHT, 0, Integer.MAX_VALUE, "Vanilla Zombie = 100, Enderman = 10, Witch = 5");
+		ZOMBIE_MIN_PACK = config.getInt("Minimum Cyberzombie pack size", "Mobs", ZOMBIE_MIN_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 1, Witch = 1");
+		ZOMBIE_MAX_PACK = config.getInt("Maximum Cyberzombie pack size", "Mobs", ZOMBIE_MAX_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 4, Witch = 1");
+
 		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", "Mobs", DROP_RARITY, 0F, 100F, "");
+		
 		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", "Other", SURGERY_CRAFTING, "Normally only found in Nether fortresses");
 		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", "Other", TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
+		
 		ESSENCE = config.getInt("Maximum Essence", "Essence", ESSENCE, 0, Integer.MAX_VALUE, "");
 		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", "Essence", CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
+		
 		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", "Machines", ENGINEERING_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", "Machines", SCANNER_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", "Machines", SCANNER_CHANCE_ADDL, 0, 100F, "");

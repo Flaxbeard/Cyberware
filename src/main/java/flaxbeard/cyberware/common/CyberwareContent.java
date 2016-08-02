@@ -270,7 +270,7 @@ public class CyberwareContent
 					}
 				}
 			}
-			EntityRegistry.addSpawn(EntityCyberZombie.class, CyberwareConfig.ZOMBIE_WEIGHT, 1, 1, EnumCreatureType.MONSTER, biomes.toArray(new Biome[0]));
+			EntityRegistry.addSpawn(EntityCyberZombie.class, CyberwareConfig.ZOMBIE_WEIGHT, CyberwareConfig.ZOMBIE_MIN_PACK, CyberwareConfig.ZOMBIE_MAX_PACK, EnumCreatureType.MONSTER, biomes.toArray(new Biome[0]));
 		}
 
 	}
