@@ -89,8 +89,8 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 		int cost = getUnmodifiedEssenceCost(stack);
 		if (getQuality(stack) == CyberwareAPI.QUALITY_SCAVENGED)
 		{
-			float tenPercent = cost / 10F;
-			cost = cost + (int) Math.ceil(tenPercent);
+			float half = cost / 2F;
+			cost = cost + (int) Math.ceil(half);
 		}
 		return cost;
 	}

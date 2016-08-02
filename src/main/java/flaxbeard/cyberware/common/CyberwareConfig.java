@@ -23,6 +23,7 @@ public class CyberwareConfig
 	public static int CRITICAL_ESSENCE = 25;
 	public static float DROP_RARITY = 50F;
 	public static float ZOMBIE_RARITY = 15F;
+	public static int ZOMBIE_WEIGHT = 15;
 	public static boolean NO_ZOMBIES = false;
 	public static boolean SURGERY_CRAFTING = false;
 	private static String[][] defaultStartingItems;

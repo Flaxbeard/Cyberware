@@ -36,6 +36,7 @@ public class CommonProxy
 	public void postInit()
 	{
 		CyberwareConfig.postInit();
+		CyberwareContent.postInit();
 	}
 
 	public void wrong(TileEntitySurgery tileEntitySurgery) {}

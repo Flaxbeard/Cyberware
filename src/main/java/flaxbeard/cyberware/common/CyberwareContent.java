@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -242,6 +247,25 @@ public class CyberwareContent
 		}
 	}
 	
+	public static void postInit()
+	{
+		List<Biome> biomes = new ArrayList<Biome>();
+		
+		for (ResourceLocation key : Biome.REGISTRY.getKeys())
+		{
+			Biome biome = Biome.REGISTRY.getObject(key);
+			for (SpawnListEntry entry : biome.getSpawnableList(EnumCreatureType.MONSTER))
+			{
+				if (entry.entityClass == EntityZombie.class)
+				{
+					biomes.add(biome);
+				}
+			}
+		}
+		EntityRegistry.addSpawn(EntityCyberZombie.class, CyberwareConfig.ZOMBIE_WEIGHT, 1, 1, EnumCreatureType.MONSTER, biomes.toArray(new Biome[0]));
+
+	}
+	
 
 	public static class NumItems extends WeightedRandom.Item
 	{
@@ -276,5 +300,7 @@ public class CyberwareContent
 			return (stack == stack2 || (stack != null && stack2 != null && stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage() && stack.stackSize == stack2.stackSize));
 		}
 	}
+
+
 
 }

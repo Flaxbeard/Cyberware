@@ -166,7 +166,7 @@ public class EngineeringDestroyPacket implements IMessage
 					
 					if (canInsert)
 					{
-						if (doBlueprint && engineering.getWorld().rand.nextFloat() < CyberwareConfig.ENGINEERING_CHANCE)
+						if (doBlueprint && engineering.getWorld().rand.nextFloat() < (CyberwareConfig.ENGINEERING_CHANCE / 100F))
 						{
 							ItemStack blue = ItemBlueprint.getBlueprintForItem(toDestroy);
 							random.add(blue);
@@ -179,6 +179,7 @@ public class EngineeringDestroyPacket implements IMessage
 							}
 							engineering.slots.setStackInSlot(1, current);
 						}
+				
 						
 						for (ItemStack drop : random)
 						{

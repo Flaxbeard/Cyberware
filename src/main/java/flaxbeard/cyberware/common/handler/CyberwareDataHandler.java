@@ -95,7 +95,7 @@ public class CyberwareDataHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleSpawn(SpecialSpawn event)
 	{
-		if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
+		/*if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
 			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (CyberwareConfig.ZOMBIE_RARITY / 100F))) return;
 			
@@ -112,7 +112,7 @@ public class CyberwareDataHandler
 			zombie.deathTime = 19;
 			zombie.setHealth(0F);
 			addRandomCyberware(cyberZombie);
-		}
+		}*/
 	}
 	
 	private void addRandomCyberware(EntityCyberZombie cyberZombie)
