@@ -84,7 +84,7 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 				
 				ICyberwareUserData data = CyberwareAPI.getCapability(entity);
 				
-				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() < CyberwareConfig.TESLA_PER_POWER))
+				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() >= CyberwareConfig.TESLA_PER_POWER))
 				{
 					container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
 					data.addPower(20, null);
