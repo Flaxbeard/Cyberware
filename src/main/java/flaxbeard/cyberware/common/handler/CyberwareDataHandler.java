@@ -134,39 +134,7 @@ public class CyberwareDataHandler
 		}
 		if (!CyberwareConfig.NO_ZOMBIES && e instanceof EntityCyberZombie && ((EntityCyberZombie) e).hasWare && !e.worldObj.isRemote)
 		{
-			if (e.worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F) || true)
-			{
-				EntityCyberZombie zombie = ((EntityCyberZombie) e);
-				ICyberwareUserData data = CyberwareAPI.getCapability(zombie);
-				List<ItemStack> allWares = new ArrayList<ItemStack>();
-				for (EnumSlot slot : EnumSlot.values())
-				{
-					ItemStack[] stuff = data.getInstalledCyberware(slot);
-					
-					allWares.addAll(Arrays.asList(stuff));
-				}
-				
-				allWares.removeAll(Collections.singleton(null));
-
-				ItemStack drop = null;
-				int count = 0;
-				while (count < 50 && (drop == null || drop.getItem() == CyberwareContent.creativeBattery || drop.getItem() == CyberwareContent.bodyPart))
-				{
-					int random = e.worldObj.rand.nextInt(allWares.size());
-					drop = ItemStack.copyItemStack(allWares.get(random));
-					drop.stackSize = 1;
-					count++;
-				}
-
-				if (count < 50)
-				{
-					EntityItem ei = new EntityItem(e.worldObj, e.posX, e.posY, e.posZ, drop);
-					e.worldObj.spawnEntityInWorld(ei);
-				}
-				else
-				{
-				}
-			}
+			
 		}
 	}
 	

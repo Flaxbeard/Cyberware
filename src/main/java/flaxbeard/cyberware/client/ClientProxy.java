@@ -26,6 +26,7 @@ import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemCyberware;
+import flaxbeard.cyberware.common.item.ItemCyberwareBase;
 
 public class ClientProxy extends CommonProxy
 {
@@ -120,6 +121,23 @@ public class ClientProxy extends CommonProxy
 			{
 				ModelLoader.setCustomModelResourceLocation(item, 
 						i, new ModelResourceLocation(item.getRegistryName() + (i == 1 ? "_blank" : ""), "inventory"));
+			}
+		}
+		if (item instanceof ItemCyberwareBase)
+		{
+			ItemCyberwareBase base = ((ItemCyberwareBase) item);
+			if (base.subnames.length > 0)
+			{
+				for (int i = 0; i < base.subnames.length; i++)
+				{
+					ModelLoader.setCustomModelResourceLocation(item, 
+							i, new ModelResourceLocation(item.getRegistryName() + "_" + base.subnames[i], "inventory"));
+				}
+			}
+			else
+			{
+				ModelLoader.setCustomModelResourceLocation(item, 
+						0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 			}
 		}
 		else

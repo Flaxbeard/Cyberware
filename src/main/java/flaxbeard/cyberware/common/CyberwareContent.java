@@ -42,6 +42,7 @@ import flaxbeard.cyberware.common.item.ItemCybereyes;
 import flaxbeard.cyberware.common.item.ItemCyberheart;
 import flaxbeard.cyberware.common.item.ItemCyberlimb;
 import flaxbeard.cyberware.common.item.ItemCyberware;
+import flaxbeard.cyberware.common.item.ItemCyberwareBase;
 import flaxbeard.cyberware.common.item.ItemDenseBattery;
 import flaxbeard.cyberware.common.item.ItemExpCapsule;
 import flaxbeard.cyberware.common.item.ItemFootUpgrade;
@@ -88,6 +89,8 @@ public class CyberwareContent
 	public static ItemCyberware footUpgrades;
 	public static ItemCyberware cyberlimbs;
 	public static ItemCyberware creativeBattery;
+	
+	public static Item component;
 	public static Item neuropozyne;
 	public static Item blueprint;
 
@@ -131,6 +134,7 @@ public class CyberwareContent
 
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");
+		component = new ItemCyberwareBase("component", "actuator", "reactor", "titanium", "ssc", "plating", "fiberoptics", "fullerene", "synthnerves", "storage", "microelectric");
 
 		bodyPart = new ItemBodyPart("bodyPart", 
 				new EnumSlot[] { EnumSlot.EYES, EnumSlot.CRANIUM, EnumSlot.HEART, EnumSlot.LUNGS, EnumSlot.LOWER_ORGANS, EnumSlot.SKIN, EnumSlot.MUSCLE, EnumSlot.BONE, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
@@ -140,19 +144,33 @@ public class CyberwareContent
 		cybereyes = new ItemCybereyes("cybereyes", EnumSlot.EYES);
 		cybereyes.setEssenceCost(10);
 		cybereyes.setWeights(UNCOMMON);
-		cybereyes.setComponents(new ItemStack[] { new ItemStack(Items.IRON_INGOT, 2, 0), new ItemStack(Items.REDSTONE, 2, 0), new ItemStack(Blocks.GLASS, 1, 0) });
+		cybereyes.setComponents(new ItemStack[] { new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 2, 7) });
 		
 		cybereyeUpgrades = new ItemCybereyeUpgrade("cybereyeUpgrades", EnumSlot.EYES,
 				new String[] { "nightVision", "underwaterVision", "hudjack", "targeting", "zoom" });
 		cybereyeUpgrades.setEssenceCost(2, 2, 1, 1, 1);
 		cybereyeUpgrades.setWeights(UNCOMMON, UNCOMMON, VERY_COMMON, UNCOMMON, UNCOMMON);
-		
+		cybereyeUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 2, 5), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 6), new ItemStack(component, 2, 7) },
+				new ItemStack[] { new ItemStack(component, 2, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 6), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 2, 5), new ItemStack(component, 4, 7) }
+				);
+
 		CyberwareAPI.linkCyberware(Items.SPIDER_EYE, new SpiderEyeWare());
 		
 		brainUpgrades = new ItemBrainUpgrade("brainUpgrades", EnumSlot.CRANIUM,
 				new String[] { "corticalStack", "enderJammer", "consciousnessTransmitter", "neuralContextualizer", "matrix" });
 		brainUpgrades.setEssenceCost(3, 10, 2, 2, 10);
 		brainUpgrades.setWeights(RARE, UNCOMMON, UNCOMMON, COMMON, UNCOMMON);
+		brainUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 1, 7), new ItemStack(component, 2, 8) },
+				new ItemStack[] { new ItemStack(component, 1, 2), new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 2, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 6), new ItemStack(component, 3, 7) },
+				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 6), new ItemStack(component, 3, 7) },
+				new ItemStack[] { new ItemStack(component, 3, 3), new ItemStack(component, 1, 5), new ItemStack(component, 2, 9) }
+				);
 		expCapsule = new ItemExpCapsule("expCapsule");
 		
 		cyberheart = new ItemCyberheart("cyberheart", EnumSlot.HEART);

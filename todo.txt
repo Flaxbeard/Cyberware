@@ -1,40 +1,10 @@
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:109]: cyberware:cybereyes_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cybereyeUpgrades_nightVision_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cybereyeUpgrades_underwaterVision_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cybereyeUpgrades_hudjack_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cybereyeUpgrades_targeting_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cybereyeUpgrades_zoom_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:brainUpgrades_corticalStack_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:brainUpgrades_enderJammer_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:brainUpgrades_consciousnessTransmitter_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:brainUpgrades_neuralContextualizer_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:brainUpgrades_matrix_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:109]: cyberware:cyberheart_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:109]: cyberware:denseBattery_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:109]: cyberware:creativeBattery_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:heartUpgrades_defibrillator_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:heartUpgrades_platelets_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:heartUpgrades_medkit_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:heartUpgrades_coupler_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lungsUpgrades_oxygen_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lungsUpgrades_hyperoxygenation_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lowerOrgansUpgrades_liverFilter_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lowerOrgansUpgrades_metabolic_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lowerOrgansUpgrades_battery_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:lowerOrgansUpgrades_adrenaline_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:skinUpgrades_solarSkin_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:skinUpgrades_subdermalSpikes_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:skinUpgrades_fakeSkin_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:muscleUpgrades_wiredReflexes_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:muscleUpgrades_muscleReplacements_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:boneUpgrades_bonelacing_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:boneUpgrades_boneflex_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:handUpgrades_craftHands_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:handUpgrades_claws_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:handUpgrades_mining_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:legUpgrades_jumpBoost_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:footUpgrades_spurs_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cyberlimbs_cyberarmLeft_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cyberlimbs_cyberarmRight_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cyberlimbs_cyberlegLeft_scavenged
-[13:26:07] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientProxy:registerRenders:94]: cyberware:cyberlimbs_cyberlegRight_scavenged
+component_actuator
+component_reactor
+component_titanium
+component_ssc
+component_plating
+component_fiberoptics
+component_fullerene
+component_synthnerves
+component_storage
+component_microelectric

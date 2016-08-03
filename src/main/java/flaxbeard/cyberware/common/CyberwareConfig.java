@@ -15,9 +15,9 @@ import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class CyberwareConfig
 {
-	public static float ENGINEERING_CHANCE = 33.33F;
-	public static float SCANNER_CHANCE = 3F;
-	public static float SCANNER_CHANCE_ADDL = 2F;
+	public static float ENGINEERING_CHANCE = 15F;
+	public static float SCANNER_CHANCE = 10F;
+	public static float SCANNER_CHANCE_ADDL = 10F;
 	public static int SCANNER_TIME = 24000;
 	
 	public static int ESSENCE = 100;

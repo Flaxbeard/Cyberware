@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.EngineeringDestroyPacket;
@@ -82,7 +83,16 @@ public class GuiEngineeringTable extends GuiContainer
 		
 		if (this.isPointInRegion(39, 34, 21, 21, mouseX, mouseY))
 		{
-			this.drawHoveringText(Arrays.asList(new String[] { I18n.format("cyberware.gui.destroy") } ), mouseX - i, mouseY - j, fontRendererObj);
+			String[] tooltip;
+			if (engineering.slots.getStackInSlot(1) != null)
+			{
+				tooltip = new String[] { I18n.format("cyberware.gui.destroy"), I18n.format("cyberware.gui.destroyChance", Float.toString(Math.round(CyberwareConfig.ENGINEERING_CHANCE * 100F) / 100F) + "%") };
+			}
+			else
+			{
+				tooltip = new String[] { I18n.format("cyberware.gui.destroy") };
+			}
+			this.drawHoveringText(Arrays.asList(tooltip), mouseX - i, mouseY - j, fontRendererObj);
 		}
 		
 		if (this.isPointInRegion(15, 20, 16, 16, mouseX, mouseY) && engineering.slots.getStackInSlot(0) == null)

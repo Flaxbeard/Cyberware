@@ -21,31 +21,21 @@ import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
 
-public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem, IDeconstructable
+public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyberwareTabItem, IDeconstructable
 {
 	private EnumSlot[] slots;
-	public String[] subnames;
 	private int[] essence;
 	private ItemStack[][] components;
 	
 	public ItemCyberware(String name, EnumSlot[] slots, String[] subnames)
 	{		
-		this.setRegistryName(name);
-		GameRegistry.register(this);
-		this.setUnlocalizedName(Cyberware.MODID + "." + name);
-        
-		this.setCreativeTab(Cyberware.creativeTab);
+		super(name, subnames);
 		
 		this.slots = slots;
 		
-		this.subnames = subnames;
-
-		this.setHasSubtypes(this.subnames.length > 0);
-		this.setMaxDamage(0);
 		this.essence = new int[subnames.length + 1];
 		this.components = new ItemStack[0][0];
 
-        CyberwareContent.items.add(this);
 	}
 	
 	public ItemCyberware(String name, EnumSlot slot, String[] subnames)
@@ -112,17 +102,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
-	
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
-	{
-		int damage = itemstack.getItemDamage();
-		if (damage >= subnames.length)
-		{
-			return super.getUnlocalizedName();
-		}
-		return super.getUnlocalizedName(itemstack) + "." + subnames[damage];
-	}
+
 
 	@Override
 	public EnumSlot getSlot(ItemStack stack)

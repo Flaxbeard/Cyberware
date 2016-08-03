@@ -71,6 +71,17 @@ item.cyberware.neuropozyne.name=Neuropozyne
 item.cyberware.blueprint.name=Blank Blueprint
 item.cyberware.blueprint.notBlank.name=%1$s Blueprint
 
+item.cyberware.component.actuator.name=Actuator
+item.cyberware.component.reactor.name=Bioreactor
+item.cyberware.component.titanium.name=Titanium Mesh
+item.cyberware.component.ssc.name=Solid-State Circuitry
+item.cyberware.component.plating.name=Chrome Plating
+item.cyberware.component.fiberoptics.name=Fiber Optics
+item.cyberware.component.fullerene.name=Fullerene Microstructures
+item.cyberware.component.synthnerves.name=Synthetic Nerves
+item.cyberware.component.storage.name=Storage Cell
+item.cyberware.component.microelectric.name=Microelectric Cells
+
 # TOOLTIPS
 itemGroup.cyberware=Cyberware
 
@@ -116,6 +127,7 @@ cyberware.gui.added=(Will be added)
 cyberware.gui.removed=(Will be removed)
 
 cyberware.gui.destroy=Void Warranty
+cyberware.gui.destroyChance=%1$s Chance for blueprint
 cyberware.gui.toDestroy=Insert Cyberware to Destroy
 cyberware.gui.paper=Insert Paper
 cyberware.gui.blueprint=Insert Cyberware Blueprint
