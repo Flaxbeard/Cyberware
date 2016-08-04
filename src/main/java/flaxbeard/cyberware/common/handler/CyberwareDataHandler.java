@@ -53,6 +53,15 @@ public class CyberwareDataHandler
 	@SubscribeEvent
 	public void playerDeathEvent(PlayerEvent.Clone event)
 	{
+		EntityPlayer p = event.getEntityPlayer();
+		EntityPlayer o = event.getOriginal();
+		if (!event.isWasDeath())
+		{
+			if (CyberwareAPI.hasCapability(o) && CyberwareAPI.hasCapability(o))
+			{
+				CyberwareAPI.getCapability(p).deserializeNBT(CyberwareAPI.getCapability(o).serializeNBT());
+			}
+		}
 	}
 	
 	@SubscribeEvent
