@@ -4,14 +4,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import flaxbeard.cyberware.client.gui.ContainerBlueprintArchive;
 import flaxbeard.cyberware.client.gui.ContainerEngineeringTable;
 import flaxbeard.cyberware.client.gui.ContainerPlayerExpandedCrafting;
 import flaxbeard.cyberware.client.gui.ContainerScanner;
 import flaxbeard.cyberware.client.gui.ContainerSurgery;
+import flaxbeard.cyberware.client.gui.GuiBlueprintArchive;
 import flaxbeard.cyberware.client.gui.GuiEngineeringTable;
 import flaxbeard.cyberware.client.gui.GuiInventoryExpandedCrafting;
 import flaxbeard.cyberware.client.gui.GuiScanner;
 import flaxbeard.cyberware.client.gui.GuiSurgery;
+import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.block.tile.TileEntityScanner;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
@@ -30,8 +33,10 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerPlayerExpandedCrafting(player.inventory, false, player);
 			case 2:
 				return new ContainerEngineeringTable(player.inventory, (TileEntityEngineeringTable) world.getTileEntity(new BlockPos(x, y, z)));
-			default:
+			case 3:
 				return new ContainerScanner(player.inventory, (TileEntityScanner) world.getTileEntity(new BlockPos(x, y, z)));
+			default:
+				return new ContainerBlueprintArchive(player.inventory, (TileEntityBlueprintArchive) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 	}
 
@@ -46,8 +51,10 @@ public class GuiHandler implements IGuiHandler
 				return new GuiInventoryExpandedCrafting(player);
 			case 2:
 				return new GuiEngineeringTable(player.inventory, (TileEntityEngineeringTable) world.getTileEntity(new BlockPos(x, y, z)));
-			default:
+			case 3:
 				return new GuiScanner(player.inventory, (TileEntityScanner) world.getTileEntity(new BlockPos(x, y, z)));
+			default:
+				return new GuiBlueprintArchive(player.inventory, (TileEntityBlueprintArchive) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 	}
 

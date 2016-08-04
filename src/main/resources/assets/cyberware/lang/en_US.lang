@@ -4,6 +4,9 @@ item.cyberware.surgeryChamber.name=Surgery Chamber
 tile.cyberware.surgeryChamber.name=Surgery Chamber
 tile.cyberware.charger.name=Cyberware Charger
 tile.cyberware.engineeringTable.name=Cyberware Engineering Table
+tile.cyberware.scanner.name=Cyberware Scanner
+tile.cyberware.blueprintArchive.name=Blueprint Archive
+item.cyberware.engineeringTable.name=Cyberware Engineering Table
 
 # ITEMS
 item.cyberware.bodyPart.brain.name=Human Brain
@@ -248,7 +251,7 @@ entity.cyberware.cyberzombie.name=Cyberzombie
 # THE LANGUAGE YOU'RE TRANSLATING TO
 
 # THIS MUST BE THE NUMBER OF THE LAST KEY + 1 TO INCLUDE THE 0 SAYING
-cyberware.gui.scannerSaying.count=67
+cyberware.gui.scannerSaying.count=68
 
 cyberware.gui.scannerSaying.0=Reticulating Splines
 cyberware.gui.scannerSaying.1=Resolving GUID Conflict
@@ -261,7 +264,7 @@ cyberware.gui.scannerSaying.7=Asserting Packed Exemplars
 cyberware.gui.scannerSaying.8=Simulating Thermonuclear War
 cyberware.gui.scannerSaying.9=Updating to Windows 10
 cyberware.gui.scannerSaying.10=Predicting Lottery Numbers
-cyberware.gui.scannerSaying.11=Building Data Trees
+cyberware.gui.scannerSaying.11=Uprooting Data Trees
 cyberware.gui.scannerSaying.12=Attempting POST Operations
 cyberware.gui.scannerSaying.13=Subscribing Event Handlers
 cyberware.gui.scannerSaying.14=Installing Ask Toolbar
@@ -317,9 +320,11 @@ cyberware.gui.scannerSaying.63=Sifting Neural Particles
 cyberware.gui.scannerSaying.64=Solving Differential Equations
 cyberware.gui.scannerSaying.65=Commencing Spatial Simulation
 cyberware.gui.scannerSaying.66=Instantiating Child Elements
+cyberware.gui.scannerSaying.67=Wiping System32
 
 
 
 # MISC
 cyberware.container.engineering=Cyberware Engineering
 cyberware.container.scanner=Scanner
+cyberware.container.blueprintArchive=Blueprint Archive

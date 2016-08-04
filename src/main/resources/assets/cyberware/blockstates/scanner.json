@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "cyberware:scanner",
+        "textures": {
+            "particle": "cyberware:blocks/surgeryChamberTop"
+        }
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}]
+    }
+}

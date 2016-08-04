@@ -1,0 +1,21 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "minecraft:orientable",
+        "textures": {
+            "particle": "cyberware:blocks/blankMachine",
+            "top": "cyberware:blocks/blankMachine",
+            "side": "cyberware:blocks/blankMachine",
+            "front": "cyberware:blocks/blueprintArchive"
+        }
+    },
+    "variants": {
+        "facing": {
+            "east": { "y": 90 },
+            "west": { "y": 270 },
+            "north": { "y": 0 },
+            "south": { "y": 180 }
+        },
+        "inventory": [{}]
+    }
+}

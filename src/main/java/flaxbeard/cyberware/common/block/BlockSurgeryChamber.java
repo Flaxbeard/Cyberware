@@ -19,6 +19,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -79,6 +80,12 @@ public class BlockSurgeryChamber extends BlockContainer
 	private static final AxisAlignedBB west = new AxisAlignedBB(15F / 16F, 0F, 0F, 1F, 1F, 1F);
 	private static final AxisAlignedBB bottom = new AxisAlignedBB(0F, 0F, 0F, 1F, 1F / 16F, 1F);
 	
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	{
+		return new ItemStack(ib);
+	}
+
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
 	{

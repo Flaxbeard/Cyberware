@@ -12,11 +12,14 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -30,12 +33,17 @@ public class CreativeMenuHandler
 {
 	private static class CEXButton extends GuiButton
 	{
+		private Minecraft mc = Minecraft.getMinecraft();
 		public final int offset;
+		public final int baseX;
+		public final int baseY;
 		
 		public CEXButton(int p_i46316_1_, int p_i46316_2_, int p_i46316_3, int offset)
 		{
 			super(p_i46316_1_, p_i46316_2_, p_i46316_3, 21, 21, "");
 			this.offset = offset;
+			this.baseX = this.xPosition;
+			this.baseY = this.yPosition;
 		}
 	
 
@@ -52,7 +60,7 @@ public class CreativeMenuHandler
 
 				boolean isDown = (down && flag) || pageSelected == offset;
 	
-				int i = 7;
+				int i = 4;
 				int j = 8;
 				if (isDown)
 				{
@@ -86,8 +94,8 @@ public class CreativeMenuHandler
 			int j = (gui.height - 195) / 2;
 			
 			List<GuiButton> buttons = event.getButtonList();
-			buttons.add(salvaged = new CEXButton(355, i - 58 + 7, j + 29 + 8, 0));
-			buttons.add(manufactured = new CEXButton(356, i - 58 + 7, j + 29 + 31, 1));
+			buttons.add(salvaged = new CEXButton(355, i + 166 + 4, j + 29 + 8, 0));
+			buttons.add(manufactured = new CEXButton(356, i + 166 + 4, j + 29 + 31, 1));
 			
 			int selectedTabIndex = ReflectionHelper.getPrivateValue(GuiContainerCreative.class, (GuiContainerCreative) gui, 2);
 			if (selectedTabIndex != Cyberware.creativeTab.getTabIndex())
@@ -109,12 +117,12 @@ public class CreativeMenuHandler
 			GuiContainerCreative gui = (GuiContainerCreative) event.getGui();
 			int i = (gui.width - 136) / 2;
 			int j = (gui.height - 195) / 2;
-			if (isPointInRegion(i, j, -58 + 7, 29 + 8, 18, 18, mouseX, mouseY))
+			if (isPointInRegion(i, j, salvaged.xPosition - i, 29 + 8, 18, 18, mouseX, mouseY))
 			{
 				ClientUtils.drawHoveringText(gui, Arrays.asList(new String[] { I18n.format(CyberwareAPI.QUALITY_SCAVENGED.getUnlocalizedName()) } ), mouseX, mouseY, mc.getRenderManager().getFontRenderer());
 			}
 			
-			if (isPointInRegion(i, j, -58 + 7, 29 + 8 + 23, 18, 18, mouseX, mouseY))
+			if (isPointInRegion(i, j, manufactured.xPosition - i, 29 + 8 + 23, 18, 18, mouseX, mouseY))
 			{
 				ClientUtils.drawHoveringText(gui, Arrays.asList(new String[] { I18n.format(CyberwareAPI.QUALITY_MANUFACTURED.getUnlocalizedName()) } ), mouseX, mouseY, mc.getRenderManager().getFontRenderer());
 			}
@@ -137,9 +145,26 @@ public class CreativeMenuHandler
 				int xSize = 29;
 				int ySize = 129;
 				
+				int xOffset = 0;
+				boolean hasVisibleEffect = false;
+				for(PotionEffect potioneffect : mc.thePlayer.getActivePotionEffects())
+				{
+					Potion potion = potioneffect.getPotion();
+					if(potion.shouldRender(potioneffect)) {
+						hasVisibleEffect = true; break;
+					}
+				}
+				if (!this.mc.thePlayer.getActivePotionEffects().isEmpty() && hasVisibleEffect)
+				{
+					xOffset = 59;
+				}
+				salvaged.xPosition = salvaged.baseX + xOffset;
+				manufactured.xPosition = manufactured.baseX + xOffset;
+
+				
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.mc.getTextureManager().bindTexture(CEX_GUI_TEXTURES);
-				gui.drawTexturedModalRect(i - 58, j + 29, 0, 0, xSize, ySize);
+				gui.drawTexturedModalRect(i + 166 + xOffset, j + 29, 0, 0, xSize, ySize);
 				
 				salvaged.visible = true;
 				manufactured.visible = true;

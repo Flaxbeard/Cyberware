@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -84,139 +85,7 @@ public class EngineeringDestroyPacket implements IMessage
 			{
 				TileEntityEngineeringTable engineering = (TileEntityEngineeringTable) te;
 	
-				ItemStack toDestroy = engineering.slots.getStackInSlot(0);
-				
-				if (CyberwareAPI.canDeconstruct(toDestroy) && toDestroy.stackSize > 0)
-				{
-					ItemStack paperSlot = engineering.slots.getStackInSlot(1);
-					boolean doBlueprint = paperSlot != null && paperSlot.stackSize > 0;
-					
-					ItemStack[] components = CyberwareAPI.getComponents(toDestroy).clone();
-
-					List<ItemStack> random = new ArrayList<ItemStack>();
-					for (ItemStack component : components)
-					{
-						if (component != null)
-						{
-							for (int i = 0; i < component.stackSize; i++)
-							{
-								ItemStack copy = component.copy();
-								copy.stackSize = 1;
-								random.add(copy);
-							}
-						}
-					}
-					
-					int numToRemove = world.getDifficulty().getDifficultyId() + 1;
-					for (int i = 0; i < numToRemove; i++)
-					{
-						random.remove(world.rand.nextInt(random.size()));
-					}
-
-					ItemStackHandler handler = new ItemStackHandler(6);
-					for (int i = 0; i < 6; i++)
-					{
-						handler.setStackInSlot(i, ItemStack.copyItemStack(engineering.slots.getStackInSlot(i + 2)));
-					}
-					boolean canInsert = true;
-					
-					// Check if drops will fit
-					for (ItemStack drop : components)
-					{
-						ItemStack left = drop.copy();
-						boolean wasAble = false;
-						for (int slot = 0; slot < 6; slot++)
-						{
-							left = handler.insertItem(slot, left, false);
-							if (left == null)
-							{
-								wasAble = true;
-								break;
-							}
-						}
-						
-						if (!wasAble)
-						{
-							canInsert = false;
-							break;
-						}
-					}
-					
-					// Check if blueprint will fit
-					if (doBlueprint)
-					{
-						ItemStack left = ItemBlueprint.getBlueprintForItem(toDestroy);
-						boolean wasAble = false;
-						for (int slot = 0; slot < 6; slot++)
-						{
-							left = handler.insertItem(slot, left, false);
-							if (left == null)
-							{
-								wasAble = true;
-								break;
-							}
-						}
-						
-						if (!wasAble)
-						{
-							canInsert = false;
-						}
-					}
-
-					
-					if (canInsert)
-					{
-						if (doBlueprint && engineering.getWorld().rand.nextFloat() < (CyberwareConfig.ENGINEERING_CHANCE / 100F))
-						{
-							ItemStack blue = ItemBlueprint.getBlueprintForItem(toDestroy);
-							random.add(blue);
-							
-							ItemStack current = engineering.slots.getStackInSlot(1);
-							current.stackSize--;
-							if (current.stackSize <= 0)
-							{
-								current = null;
-							}
-							engineering.slots.setStackInSlot(1, current);
-						}
-				
-						
-						for (ItemStack drop : random)
-						{
-							ItemStack dropLeft = drop.copy();
-							for (int slot = 2; slot < 8; slot++)
-							{
-								if (engineering.slots.getStackInSlot(slot) != null)
-								{
-									dropLeft = engineering.slots.insertItem(slot, dropLeft, false);
-									if (dropLeft == null)
-									{
-										break;
-									}
-								}
-							}
-							
-							for (int slot = 2; slot < 8; slot++)
-							{
-								dropLeft = engineering.slots.insertItem(slot, dropLeft, false);
-								if (dropLeft == null)
-								{
-									break;
-								}
-							}
-						}
-						
-						ItemStack current = engineering.slots.getStackInSlot(0);
-						current.stackSize--;
-						if (current.stackSize <= 0)
-						{
-							current = null;
-						}
-						engineering.slots.setStackInSlot(0, current);
-						engineering.updateRecipe();
-					}
-				}
-
+				engineering.smash(true);
 			}
 			
 			

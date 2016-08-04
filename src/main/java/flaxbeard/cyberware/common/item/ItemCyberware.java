@@ -336,9 +336,16 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 	@Override
 	public ItemStack setQuality(ItemStack stack, Quality quality)
 	{
-		if (quality == CyberwareAPI.QUALITY_MANUFACTURED && stack != null && stack.hasTagCompound())
+		if (quality == CyberwareAPI.QUALITY_MANUFACTURED)
 		{
-			stack.getTagCompound().removeTag(CyberwareAPI.QUALITY_TAG);
+			if (stack != null && stack.hasTagCompound())
+			{
+				stack.getTagCompound().removeTag(CyberwareAPI.QUALITY_TAG);
+				if (stack.getTagCompound().hasNoTags())
+				{
+					stack.setTagCompound(null);
+				}
+			}
 			return stack;
 		}
 		return CyberwareAPI.writeQualityTag(stack, quality);

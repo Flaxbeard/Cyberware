@@ -16,9 +16,13 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.client.render.CyberwareMeshDefinition;
 import flaxbeard.cyberware.client.render.RenderCyberZombie;
+import flaxbeard.cyberware.client.render.TileEntityEngineeringRenderer;
+import flaxbeard.cyberware.client.render.TileEntityScannerRenderer;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
+import flaxbeard.cyberware.common.block.tile.TileEntityScanner;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
@@ -48,6 +52,9 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySurgeryChamber.class, new TileEntitySurgeryChamberRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityCyberZombie.class, RenderCyberZombie::new);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityScanner.class, new TileEntityScannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEngineeringTable.class, new TileEntityEngineeringRenderer());
+
 	}
 
 
@@ -123,7 +130,7 @@ public class ClientProxy extends CommonProxy
 						i, new ModelResourceLocation(item.getRegistryName() + (i == 1 ? "_blank" : ""), "inventory"));
 			}
 		}
-		if (item instanceof ItemCyberwareBase)
+		else if (item instanceof ItemCyberwareBase)
 		{
 			ItemCyberwareBase base = ((ItemCyberwareBase) item);
 			if (base.subnames.length > 0)

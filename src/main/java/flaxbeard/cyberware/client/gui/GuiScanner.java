@@ -83,7 +83,7 @@ public class GuiScanner extends GuiContainer
 		if (scanner.slots.getStackInSlot(0) != null)
 		{
 			chance = CyberwareConfig.SCANNER_CHANCE + (CyberwareConfig.SCANNER_CHANCE_ADDL * (scanner.slots.getStackInSlot(0).stackSize - 1));
-			chance = Math.min(chance, 100F);
+			chance = Math.min(chance, 50F);
 		}
 		String num = Float.toString(Math.round(chance * 100F) / 100F) + "%";
 		s = I18n.format("cyberware.gui.percent", num);

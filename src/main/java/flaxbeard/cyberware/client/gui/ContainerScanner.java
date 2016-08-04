@@ -120,7 +120,7 @@ public class ContainerScanner extends Container
 						return null;
 					}
 				}
-				if (scanner.slots.isItemValidForSlot(0, itemstack1))
+				else if (scanner.slots.isItemValidForSlot(0, itemstack1))
 				{
 					if (!this.mergeItemStack(itemstack1, 0, 1, false))
 					{

@@ -64,7 +64,6 @@ public class TileEntityScanner extends TileEntity implements ITickable
 		public boolean canRemoveItem(int slot)
 		{
 			if (overrideExtract) return true;
-			if (slot < 2) return false;
 			return true;
 		}
 
@@ -139,9 +138,13 @@ public class TileEntityScanner extends TileEntity implements ITickable
 	public ItemStackHandlerScanner slots = new ItemStackHandlerScanner(this, 3);
 	private final RangedWrapper slotsTopSides = new RangedWrapper(slots, 0, 2);
 	private final RangedWrapper slotsBottom = new RangedWrapper(slots, 2, 3);
+	private final RangedWrapper slotsBottom2 = new RangedWrapper(slots, 0, 1);
 	public final GuiWrapper guiSlots = new GuiWrapper(slots);
 	public String customName = null;
 	public int ticks = 0;
+	public int ticksMove = 0;
+	public int lastX = 0, x = 0;
+	public int lastZ = 0, z = 0;
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
@@ -161,7 +164,14 @@ public class TileEntityScanner extends TileEntity implements ITickable
 		{
 			if (facing == EnumFacing.DOWN)
 			{
-				return (T) slotsBottom;
+				if (slots.getStackInSlot(2) != null && slots.getStackInSlot(0) != null)
+				{
+					return (T) slotsBottom2;
+				}
+				else
+				{
+					return (T) slotsBottom;
+				}
 			}
 			else
 			{
@@ -255,18 +265,33 @@ public class TileEntityScanner extends TileEntity implements ITickable
 	public void update()
 	{
 		ItemStack toDestroy = slots.getStackInSlot(0);
-		
 		if (CyberwareAPI.canDeconstruct(toDestroy) && toDestroy.stackSize > 0 && (slots.getStackInSlot(2) == null || slots.getStackInSlot(2).stackSize == 0))
 		{
 			ticks++;
+			
+			if (ticksMove > ticks || (ticks - ticksMove > Math.max((Math.abs(lastX - x) * 3), (Math.abs(lastZ - z) * 3)) + 10))
+			{
+				ticksMove = ticks;
+				lastX = x;
+				lastZ = z;
+				while (x == lastX)
+				{
+					x = worldObj.rand.nextInt(11);
+				}
+				while (z == lastZ)
+				{
+					z = worldObj.rand.nextInt(11);
+				}
+			}
 			if (ticks > CyberwareConfig.SCANNER_TIME)
 			{
 				ticks = 0;
-				
+				ticksMove = 0;
+
 				if (!worldObj.isRemote && (slots.getStackInSlot(1) != null && slots.getStackInSlot(1).stackSize > 0))
 				{
 					float chance = CyberwareConfig.SCANNER_CHANCE + (CyberwareConfig.SCANNER_CHANCE_ADDL * (slots.getStackInSlot(0).stackSize - 1));
-					chance = Math.min(chance, 100F);
+					chance = Math.min(chance, 50F);
 					
 					if (worldObj.rand.nextFloat() < (chance / 100F))
 					{
@@ -279,15 +304,22 @@ public class TileEntityScanner extends TileEntity implements ITickable
 							current = null;
 						}
 						slots.setStackInSlot(1, current);
+						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(getPos()), worldObj.getBlockState(getPos()), 2);
+
 					}
+					
 				}
 			}
 			this.markDirty();
 		}
-		else if (ticks != 0)
+		else
 		{
-			this.ticks = 0;
-			this.markDirty();
+			x = lastX = z = lastZ = 0;
+			if (ticks != 0)
+			{
+				this.ticks = 0;
+				this.markDirty();
+			}
 		}
 	}
 

@@ -103,7 +103,7 @@ public class EntityCyberZombie extends EntityZombie
 		
 		if (hasWare)
 		{
-			if (worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F) || true)
+			if (worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F))
 			{
 				List<ItemStack> allWares = new ArrayList<ItemStack>();
 				for (EnumSlot slot : EnumSlot.values())

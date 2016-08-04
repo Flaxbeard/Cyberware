@@ -9,7 +9,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,6 +20,7 @@ import org.lwjgl.input.Mouse;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.EngineeringDestroyPacket;
@@ -49,8 +53,8 @@ public class GuiEngineeringTable extends GuiContainer
 				int j = 34;
 				if (down && flag)
 				{
-					i = 176;
-					j = 0;
+					i = 0;
+					j = 166;
 				}
 				this.drawTexturedModalRect(this.xPosition, this.yPosition, i, j, 21, 21);
 			}
@@ -62,7 +66,8 @@ public class GuiEngineeringTable extends GuiContainer
 	private InventoryPlayer playerInventory;
 
 	private TileEntityEngineeringTable engineering;
-	
+	private TileEntityBlueprintArchive archive;
+
 	private SmashButton smash;
 
 	public GuiEngineeringTable(InventoryPlayer playerInv, TileEntityEngineeringTable engineering)
@@ -70,6 +75,23 @@ public class GuiEngineeringTable extends GuiContainer
 		super(new ContainerEngineeringTable(playerInv, engineering));
 		this.playerInventory = playerInv;
 		this.engineering = engineering;
+		
+		BlockPos pos = engineering.getPos().add(0, -1, 0);
+		archive = null;
+		for (EnumFacing facing : EnumFacing.HORIZONTALS)
+		{
+			TileEntity te = engineering.getWorld().getTileEntity(pos.add(facing.getDirectionVec()));
+			if (te instanceof TileEntityBlueprintArchive)
+			{
+				archive = (TileEntityBlueprintArchive) te;
+				break;
+			}
+		}
+		
+		if (archive != null)
+		{
+			this.xSize = 241;
+		}
 	}
 	
 	@Override
@@ -78,9 +100,26 @@ public class GuiEngineeringTable extends GuiContainer
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		String s = this.engineering.getDisplayName().getUnformattedText();
-		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRendererObj.drawString(s, 8, 6, 4210752);
 		this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 		
+		if (archive != null)
+		{
+			String ogName = this.archive.getDisplayName().getUnformattedText();
+			
+			String name = ogName.substring(0, Math.min(9, ogName.length())).trim();
+			if (ogName.length() > 9)
+			{
+				name += "...";
+			}
+			
+			if (ogName.length() <= 11)
+			{
+				name = ogName.substring(0, Math.min(11, ogName.length())).trim();
+			}
+			
+			this.fontRendererObj.drawString(name, 180, 10, 4210752);
+		}
 		if (this.isPointInRegion(39, 34, 21, 21, mouseX, mouseY))
 		{
 			String[] tooltip;

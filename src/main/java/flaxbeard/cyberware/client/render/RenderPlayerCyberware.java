@@ -30,6 +30,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 
 	public boolean doMuscles = false;
 	public boolean doRobo = false;
+	public boolean doRusty = false;
 
 	public RenderPlayerCyberware(RenderManager renderManager, boolean arms)
 	{
@@ -38,11 +39,12 @@ public class RenderPlayerCyberware extends RenderPlayer
 
 	private static final ResourceLocation muscles = new ResourceLocation(Cyberware.MODID + ":textures/models/playerMuscles.png");
 	private static final ResourceLocation robo = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRobot.png");
-	
+	private static final ResourceLocation roboRust = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRustyRobot.png");
+
 	@Override
 	protected ResourceLocation getEntityTexture(AbstractClientPlayer entity)
 	{
-		return doRobo ? robo :
+		return doRusty ? roboRust : doRobo ? robo :
 			doMuscles ? muscles : super.getEntityTexture(entity);
 	}
 	

@@ -24,6 +24,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockEngineeringTable;
 import flaxbeard.cyberware.common.block.BlockScanner;
@@ -69,6 +70,7 @@ public class CyberwareContent
 	public static Block charger;
 	public static Block engineering;
 	public static Block scanner;
+	public static Block blueprintArchive;
 
 	
 	public static Item bodyPart;
@@ -126,6 +128,7 @@ public class CyberwareContent
 		
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
 
+		blueprintArchive = new BlockBlueprintArchive();
 		surgeryApparatus = new BlockSurgery();
 		surgeryChamber = new BlockSurgeryChamber();
 		charger = new BlockCharger();
@@ -176,11 +179,13 @@ public class CyberwareContent
 		cyberheart = new ItemCyberheart("cyberheart", EnumSlot.HEART);
 		cyberheart.setEssenceCost(5);
 		cyberheart.setWeights(COMMON);
+		cyberheart.setComponents(new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 7) });
 		
 		denseBattery = new ItemDenseBattery("denseBattery", EnumSlot.LOWER_ORGANS);
 		denseBattery.setEssenceCost(15);
 		denseBattery.setWeights(RARE);
-		
+		denseBattery.setComponents(new ItemStack[] { new ItemStack(component, 3, 6), new ItemStack(component, 4, 9) });
+
 		creativeBattery = new ItemCreativeBattery("creativeBattery", EnumSlot.LOWER_ORGANS);
 		creativeBattery.setEssenceCost(0);
 		
@@ -188,51 +193,93 @@ public class CyberwareContent
 				new String[] { "defibrillator", "platelets", "medkit", "coupler" });
 		heartUpgrades.setEssenceCost(10, 5, 15, 10);
 		heartUpgrades.setWeights(COMMON, UNCOMMON, UNCOMMON, VERY_COMMON);
+		heartUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 2, 6), new ItemStack(component, 2, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 2, 1), new ItemStack(component, 1, 8) },
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 1, 6), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 1, 7), new ItemStack(component, 2, 9) }
+				);
 		
 		lungsUpgrades = new ItemLungsUpgrade("lungsUpgrades", EnumSlot.LUNGS,
 				new String[] { "oxygen", "hyperoxygenation" });
 		lungsUpgrades.setEssenceCost(15, 2);
 		lungsUpgrades.setWeights(UNCOMMON, COMMON);
+		lungsUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 2, 8) },
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 2, 8), new ItemStack(component, 1, 9) }
+				);
 		
 		lowerOrgansUpgrades = new ItemLowerOrgansUpgrade("lowerOrgansUpgrades", EnumSlot.LOWER_ORGANS,
 				new String[] { "liverFilter", "metabolic", "battery", "adrenaline" });
 		lowerOrgansUpgrades.setEssenceCost(5, 5, 10, 5);
 		lowerOrgansUpgrades.setWeights(UNCOMMON, COMMON, VERY_COMMON, UNCOMMON);
+		lowerOrgansUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 2, 8) },
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 1, 3), new ItemStack(component, 1, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 2, 8), new ItemStack(component, 3, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 2, 1) }
+				);
 		
 		skinUpgrades = new ItemSkinUpgrade("skinUpgrades", EnumSlot.SKIN,
 				new String[] { "solarSkin", "subdermalSpikes", "fakeSkin" });
 		skinUpgrades.setEssenceCost(15, 12, 0);
 		skinUpgrades.setWeights(VERY_COMMON, UNCOMMON, UNCOMMON);
+		skinUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 1, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 2, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 3, 4), new ItemStack(component, 2, 5) }
+				);
 		
 		muscleUpgrades = new ItemMuscleUpgrade("muscleUpgrades", EnumSlot.MUSCLE,
 				new String[] { "wiredReflexes", "muscleReplacements" });
 		muscleUpgrades.setEssenceCost(5, 15);
 		muscleUpgrades.setWeights(UNCOMMON, RARE);
+		muscleUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 3, 7) },
+				new ItemStack[] { new ItemStack(component, 3, 0), new ItemStack(component, 1, 2), new ItemStack(component, 2, 5) }
+				);
 
 		boneUpgrades = new ItemBoneUpgrade("boneUpgrades", EnumSlot.BONE,
 				new String[] { "bonelacing", "boneflex" });
 		boneUpgrades.setEssenceCost(3, 5);
 		boneUpgrades.setWeights(UNCOMMON);
+		boneUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 6) },
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 8) }
+				);
 		
 		handUpgrades = new ItemHandUpgrade("handUpgrades", EnumSlot.HAND,
 				new String[] { "craftHands", "claws", "mining" });
 		handUpgrades.setEssenceCost(2, 2, 1);
 		handUpgrades.setWeights(RARE, RARE, RARE);
+		handUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 1, 3), new ItemStack(component, 1, 4) },
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 6), new ItemStack(component, 2, 8) },
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4), new ItemStack(component, 2, 6)}
+				);
 		
 		legUpgrades = new ItemLegUpgrade("legUpgrades", EnumSlot.LEG,
 				new String[] { "jumpBoost" });
 		legUpgrades.setEssenceCost(3);
 		legUpgrades.setWeights(UNCOMMON);
+		legUpgrades.setComponents(new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2) });
 		
 		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
 				new String[] { "spurs" });
 		footUpgrades.setEssenceCost(1);
 		footUpgrades.setWeights(UNCOMMON);
-		
+		footUpgrades.setComponents(new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4) });
+
 		cyberlimbs = new ItemCyberlimb("cyberlimbs", 
 				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
 				new String[] { "cyberarmLeft", "cyberarmRight", "cyberlegLeft", "cyberlegRight" });
 		cyberlimbs.setEssenceCost(25, 25, 25, 25);
+		cyberlimbs.setComponents(
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) },
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) }
+				);
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(surgeryChamber.ib),
 				"III",
@@ -248,9 +295,39 @@ public class CyberwareContent
 				Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "blockRedstone", Character.valueOf('F'), new ItemStack(Blocks.IRON_BARS)
 				));
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(scanner),
+				"IEI",
+				"IDI",
+				"III",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('D'), "gemDiamond", Character.valueOf('E'), new ItemStack(cybereyes, 1, OreDictionary.WILDCARD_VALUE)
+				));
+		
+		ItemStack salvagedEye = new ItemStack(cybereyes);
+		salvagedEye = cybereyes.setQuality(salvagedEye, CyberwareAPI.QUALITY_SCAVENGED);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(scanner),
+				"IEI",
+				"IDI",
+				"III",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('D'), "gemDiamond", Character.valueOf('E'), salvagedEye
+				));
+		
 		GameRegistry.addRecipe(new BlueprintCraftingHandler());
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.PAPER),
 				new ItemStack(blueprint, 1, OreDictionary.WILDCARD_VALUE)
+				));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(engineering),
+				" PI",
+				"III",
+				"ICI",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('P'), new ItemStack(Blocks.PISTON), Character.valueOf('C'), new ItemStack(Blocks.CRAFTING_TABLE)
+				));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blueprintArchive),
+				"PPP",
+				"AAA",
+				"PPP",
+				Character.valueOf('P'), "plankWood", Character.valueOf('A'), "paper"
 				));
 		
 		if (CyberwareConfig.SURGERY_CRAFTING)
