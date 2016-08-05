@@ -77,57 +77,10 @@ public class ItemLegUpgrade extends ItemCyberware
 			}
 		}
 	}
-	
-	private Map<EntityLivingBase, Boolean> lastAqua = new HashMap<EntityLivingBase, Boolean>();
-
-	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void handleLivingUpdate(LivingUpdateEvent event)
-	{
-		EntityLivingBase e = event.getEntityLiving();
-		
-		ItemStack test = new ItemStack(this, 1, 1);
-		if (CyberwareAPI.isCyberwareInstalled(e, test) && e.isInWater())
-		{
-			int numLegs = 0;
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 2)))
-			{
-				numLegs++;
-			}
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 3)))
-			{
-				numLegs++;
-			}
-			boolean last = getLastAqua(e);
-
-			boolean powerUsed = e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last;
-			if (powerUsed)
-			{
-				if (e.moveForward > 0)
-				{
-					e.moveRelative(0F, numLegs * 0.5F, 0.075F);
-				}
-			}
-			
-			lastAqua.put(e, powerUsed);
-		}
-		else
-		{
-			lastAqua.put(e, true);
-		}
-	}
-	
-	private boolean getLastAqua(EntityLivingBase e)
-	{
-		if (!lastAqua.containsKey(e))
-		{
-			lastAqua.put(e, true);
-		}
-		return lastAqua.get(e);
-	}
 
 	@Override
 	public int getPowerConsumption(ItemStack stack)
 	{
-		return stack.getItemDamage() == 0 ? LibConstants.JUMPBOOST_CONSUMPTION : LibConstants.AQUA_CONSUMPTION;
+		return LibConstants.JUMPBOOST_CONSUMPTION;
 	}
 }
