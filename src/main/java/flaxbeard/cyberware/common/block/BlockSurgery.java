@@ -47,7 +47,7 @@ public class BlockSurgery extends BlockContainer
 		this.setCreativeTab(Cyberware.creativeTab);
 		GameRegistry.registerTileEntity(TileEntitySurgery.class, Cyberware.MODID + ":" + name);
 		
-        CyberwareContent.blocks.add(this);
+		CyberwareContent.blocks.add(this);
 	}
 
 	@Override
@@ -101,16 +101,16 @@ public class BlockSurgery extends BlockContainer
 
 		if (tileentity instanceof TileEntitySurgery && !worldIn.isRemote)
 		{
-    		TileEntitySurgery surgery = (TileEntitySurgery) tileentity;
-    		
-    		for (int i = 0; i < surgery.slots.getSlots(); i++)
-    		{
-    			ItemStack stack = surgery.slots.getStackInSlot(i);
-    			if (stack != null)
-    			{
-    				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
-    			}
-    		}
+			TileEntitySurgery surgery = (TileEntitySurgery) tileentity;
+			
+			for (int i = 0; i < surgery.slots.getSlots(); i++)
+			{
+				ItemStack stack = surgery.slots.getStackInSlot(i);
+				if (stack != null)
+				{
+					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+				}
+			}
 		}
 		super.breakBlock(worldIn, pos, state);
 

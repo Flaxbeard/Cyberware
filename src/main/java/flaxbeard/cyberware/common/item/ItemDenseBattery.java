@@ -2,6 +2,7 @@ package flaxbeard.cyberware.common.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ISpecialBattery;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -29,7 +30,8 @@ public class ItemDenseBattery extends ItemCyberware implements ISpecialBattery
 			int amountToAdd = Math.min(getCapacity(battery) - getStoredEnergy(battery), amount);
 			if (!simulate)
 			{
-				battery.getTagCompound().setInteger("power", battery.getTagCompound().getInteger("power") + amountToAdd);
+				NBTTagCompound data = CyberwareAPI.getCyberwareNBT(battery);
+				data.setInteger("power", data.getInteger("power") + amountToAdd);
 			}
 			return amountToAdd;
 		}
@@ -42,7 +44,8 @@ public class ItemDenseBattery extends ItemCyberware implements ISpecialBattery
 		int amountToSub = Math.min(getStoredEnergy(battery), amount);
 		if (!simulate)
 		{
-			battery.getTagCompound().setInteger("power", battery.getTagCompound().getInteger("power") - amountToSub);
+			NBTTagCompound data = CyberwareAPI.getCyberwareNBT(battery);
+			data.setInteger("power", data.getInteger("power") - amountToSub);
 		}
 		return amountToSub;
 	}
@@ -50,15 +53,13 @@ public class ItemDenseBattery extends ItemCyberware implements ISpecialBattery
 	@Override
 	public int getStoredEnergy(ItemStack battery)
 	{
-		if (!battery.hasTagCompound())
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(battery);
+
+		if (!data.hasKey("power"))
 		{
-			battery.setTagCompound(new NBTTagCompound());
+			data.setInteger("power", 0);
 		}
-		if (!battery.getTagCompound().hasKey("power"))
-		{
-			battery.getTagCompound().setInteger("power", 0);
-		}
-		return battery.getTagCompound().getInteger("power");
+		return data.getInteger("power");
 	}
 	
 	@Override

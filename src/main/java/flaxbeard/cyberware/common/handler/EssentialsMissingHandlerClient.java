@@ -34,9 +34,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Objects;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.client.render.RenderCyberlimbHand;
 import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
 import flaxbeard.cyberware.common.CyberwareContent;
@@ -103,6 +103,11 @@ public class EssentialsMissingHandlerClient
 				{
 					event.setCanceled(true);
 
+					boolean leftArmRusty = robotLeftArm && CyberwareContent.cyberlimbs.getQuality(CyberwareAPI.getCyberware(p, new ItemStack(CyberwareContent.cyberlimbs, 0, 0))) == CyberwareAPI.QUALITY_SCAVENGED;
+					boolean rightArmRusty = robotRightArm && CyberwareContent.cyberlimbs.getQuality(CyberwareAPI.getCyberware(p, new ItemStack(CyberwareContent.cyberlimbs, 0, 1))) == CyberwareAPI.QUALITY_SCAVENGED;
+					boolean leftLegRusty = robotLeftLeg && CyberwareContent.cyberlimbs.getQuality(CyberwareAPI.getCyberware(p, new ItemStack(CyberwareContent.cyberlimbs, 0, 2))) == CyberwareAPI.QUALITY_SCAVENGED;
+					boolean rightLegRusty = robotRightLeg && CyberwareContent.cyberlimbs.getQuality(CyberwareAPI.getCyberware(p, new ItemStack(CyberwareContent.cyberlimbs, 0, 3))) == CyberwareAPI.QUALITY_SCAVENGED;
+
 					if (bigArms)
 					{
 						renderT.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
@@ -115,13 +120,21 @@ public class EssentialsMissingHandlerClient
 					
 					if (!cyberware.isCyberwareInstalled(new ItemStack(CyberwareContent.skinUpgrades, 1, 2)))
 					{
+						
 						ModelPlayer mp = renderF.getMainModel();
+						
+						if (bigArms)
+						{
+							mp = renderT.getMainModel();
+						}
 						mp.bipedBody.isHidden = true;
 						mp.bipedHead.isHidden = true;
-						mp.bipedLeftArm.isHidden = !robotLeftArm;
-						mp.bipedRightArm.isHidden = !robotRightArm;
-						mp.bipedLeftLeg.isHidden = !robotLeftLeg;
-						mp.bipedRightLeg.isHidden = !robotRightLeg;
+						
+						// Manufactured 'ware pass
+						mp.bipedLeftArm.isHidden = !(robotLeftArm && !leftArmRusty);
+						mp.bipedRightArm.isHidden = !(robotRightArm && !rightArmRusty);
+						mp.bipedLeftLeg.isHidden = !(robotLeftLeg && !leftLegRusty);
+						mp.bipedRightLeg.isHidden = !(robotRightLeg && !rightLegRusty);
 						
 						if (bigArms)
 						{
@@ -134,6 +147,29 @@ public class EssentialsMissingHandlerClient
 							renderF.doRobo = true;
 							renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
 							renderF.doRobo = false;
+						}
+						
+						// Rusty 'ware pass
+						mp.bipedLeftArm.isHidden = !leftArmRusty;
+						mp.bipedRightArm.isHidden = !rightArmRusty;
+						mp.bipedLeftLeg.isHidden = !leftLegRusty;
+						mp.bipedRightLeg.isHidden = !rightLegRusty;
+						
+						if (bigArms)
+						{
+							renderT.doRobo = true;
+							renderT.doRusty = true;
+							renderT.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+							renderT.doRobo = false;
+							renderT.doRusty = false;
+						}
+						else
+						{
+							renderF.doRusty = true;
+							renderF.doRobo = true;
+							renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+							renderF.doRobo = false;
+							renderF.doRusty = false;
 						}
 						
 						mp.bipedBody.isHidden = false;

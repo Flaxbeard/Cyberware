@@ -12,7 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import flaxbeard.cyberware.api.ICyberwareTabItem;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 
 public class ItemSurgeryChamber extends Item implements ICyberwareTabItem

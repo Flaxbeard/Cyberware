@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -62,6 +62,7 @@ public class ContainerSurgery extends Container
 		public void onSlotChanged()
 		{
 			surgery.updateEssence();
+			surgery.markDirty();
 		}
 		
 		@Override
@@ -77,6 +78,7 @@ public class ContainerSurgery extends Container
 			surgery.updateEssence();
 		}
 		
+		@Override
 		public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
 	    {
 			super.onPickupFromSlot(playerIn, stack);
@@ -94,7 +96,7 @@ public class ContainerSurgery extends Container
 			if (getPlayerStack() != null && !surgery.canDisableItem(playerStack, slot, index % LibConstants.WARE_PER_SLOT)) return false;
 			if (!(stack != null && stack.getItem() != null && CyberwareAPI.isCyberware(stack) && CyberwareAPI.getCyberware(stack).getSlot(stack) == this.slot)) return false;
 			
-			if (stack != null && playerStack != null && playerStack.getItem() == stack.getItem() && playerStack.getItemDamage() == stack.getItemDamage())
+			if (CyberwareAPI.areCyberwareStacksEqual(stack, playerStack))
 			{
 				int stackSize = CyberwareAPI.getCyberware(stack).installedStackSize(stack);
 				if (playerStack.stackSize == stackSize) return false;
@@ -123,7 +125,7 @@ public class ContainerSurgery extends Container
 			}
 			ItemStack playerStack = getPlayerStack();
 			int stackSize = CyberwareAPI.getCyberware(stack).installedStackSize(stack);
-			if (playerStack != null && playerStack.getItem() == stack.getItem() && playerStack.getItemDamage() == stack.getItemDamage())
+			if (CyberwareAPI.areCyberwareStacksEqual(playerStack, stack))
 			{
 				return stackSize - playerStack.stackSize;
 			}

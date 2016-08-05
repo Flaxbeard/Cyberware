@@ -1,6 +1,6 @@
 package flaxbeard.cyberware.common.network;
 
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import io.netty.buffer.ByteBuf;

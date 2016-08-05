@@ -103,11 +103,11 @@ public class ItemLungsUpgrade extends ItemCyberware
 			{
 				int toAdd = Math.min(300 - e.getAir(), air);
 				e.setAir(e.getAir() + toAdd);
-				stack.getTagCompound().setInteger("air", air - toAdd);
+				CyberwareAPI.getCyberwareNBT(stack).setInteger("air", air - toAdd);
 			}
 			else if (e.getAir() == 300 && air < 900)
 			{
-				stack.getTagCompound().setInteger("air", air + 1);
+				CyberwareAPI.getCyberwareNBT(stack).setInteger("air", air + 1);
 			}
 		}
 		
@@ -149,13 +149,12 @@ public class ItemLungsUpgrade extends ItemCyberware
 
 	private int getAir(ItemStack stack)
 	{
-		if (!stack.hasTagCompound())
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
+		if (!data.hasKey("air"))
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("air", 900);
-			stack.setTagCompound(tag);
+			data.setInteger("air", 900);
 		}
-		return stack.getTagCompound().getInteger("air");
+		return data.getInteger("air");
 	}
 	
 	@Override
@@ -165,7 +164,7 @@ public class ItemLungsUpgrade extends ItemCyberware
 	}
 	
 	@Override
-	public int getEssenceCost(ItemStack stack)
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
 	{
 		if (stack.getItemDamage() == 1)
 		{
@@ -179,6 +178,6 @@ public class ItemLungsUpgrade extends ItemCyberware
 					return 5;
 			}
 		}
-		return super.getEssenceCost(stack);
+		return super.getUnmodifiedEssenceCost(stack);
 	}
 }

@@ -6,8 +6,8 @@ import java.util.Stack;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 
 public interface ICyberwareUserData
 {	

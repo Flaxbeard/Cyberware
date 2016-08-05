@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/cybereye"
+        "layer0": "cyberware:items/cybereyes"
     }
 }

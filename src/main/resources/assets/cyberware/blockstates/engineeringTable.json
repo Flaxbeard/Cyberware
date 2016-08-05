@@ -1,0 +1,29 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "minecraft:cube",
+        "textures": {
+            "particle": "cyberware:blocks/surgeryChamberTop",
+            "down": "cyberware:blocks/surgeryChamberTop",
+            "up": "cyberware:blocks/surgeryChamberTop",
+            "north": "cyberware:blocks/engineeringBottomSide2",
+            "east": "cyberware:blocks/engineeringBottomSide1",
+            "west": "cyberware:blocks/engineeringBottomSide1",
+            "south": "cyberware:blocks/engineeringBottomSide2"
+        }
+    },
+    "variants": {
+        "facing": {
+            "east": {"y" : 90},
+            "west": {"y" : 270},
+            "north": {},
+            "south": {"y" : 180}
+        },
+        "half": {
+            "lower": {},
+            "upper": {
+                "model" : "cyberware:engineeringTop"
+            }
+        }
+    }
+}

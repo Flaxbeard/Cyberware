@@ -1,6 +1,6 @@
 package flaxbeard.cyberware.common.integration.tan;
 
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 

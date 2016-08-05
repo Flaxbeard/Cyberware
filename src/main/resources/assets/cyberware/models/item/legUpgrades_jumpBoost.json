@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/jumpBoost"
+        "layer0": "cyberware:items/legUpgrades_jumpBoost"
     }
 }

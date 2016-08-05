@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware;
 
 public class VanillaWares
 {
@@ -147,6 +147,24 @@ public class VanillaWares
 		public int getEssenceCost(ItemStack stack)
 		{
 			return 5;
+		}
+
+		@Override
+		public Quality getQuality(ItemStack stack)
+		{
+			return null;
+		}
+
+		@Override
+		public ItemStack setQuality(ItemStack stack, Quality quality)
+		{
+			return stack;
+		}
+
+		@Override
+		public boolean canHoldQuality(ItemStack stack, Quality quality)
+		{
+			return false;
 		}
 		
 	}

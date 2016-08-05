@@ -14,34 +14,28 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.ICyberware;
-import flaxbeard.cyberware.api.ICyberwareTabItem;
+import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem;
+import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
 
-public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
+public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyberwareTabItem, IDeconstructable
 {
 	private EnumSlot[] slots;
-	public String[] subnames;
 	private int[] essence;
+	private ItemStack[][] components;
 	
 	public ItemCyberware(String name, EnumSlot[] slots, String[] subnames)
 	{		
-		this.setRegistryName(name);
-		GameRegistry.register(this);
-		this.setUnlocalizedName(Cyberware.MODID + "." + name);
-        
-		this.setCreativeTab(Cyberware.creativeTab);
+		super(name, subnames);
 		
 		this.slots = slots;
 		
-		this.subnames = subnames;
-
-		this.setHasSubtypes(this.subnames.length > 0);
-		this.setMaxDamage(0);
 		this.essence = new int[subnames.length + 1];
+		this.components = new ItemStack[0][0];
 
-        CyberwareContent.items.add(this);
 	}
 	
 	public ItemCyberware(String name, EnumSlot slot, String[] subnames)
@@ -61,6 +55,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 			ItemStack stack = new ItemStack(this, 1, meta);
 			int installedStackSize = installedStackSize(stack);
 			stack.stackSize = installedStackSize;
+			this.setQuality(stack, CyberwareAPI.QUALITY_SCAVENGED);
 			CyberwareContent.zombieItems.add(new ZombieItem(weight[meta], stack));
 		}
 		return this;
@@ -72,13 +67,29 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 		return this;
 	}
 	
+	public ItemCyberware setComponents(ItemStack[]... components)
+	{
+		this.components = components;
+		return this;
+	}
+	
 	@Override
 	public int getEssenceCost(ItemStack stack)
 	{
-		return essence[Math.min(this.subnames.length, stack.getItemDamage())];
+		int cost = getUnmodifiedEssenceCost(stack);
+		if (getQuality(stack) == CyberwareAPI.QUALITY_SCAVENGED)
+		{
+			float half = cost / 2F;
+			cost = cost + (int) Math.ceil(half);
+		}
+		return cost;
 	}
 	
-	
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
+	{
+		return essence[Math.min(this.subnames.length, stack.getItemDamage())];
+	}
+
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
@@ -91,17 +102,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
-	
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
-	{
-		int damage = itemstack.getItemDamage();
-		if (damage >= subnames.length)
-		{
-			return super.getUnlocalizedName();
-		}
-		return super.getUnlocalizedName(itemstack) + "." + subnames[damage];
-	}
+
 
 	@Override
 	public EnumSlot getSlot(ItemStack stack)
@@ -295,7 +296,7 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 	@Override
 	public EnumCategory getCategory(ItemStack stack)
 	{
-		return EnumCategory.values()[this.getSlot(stack).ordinal() + 2];
+		return EnumCategory.values()[this.getSlot(stack).ordinal()];
 	}
 
 	@Override
@@ -309,5 +310,61 @@ public class ItemCyberware extends Item implements ICyberware, ICyberwareTabItem
 
 	@Override
 	public void onRemoved(EntityLivingBase entity, ItemStack stack) {}
+
+	@Override
+	public boolean canDestroy(ItemStack stack)
+	{
+		return stack.getItemDamage() < this.components.length;
+	}
+
+	@Override
+	public ItemStack[] getComponents(ItemStack stack)
+	{
+		return components[Math.min(this.components.length - 1, stack.getItemDamage())];
+	}
+
+	@Override
+	public Quality getQuality(ItemStack stack)
+	{
+		Quality q = CyberwareAPI.getQualityTag(stack);
+		
+		if (q == null) return CyberwareAPI.QUALITY_MANUFACTURED;
+		
+		return q;
+	}
+
+	@Override
+	public ItemStack setQuality(ItemStack stack, Quality quality)
+	{
+		if (quality == CyberwareAPI.QUALITY_MANUFACTURED)
+		{
+			if (stack != null && stack.hasTagCompound())
+			{
+				stack.getTagCompound().removeTag(CyberwareAPI.QUALITY_TAG);
+				if (stack.getTagCompound().hasNoTags())
+				{
+					stack.setTagCompound(null);
+				}
+			}
+			return stack;
+		}
+		return CyberwareAPI.writeQualityTag(stack, quality);
+	}
 	
+	@Override
+	public String getItemStackDisplayName(ItemStack stack)
+	{
+		Quality q = getQuality(stack);
+		if (q != null && q.getNameModifier() != null)
+		{
+			return I18n.format(q.getNameModifier(), ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim()).trim();
+		}
+		return ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
+	}
+
+	@Override
+	public boolean canHoldQuality(ItemStack stack, Quality quality)
+	{
+		return true;
+	}
 }

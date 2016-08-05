@@ -19,6 +19,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -80,6 +81,12 @@ public class BlockSurgeryChamber extends BlockContainer
 	private static final AxisAlignedBB bottom = new AxisAlignedBB(0F, 0F, 0F, 1F, 1F / 16F, 1F);
 	
 	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	{
+		return new ItemStack(ib);
+	}
+
+	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
 	{
 		EnumFacing face = state.getValue(FACING);
@@ -128,34 +135,34 @@ public class BlockSurgeryChamber extends BlockContainer
 	}
 	
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+	{
 		boolean top = state.getValue(HALF) == EnumChamberHalf.UPPER;
 		if (canOpen(top ? pos : pos.up(), worldIn))
 		{
 			toggleDoor(top, state, pos, worldIn);
-	        
-	        notifySurgeon(top ? pos : pos.up(), worldIn);
+			
+			notifySurgeon(top ? pos : pos.up(), worldIn);
 		}
-        
-        return true;
-    }
+		
+		return true;
+	}
 	
 	public void toggleDoor(boolean top, IBlockState state, BlockPos pos, World worldIn)
 	{
 		state = state.cycleProperty(OPEN);
-        worldIn.setBlockState(pos, state, 2);
-        
-        BlockPos otherPos = pos.up();
-        if (top)
+		worldIn.setBlockState(pos, state, 2);
+		
+		BlockPos otherPos = pos.up();
+		if (top)
 		{
-        	otherPos = pos.down();
+			otherPos = pos.down();
 		}
-        IBlockState otherState = worldIn.getBlockState(otherPos);
+		IBlockState otherState = worldIn.getBlockState(otherPos);
 
-        if (otherState.getBlock() == this)
+		if (otherState.getBlock() == this)
 		{
-        	otherState = otherState.cycleProperty(OPEN);
-        	worldIn.setBlockState(otherPos, otherState, 2);
+			otherState = otherState.cycleProperty(OPEN);
+			worldIn.setBlockState(otherPos, otherState, 2);
 		}
 	}
 	

@@ -1,0 +1,39 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "0": "cyberware:blocks/engineeringPistonTopFront",
+        "1": "cyberware:blocks/engineeringPistonTopSide",
+        "2": "cyberware:blocks/engineeringTopFront",
+        "3": "cyberware:blocks/engineeringTopSide",
+        "4": "cyberware:blocks/engineeringTopTop",
+        "5": "cyberware:blocks/engineeringPistonTopTop"
+    },
+    "elements": [
+        {
+            "name": "Holder",
+            "from": [ 4.0, 8.0, 4.0 ], 
+            "to": [ 12.0, 16.0, 12.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "east": { "texture": "#1", "uv": [ 8.0, 0.0, 0.0, 8.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "west": { "texture": "#1", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "up": { "texture": "#5", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 8.0 ] }
+            }
+        },
+        {
+            "name": "Tall",
+            "from": [ 4.0, 0.0, 0.0 ], 
+            "to": [ 12.0, 16.0, 4.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 4.0, 0.0, 12.0, 16.0 ] },
+                "east": { "texture": "#3", "uv": [ 0.0, 0.0, 4.0, 16.0 ] },
+                "south": { "texture": "#2", "uv": [ 4.0, 0.0, 12.0, 16.0 ] },
+                "west": { "texture": "#3", "uv": [ 4.0, 0.0, 0.0, 16.0 ] },
+                "up": { "texture": "#4", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "down": { "texture": "#4", "uv": [ 0.0, 0.0, 8.0, 4.0 ] }
+            }
+        }
+    ]
+}

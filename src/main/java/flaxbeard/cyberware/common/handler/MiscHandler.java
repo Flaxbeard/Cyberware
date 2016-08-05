@@ -27,7 +27,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.misc.CommandClearCyberware;
 
@@ -43,6 +44,9 @@ public class MiscHandler
 		if (CyberwareAPI.isCyberware(stack))
 		{
 			ICyberware ware = CyberwareAPI.getCyberware(stack);
+			Quality quality = ware.getQuality(stack);
+
+			
 			GameSettings settings = Minecraft.getMinecraft().gameSettings;
 			if (settings.isKeyDown(settings.keyBindSneak))
 			{
@@ -81,6 +85,12 @@ public class MiscHandler
 							+ joined);
 				}
 				event.getToolTip().add(ChatFormatting.RED + I18n.format("cyberware.slot." + ware.getSlot(stack).getName()));
+				
+				
+				if (quality != null)
+				{
+					event.getToolTip().add(quality.getColor() + I18n.format(quality.getUnlocalizedName()));
+				}
 			}
 			else
 			{

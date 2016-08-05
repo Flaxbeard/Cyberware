@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket;
@@ -101,7 +101,7 @@ public class ItemBoneUpgrade extends ItemCyberware
 	}
 	
 	@Override
-	public int getEssenceCost(ItemStack stack)
+	protected int getUnmodifiedEssenceCost(ItemStack stack)
 	{
 		if (stack.getItemDamage() == 0)
 		{
@@ -119,7 +119,7 @@ public class ItemBoneUpgrade extends ItemCyberware
 					return 15;
 			}
 		}
-		return super.getEssenceCost(stack);
+		return super.getUnmodifiedEssenceCost(stack);
 	}
 	
 }

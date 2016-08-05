@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/wiredReflexes"
+        "layer0": "cyberware:items/muscleUpgrades_wiredReflexes"
     }
 }

@@ -2,7 +2,9 @@ package flaxbeard.cyberware.common.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ISpecialBattery;
+import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -37,6 +39,12 @@ public class ItemCreativeBattery extends ItemCyberware implements ISpecialBatter
 	public int getCapacity(ItemStack battery)
 	{
 		return 999999;
+	}
+	
+	@Override
+	public boolean canHoldQuality(ItemStack stack, Quality quality)
+	{
+		return quality == CyberwareAPI.QUALITY_MANUFACTURED;
 	}
 
 }

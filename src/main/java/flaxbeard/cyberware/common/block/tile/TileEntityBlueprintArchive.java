@@ -1,0 +1,138 @@
+package flaxbeard.cyberware.common.block.tile;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreDictionary;
+import flaxbeard.cyberware.api.item.IBlueprint;
+
+public class TileEntityBlueprintArchive extends TileEntity
+{
+	public class ItemStackHandlerBlueprint extends ItemStackHandler
+	{		
+		public ItemStackHandlerBlueprint(int i)
+		{
+			super(i);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+		{
+			if (!isItemValidForSlot(slot, stack)) return stack;
+			
+			return super.insertItem(slot, stack, simulate);
+		}
+		
+		public boolean isItemValidForSlot(int slot, ItemStack stack)
+		{
+			if (stack != null && stack.getItem() instanceof IBlueprint) return true;
+			int[] ids = OreDictionary.getOreIDs(stack);
+			int paperId = OreDictionary.getOreID("paper");
+			for (int id : ids)
+			{
+				if (id == paperId)
+				{
+					return true;
+				}
+			}
+			
+			return stack == null;
+		}
+
+	}
+	
+	public ItemStackHandler slots = new ItemStackHandlerBlueprint(18);
+	public String customName = null;
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+	
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			return (T) slots;
+		}
+		return super.getCapability(capability, facing);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound)
+	{
+		super.readFromNBT(compound);
+		
+		slots.deserializeNBT(compound.getCompoundTag("inv"));
+		
+		if (compound.hasKey("CustomName", 8))
+		{
+			customName = compound.getString("CustomName");
+		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
+	{
+		compound = super.writeToNBT(compound);
+		
+		compound.setTag("inv", this.slots.serializeNBT());
+		
+		if (this.hasCustomName())
+		{
+			compound.setString("CustomName", customName);
+		}
+				
+		return compound;
+	}
+
+	
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
+		return this.worldObj.getTileEntity(this.pos) != this ? false : player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+	}
+	
+	public String getName()
+	{
+		return this.hasCustomName() ? customName : "cyberware.container.blueprintArchive";
+	}
+
+	public boolean hasCustomName()
+	{
+		return this.customName != null && !this.customName.isEmpty();
+	}
+
+	public void setCustomInventoryName(String p_145951_1_)
+	{
+		this.customName = p_145951_1_;
+	}
+	
+	public ITextComponent getDisplayName()
+	{
+		return (ITextComponent)(this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName(), new Object[0]));
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		return (oldState.getBlock() != newState.getBlock());
+	}
+}
