@@ -117,8 +117,8 @@ cyberware.slot.foot=Feet Slot
 cyberware.gui.missingEssential.foot.left=Missing left foot, will be unusable
 cyberware.gui.missingEssential.foot.right=Missing right foot, will be unusable
 
-cyberware.gui.noEssence=No essence, will cause death
-cyberware.gui.criticalEssence=Low essence, will cause rejection
+cyberware.gui.noEssence=No tolerance, will cause death
+cyberware.gui.criticalEssence=Low tolerance, will cause rejection
 cyberware.gui.back=Back (or Right Mouse Button)
 cyberware.gui.noPower=No power production
 cyberware.gui.remove=(Click to remove)
@@ -154,7 +154,7 @@ cyberware.tooltip.powerConsumption=Requires%1$s pow/s when in use
 cyberware.tooltip.powerProduction=Produces%1$s pow/s when in use
 cyberware.tooltip.capacity=%1$d power units capacity
 cyberware.tooltip.maxInstall=Can install up to %1$d
-cyberware.tooltip.essence=Essence cost:%1$s
+cyberware.tooltip.essence=Tolerance cost:%1$s
 
 cyberware.quality.scavenged=Salvaged
 cyberware.quality.scavenged.nameModifier=Salvaged %1$s
@@ -235,8 +235,8 @@ death.attack.cyberware.heartless=%1$s died to heartlessness
 death.attack.cyberware.surgery=%1$s didn't return from the operation
 death.attack.cyberware.spineless=%1$s was spineless
 death.attack.cyberware.nomuscles=%1$s couldn't hold themselves together
-death.attack.cyberware.noessence=%1$s lost their humanity
-death.attack.cyberware.lowessence=%1$s lost their humanity
+death.attack.cyberware.noessence=%1$s's body fought back
+death.attack.cyberware.lowessence=%1$s's body fought back
 
 # COMMAND
 cyberware.commands.clearCyberware.usage=Usage: /clearcyberware [player]
