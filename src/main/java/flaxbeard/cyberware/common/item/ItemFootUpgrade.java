@@ -63,7 +63,7 @@ public class ItemFootUpgrade extends ItemCyberware
 		EntityLivingBase e = event.getEntityLiving();
 		
 		ItemStack test = new ItemStack(this, 1, 1);
-		if (CyberwareAPI.isCyberwareInstalled(e, test) && e.isInWater())
+		if (CyberwareAPI.isCyberwareInstalled(e, test) && e.isInWater() && !e.onGround)
 		{
 			int numLegs = 0;
 			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 2)))
@@ -81,7 +81,7 @@ public class ItemFootUpgrade extends ItemCyberware
 			{
 				if (e.moveForward > 0)
 				{
-					e.moveRelative(0F, numLegs * 0.5F, 0.075F);
+					e.moveRelative(0F, numLegs * 0.4F, 0.075F);
 				}
 			}
 			

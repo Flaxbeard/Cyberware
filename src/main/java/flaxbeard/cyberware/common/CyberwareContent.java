@@ -241,12 +241,13 @@ public class CyberwareContent
 				);
 
 		boneUpgrades = new ItemBoneUpgrade("boneUpgrades", EnumSlot.BONE,
-				new String[] { "bonelacing", "boneflex" });
+				new String[] { "bonelacing", "boneflex", "bonebattery" });
 		boneUpgrades.setEssenceCost(3, 5);
-		boneUpgrades.setWeights(UNCOMMON);
+		boneUpgrades.setWeights(UNCOMMON, RARE, UNCOMMON);
 		boneUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 6) },
-				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 8) }
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 8) },
+				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 2, 8), new ItemStack(component, 1, 9) }
 				);
 		
 		handUpgrades = new ItemHandUpgrade("handUpgrades", EnumSlot.HAND,
@@ -262,16 +263,16 @@ public class CyberwareContent
 		legUpgrades = new ItemLegUpgrade("legUpgrades", EnumSlot.LEG,
 				new String[] { "jumpBoost" });
 		legUpgrades.setEssenceCost(3);
-		legUpgrades.setWeights(UNCOMMON);
+		legUpgrades.setWeights(RARE);
 		legUpgrades.setComponents(new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2) });
 		
 		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
-				new String[] { "spurs", "aquaticLegs" });
+				new String[] { "spurs", "aqua" });
 		footUpgrades.setEssenceCost(1, 2);
-		footUpgrades.setWeights(UNCOMMON, UNCOMMON);
+		footUpgrades.setWeights(UNCOMMON, RARE);
 		footUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4) },
-				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4) });
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 9) });
 
 		cyberlimbs = new ItemCyberlimb("cyberlimbs", 
 				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },

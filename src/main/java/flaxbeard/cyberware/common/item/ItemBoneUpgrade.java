@@ -92,12 +92,18 @@ public class ItemBoneUpgrade extends ItemCyberware
 	public boolean isIncompatible(ItemStack stack, ItemStack other)
 	{
 		return other.getItem() == this;
+	}	@Override
+	
+	public int getCapacity(ItemStack wareStack)
+	{
+		return wareStack.getItemDamage() == 2 ? LibConstants.BONE_BATTERY_CAPACITY * wareStack.stackSize : 0;
 	}
-
+	
 	@Override
 	public int installedStackSize(ItemStack stack)
 	{
-		return stack.getItemDamage() == 0 ? 5 : 1;
+		return stack.getItemDamage() == 0 ? 5 : 
+			stack.getItemDamage() == 2 ? 4 : 1;
 	}
 	
 	@Override
@@ -117,6 +123,20 @@ public class ItemBoneUpgrade extends ItemCyberware
 					return 12;
 				case 5:
 					return 15;
+			}
+		}
+		if (stack.getItemDamage() == 2)
+		{
+			switch (stack.stackSize)
+			{
+				case 1:
+					return 2;
+				case 2:
+					return 3;
+				case 3:
+					return 4;
+				case 4:
+					return 5;
 			}
 		}
 		return super.getUnmodifiedEssenceCost(stack);

@@ -9,6 +9,7 @@ public class LibConstants
 	public static final int METABOLIC_PRODUCTION = 25;
 	public static final int METABOLIC_USES = 54; // Uses before subtracting a food
 	public static final int BATTERY_CAPACITY = 3000;
+	public static final int BONE_BATTERY_CAPACITY = 900;
 	public static final int REPLACEMENTS_CONSUMPTION = 3;
 	public static final int REFLEXES_CONSUMPTION = 2;
 	public static final int ADRENALINE_CONSUMPTION = 150;

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "cyberware:items/blubber"
+        "layer0": "cyberware:items/toughAsNailsUpgrades_blubber"
     }
 }
