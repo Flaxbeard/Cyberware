@@ -1,10 +1,13 @@
 package flaxbeard.cyberware.common.item;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -16,8 +19,11 @@ import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemSkinUpgrade extends ItemCyberware
@@ -42,6 +48,45 @@ public class ItemSkinUpgrade extends ItemCyberware
 				CyberwareAPI.getCapability(e).addPower(getPowerProduction(test), test);
 			}
 		}
+	}
+	
+	private Map<EntityLivingBase, Boolean> lastImmuno = new HashMap<EntityLivingBase, Boolean>();
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void handleMissingEssentials(LivingUpdateEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		
+		ItemStack test = new ItemStack(this, 1, 3);
+		if (CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			boolean last = lastImmuno(e);
+			boolean powerUsed = e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last;
+			
+			if (!powerUsed && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
+			{
+				e.attackEntityFrom(EssentialsMissingHandler.lowessence, 2F);
+			}
+		}
+		else
+		{
+			lastImmuno.remove(e);
+		}
+	}
+	
+	private boolean lastImmuno(EntityLivingBase e)
+	{
+		if (!lastImmuno.containsKey(e))
+		{
+			lastImmuno.put(e, true);
+		}
+		return lastImmuno.get(e);
+	}
+	
+	@Override
+	public int getPowerConsumption(ItemStack stack)
+	{
+		return stack.getItemDamage() == 3 ? LibConstants.IMMUNO_CONSUMPTION : 0;
 	}
 	
 

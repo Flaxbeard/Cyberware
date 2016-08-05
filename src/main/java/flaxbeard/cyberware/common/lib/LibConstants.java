@@ -23,7 +23,7 @@ public class LibConstants
 	public static final int HYPEROXYGENATION_CONSUMPTION = 1;
 	public static final int AQUA_CONSUMPTION = 1;
 	public static final int JUMPBOOST_CONSUMPTION = 0;
-
+	public static final int IMMUNO_CONSUMPTION = 10;
 	public static final float DODGE_ARMOR = .70F;
 	public static final float DODGE_NO_ARMOR = .65F;
 	public static final int LIMB_CONSUMPTION = 10;
