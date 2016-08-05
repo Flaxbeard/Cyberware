@@ -81,6 +81,13 @@ public class CyberwareDataHandler
 				}
 			}
 		}
+		else
+		{
+			if (CyberwareAPI.hasCapability(o) && CyberwareAPI.hasCapability(o))
+			{
+				CyberwareAPI.getCapability(p).deserializeNBT(CyberwareAPI.getCapability(o).serializeNBT());
+			}
+		}
 	}
 	
 	@SubscribeEvent
