@@ -1,5 +1,6 @@
 package flaxbeard.cyberware.common.item;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -8,9 +9,11 @@ import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -51,6 +54,7 @@ public class ItemSkinUpgrade extends ItemCyberware
 	}
 	
 	private Map<EntityLivingBase, Boolean> lastImmuno = new HashMap<EntityLivingBase, Boolean>();
+	private static Map<EntityLivingBase, Collection<PotionEffect>> potions = new HashMap<EntityLivingBase, Collection<PotionEffect>>();
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void handleMissingEssentials(LivingUpdateEvent event)
@@ -67,10 +71,38 @@ public class ItemSkinUpgrade extends ItemCyberware
 			{
 				e.attackEntityFrom(EssentialsMissingHandler.lowessence, 2F);
 			}
+			
+			if (potions.containsKey(e))
+			{
+				Collection<PotionEffect> potionsLastActive = potions.get(e);
+				Collection<PotionEffect> currentEffects = e.getActivePotionEffects();
+				for (PotionEffect cE : currentEffects)
+				{
+					if (cE.getPotion() == MobEffects.POISON || cE.getPotion() == MobEffects.HUNGER)
+					{
+						boolean found = false;
+						for (PotionEffect lE : potionsLastActive)
+						{
+							if (lE.getPotion() == cE.getPotion() && lE.getAmplifier() == cE.getAmplifier())
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if (!found)
+						{
+							e.addPotionEffect(new PotionEffect(cE.getPotion(), (int) (cE.getDuration() * 1.8F), cE.getAmplifier(), cE.getIsAmbient(), cE.doesShowParticles()));
+						}
+					}
+				}
+			}
+			potions.put(e, e.getActivePotionEffects());
 		}
 		else
 		{
 			lastImmuno.remove(e);
+			potions.remove(e);
 		}
 	}
 	
