@@ -19,6 +19,7 @@ public class LibConstants
 	public static final int PLATELET_CONSUMPTION = 3;
 	public static final int MATRIX_CONSUMPTION = 8;
 	public static final int HYPEROXYGENATION_CONSUMPTION = 1;
+	public static final int IMMUNO_CONSUMPTION = 10;
 
 	public static final float DODGE_ARMOR = .70F;
 	public static final float DODGE_NO_ARMOR = .65F;

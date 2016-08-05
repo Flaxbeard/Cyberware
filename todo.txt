@@ -1,10 +1,2 @@
-component_actuator
-component_reactor
-component_titanium
-component_ssc
-component_plating
-component_fiberoptics
-component_fullerene
-component_synthnerves
-component_storage
-component_microelectric
+skinUpgrades_immuno
+skinUpgrades_immuno_scavenged

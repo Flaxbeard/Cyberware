@@ -226,13 +226,14 @@ public class CyberwareContent
 				);
 		
 		skinUpgrades = new ItemSkinUpgrade("skinUpgrades", EnumSlot.SKIN,
-				new String[] { "solarSkin", "subdermalSpikes", "fakeSkin" });
-		skinUpgrades.setEssenceCost(15, 12, 0);
-		skinUpgrades.setWeights(VERY_COMMON, UNCOMMON, UNCOMMON);
+				new String[] { "solarSkin", "subdermalSpikes", "fakeSkin", "immuno"});
+		skinUpgrades.setEssenceCost(15, 12, 0, -25);
+		skinUpgrades.setWeights(VERY_COMMON, UNCOMMON, UNCOMMON, RARE);
 		skinUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 1, 9) },
 				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 2, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 9) },
-				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 3, 4), new ItemStack(component, 2, 5) }
+				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 3, 4), new ItemStack(component, 2, 5) },
+				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 1, 2), new ItemStack(component, 1, 7), new ItemStack(component, 1, 8), new ItemStack(component, 1, 9) }
 				);
 		
 		muscleUpgrades = new ItemMuscleUpgrade("muscleUpgrades", EnumSlot.MUSCLE,
