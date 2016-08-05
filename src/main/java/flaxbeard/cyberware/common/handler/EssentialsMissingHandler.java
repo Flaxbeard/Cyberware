@@ -370,7 +370,7 @@ public class EssentialsMissingHandler
 			{
 				ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
 				
-				if (!cyberware.hasEssential(EnumSlot.EYES))
+				if (!cyberware.hasEssential(EnumSlot.EYES) && !e.isCreative())
 				{
 					Minecraft.getMinecraft().getTextureManager().bindTexture(BLACK_PX);
 					ClientUtils.drawTexturedModalRect(0, 0, 0, 0, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);

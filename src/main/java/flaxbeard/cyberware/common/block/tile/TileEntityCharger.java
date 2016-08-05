@@ -5,8 +5,11 @@ import java.util.List;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -19,7 +22,6 @@ import cofh.api.energy.IEnergyReceiver;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareConfig;
-import flaxbeard.cyberware.common.lib.LibConstants;
 
 @Optional.Interface(iface = " cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI|energy")
 public class TileEntityCharger extends TileEntity implements ITickable, IEnergyReceiver
@@ -32,6 +34,8 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 	private static Capability TESLA_PRODUCER;
 	@CapabilityInject(ITeslaHolder.class)
 	private static Capability TESLA_HOLDER;
+	
+	private boolean last = false;
 
 	
 	@Override
@@ -48,6 +52,27 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 		compound = super.writeToNBT(compound);
 		compound.setTag("power", container.serializeNBT());
 		return compound;
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.getNbtCompound();
+		this.readFromNBT(data);
+	}
+	
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		this.writeToNBT(data);
+		return new SPacketUpdateTileEntity(pos, 0, data);
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		return writeToNBT(new NBTTagCompound());
 	}
 	
 	@Override
@@ -75,6 +100,7 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 	@Override
 	public void update()
 	{
+
 		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 2.5F, pos.getZ() + 1F));
 		for (EntityLivingBase entity : entities)
 		{
@@ -84,7 +110,7 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 				
 				ICyberwareUserData data = CyberwareAPI.getCapability(entity);
 				
-				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() < CyberwareConfig.TESLA_PER_POWER))
+				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() >= CyberwareConfig.TESLA_PER_POWER))
 				{
 					container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
 					data.addPower(20, null);
@@ -101,6 +127,14 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 
 				}
 			}
+		}
+		
+		boolean hasPower = (container.getStoredPower() >= CyberwareConfig.TESLA_PER_POWER);
+		if (hasPower != last && !worldObj.isRemote)
+		{
+			IBlockState state = worldObj.getBlockState(getPos());
+			worldObj.notifyBlockUpdate(pos, state, state, 2);
+			last = hasPower;
 		}
 	}
 

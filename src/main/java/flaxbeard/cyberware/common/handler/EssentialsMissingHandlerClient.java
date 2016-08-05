@@ -123,9 +123,18 @@ public class EssentialsMissingHandlerClient
 						mp.bipedLeftLeg.isHidden = !robotLeftLeg;
 						mp.bipedRightLeg.isHidden = !robotRightLeg;
 						
-						renderF.doRobo = true;
-						renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
-						renderF.doRobo = false;
+						if (bigArms)
+						{
+							renderT.doRobo = true;
+							renderT.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+							renderT.doRobo = false;
+						}
+						else
+						{
+							renderF.doRobo = true;
+							renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+							renderF.doRobo = false;
+						}
 						
 						mp.bipedBody.isHidden = false;
 						mp.bipedHead.isHidden = false;

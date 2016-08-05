@@ -73,7 +73,7 @@ public class ItemBoneUpgrade extends ItemCyberware
 	}
 	
 	@SubscribeEvent
-	public void handleMissingSkin(LivingHurtEvent event)
+	public void handleFallDamage(LivingHurtEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		

@@ -82,7 +82,7 @@ public class ItemCybereyes extends ItemCyberware
 		{
 			EntityPlayer e = Minecraft.getMinecraft().thePlayer;
 			
-			if (isBlind)
+			if (isBlind && !e.isCreative())
 			{
 				Minecraft.getMinecraft().getTextureManager().bindTexture(EssentialsMissingHandler.BLACK_PX);
 				ClientUtils.drawTexturedModalRect(0, 0, 0, 0, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
