@@ -161,6 +161,7 @@ cyberware.tooltip.powerProduction=Produces%1$s pow/s when in use
 cyberware.tooltip.capacity=%1$d power units capacity
 cyberware.tooltip.maxInstall=Can install up to %1$d
 cyberware.tooltip.essence=Tolerance cost:%1$s
+cyberware.tooltip.essenceAdd=Tolerance boost:%1$s
 
 cyberware.quality.scavenged=Salvaged
 cyberware.quality.scavenged.nameModifier=Salvaged %1$s

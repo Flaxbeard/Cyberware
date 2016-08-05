@@ -80,7 +80,14 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 		if (getQuality(stack) == CyberwareAPI.QUALITY_SCAVENGED)
 		{
 			float half = cost / 2F;
-			cost = cost + (int) Math.ceil(half);
+			if (cost > 0)
+			{
+				cost = cost + (int) Math.ceil(half);
+			}
+			else
+			{
+				cost = cost - (int) Math.ceil(half);
+			}
 		}
 		return cost;
 	}
@@ -237,15 +244,20 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 		
 		
 		boolean hasEssenceCost = false;
+		boolean essenceCostNegative = true;
 		String toAddEssence = "";
 		for (int i = 0; i < installedStackSize(stack); i++)
 		{
 			ItemStack temp = stack.copy();
 			temp.stackSize = i + 1;
 			int cost = this.getEssenceCost(temp);
-			if (cost > 0)
+			if (cost != 0)
 			{
 				hasEssenceCost = true;
+			}
+			if (cost < 0)
+			{
+				essenceCostNegative = false;
 			}
 			
 			if (i != 0)
@@ -253,12 +265,12 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 				toAddEssence += I18n.format("cyberware.tooltip.joiner");
 			}
 			
-			toAddEssence += " " + cost;
+			toAddEssence += " " + Math.abs(cost);
 		}
 		
 		if (hasEssenceCost)
 		{
-			toReturn.add(ChatFormatting.DARK_PURPLE + I18n.format("cyberware.tooltip.essence", toAddEssence));
+			toReturn.add(ChatFormatting.DARK_PURPLE + I18n.format(essenceCostNegative ? "cyberware.tooltip.essence" : "cyberware.tooltip.essenceAdd", toAddEssence));
 		}
 		
 
