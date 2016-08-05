@@ -411,13 +411,19 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 			{
 				int amount = Math.round((21F * cachedPercent));
 
-
-				ClientUtils.drawTexturedModalRect(left, top, 0, 0, 13, 2 + (21 - amount));
-				ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13, 2 + (21 - amount), 13, amount + 2);
+				boolean danger = (cachedPercent <= .2F);
+				boolean superDanger = danger && (cachedPercent <= .05F);
+				int xOffset = (danger ? 39 : 0);
 				
-				ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26, 2 + (21 - amount), 13, amount + 2);
-				
-				fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, 0x4CFF00);
+				if (!superDanger || p.ticksExisted % 4 != 0)
+				{
+					ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
+					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
+					
+					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
+					
+					fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : 0x4CFF00);
+				}
 				top += 28;
 			}
 			
