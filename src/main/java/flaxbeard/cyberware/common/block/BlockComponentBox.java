@@ -1,5 +1,8 @@
 package flaxbeard.cyberware.common.block;
 
+import java.util.List;
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockContainer;
@@ -10,56 +13,87 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
-import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
-import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
-import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
+import flaxbeard.cyberware.common.block.item.ItemComponentBox;
+import flaxbeard.cyberware.common.block.tile.TileEntityComponentBox;
 
-public class BlockBlueprintArchive extends BlockContainer
+public class BlockComponentBox extends BlockContainer
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-
-	public BlockBlueprintArchive()
+	public ItemBlock ib;
+	
+	public BlockComponentBox()
 	{
 		super(Material.IRON);
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setSoundType(SoundType.METAL);
 		
-		String name = "blueprintArchive";
+		String name = "componentBox";
 		
 		this.setRegistryName(name);
 		GameRegistry.register(this);
 
-		ItemBlock ib = new ItemBlockCyberware(this, "cyberware.tooltip.blueprintArchive");
+		ib = new ItemComponentBox(this);
 		ib.setRegistryName(name);
 		GameRegistry.register(ib);
 		
 		this.setUnlocalizedName(Cyberware.MODID + "." + name);
 
 		this.setCreativeTab(Cyberware.creativeTab);
-		GameRegistry.registerTileEntity(TileEntityBlueprintArchive.class, Cyberware.MODID + ":" + name);
+		GameRegistry.registerTileEntity(TileEntityComponentBox.class, Cyberware.MODID + ":" + name);
 		
-		CyberwareContent.blocks.add(this);
+		CyberwareContent.items.add(ib);
 		
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+	}
+	
+	private static final AxisAlignedBB ns = new AxisAlignedBB(4F / 16F, 0F, 1F / 16F, 12F / 16F, 10F / 16F, 15F / 16F);
+	private static final AxisAlignedBB ew = new AxisAlignedBB(1F / 16F, 0F, 4F / 16F, 15F / 16F, 10F / 16F, 12F / 16F);
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+		EnumFacing face = state.getValue(FACING);
+		if (face == EnumFacing.NORTH || face == EnumFacing.SOUTH)
+		{
+			return ew;
+		}
+		else
+		{
+			return ns;
+		}
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
 	}
 
 	@Override
@@ -73,7 +107,7 @@ public class BlockBlueprintArchive extends BlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileEntityBlueprintArchive();
+		return new TileEntityComponentBox();
 	}
 	
 	@Override
@@ -90,9 +124,18 @@ public class BlockBlueprintArchive extends BlockContainer
 		{
 			TileEntity tileentity = worldIn.getTileEntity(pos);
 
-			if (tileentity instanceof TileEntityBlueprintArchive)
+			if (tileentity instanceof TileEntityComponentBox)
 			{
-				((TileEntityBlueprintArchive) tileentity).setCustomInventoryName(stack.getDisplayName());
+				((TileEntityComponentBox) tileentity).setCustomInventoryName(stack.getDisplayName());
+			}
+		}
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("contents"))
+		{
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+
+			if (tileentity instanceof TileEntityComponentBox)
+			{
+				((TileEntityComponentBox) tileentity).slots.deserializeNBT(stack.getTagCompound().getCompoundTag("contents"));
 			}
 		}
 	}
@@ -139,40 +182,82 @@ public class BlockBlueprintArchive extends BlockContainer
 	{
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if (tileentity instanceof TileEntityBlueprintArchive)
+		if (tileentity instanceof TileEntityComponentBox)
 		{
 			/*if (player.isCreative() && player.isSneaking())
 			{
 				TileEntityScanner scanner = ((TileEntityScanner) tileentity);
 				scanner.ticks = CyberwareConfig.SCANNER_TIME - 200;
 			}*/
-			player.openGui(Cyberware.INSTANCE, 4, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			if (player.isSneaking())
+			{
+				TileEntityComponentBox box = (TileEntityComponentBox) tileentity;
+				ItemStack toDrop = this.getStack(box);
+				
+				if (player.inventory.mainInventory[player.inventory.currentItem] == null)
+				{
+					player.inventory.mainInventory[player.inventory.currentItem] = toDrop;
+				}
+				else
+				{
+					if (!player.inventory.addItemStackToInventory(toDrop))
+					{
+						InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), toDrop);
+					}
+				}
+				box.doDrop = false;
+				worldIn.setBlockToAir(pos);
+			}
+			else
+			{
+				player.openGui(Cyberware.INSTANCE, 5, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
 		}
 		
 		return true;
 		
 	}
 	
+	private ItemStack getStack(TileEntityComponentBox box)
+	{
+		ItemStack stackToDrop = new ItemStack(ib);
+
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setTag("contents", box.slots.serializeNBT());
+		stackToDrop.setTagCompound(compound);
+		
+		if (box.hasCustomName())
+		{
+			stackToDrop = stackToDrop.setStackDisplayName(box.getName());
+		}
+		return stackToDrop;
+	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{ 
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity instanceof TileEntityBlueprintArchive && !worldIn.isRemote)
+		if (tileentity instanceof TileEntityComponentBox && !worldIn.isRemote)
 		{
-			TileEntityBlueprintArchive scanner = (TileEntityBlueprintArchive) tileentity;
-			
-			for (int i = 0; i < scanner.slots.getSlots(); i++)
+			TileEntityComponentBox box = (TileEntityComponentBox) tileentity;
+			if (box.doDrop)
 			{
-				ItemStack stack = scanner.slots.getStackInSlot(i);
-				if (stack != null)
-				{
-					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
-				}
+				ItemStack stackToDrop = new ItemStack(ib);
+				stackToDrop = getStack(box);
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stackToDrop);
 			}
 		}
+		
+
 		super.breakBlock(worldIn, pos, state);
 
+	}
+	
+	@Override
+	public int quantityDropped(Random random)
+	{
+		return 0;
 	}
 
 }

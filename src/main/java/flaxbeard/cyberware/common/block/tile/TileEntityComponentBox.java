@@ -18,12 +18,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import flaxbeard.cyberware.api.item.IBlueprint;
+import flaxbeard.cyberware.common.CyberwareContent;
 
-public class TileEntityBlueprintArchive extends TileEntity
+public class TileEntityComponentBox extends TileEntity
 {
-	public class ItemStackHandlerBlueprint extends ItemStackHandler
+	public static class ItemStackHandlerComponent extends ItemStackHandler
 	{		
-		public ItemStackHandlerBlueprint(int i)
+		public ItemStackHandlerComponent(int i)
 		{
 			super(i);
 		}
@@ -38,24 +39,16 @@ public class TileEntityBlueprintArchive extends TileEntity
 		
 		public boolean isItemValidForSlot(int slot, ItemStack stack)
 		{
-			if (stack != null && stack.getItem() instanceof IBlueprint) return true;
-			int[] ids = OreDictionary.getOreIDs(stack);
-			int paperId = OreDictionary.getOreID("paper");
-			for (int id : ids)
-			{
-				if (id == paperId)
-				{
-					return true;
-				}
-			}
+			if (stack != null && stack.getItem() == CyberwareContent.component) return true;
 			
 			return stack == null;
 		}
 
 	}
 	
-	public ItemStackHandler slots = new ItemStackHandlerBlueprint(18);
+	public ItemStackHandler slots = new ItemStackHandlerComponent(18);
 	public String customName = null;
+	public boolean doDrop = true;
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
@@ -134,7 +127,7 @@ public class TileEntityBlueprintArchive extends TileEntity
 	
 	public String getName()
 	{
-		return this.hasCustomName() ? customName : "cyberware.container.blueprintArchive";
+		return this.hasCustomName() ? customName : "cyberware.container.componentBox";
 	}
 
 	public boolean hasCustomName()
