@@ -9,12 +9,16 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
+import flaxbeard.cyberware.common.block.tile.TileEntityComponentBox;
+import flaxbeard.cyberware.common.block.tile.TileEntityComponentBox.ItemStackHandlerComponent;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 
 public class ContainerEngineeringTable extends Container
@@ -69,13 +73,20 @@ public class ContainerEngineeringTable extends Container
 	
 	private final TileEntityEngineeringTable engineering;
 	public TileEntityBlueprintArchive archive;
-	public int index = 0;
-	public ArrayList<TileEntityBlueprintArchive> list = new ArrayList<TileEntityBlueprintArchive>();
+	public int archiveIndex = 0;
+	public ArrayList<TileEntityBlueprintArchive> archiveList = new ArrayList<TileEntityBlueprintArchive>();
+	
+	public Object componentBox;
+	public ArrayList<Object> componentBoxList = new ArrayList<Object>();
+	public int componentBoxIndex = 0;
+	
+	ItemStackHandler componentHandler = null;
 	
 	public ContainerEngineeringTable(String uuid, InventoryPlayer playerInventory, TileEntityEngineeringTable engineering)
 	{
 		this.engineering = engineering;
 		archive = null;
+		componentBox = null;
 		BlockPos target = null;
 		if (engineering.lastPlayerArchive.containsKey(uuid))
 		{
@@ -94,41 +105,88 @@ public class ContainerEngineeringTable extends Container
 						if (archive == null || te.getPos().equals(target))
 						{
 							archive = (TileEntityBlueprintArchive) te;
-							index = list.size();
+							archiveIndex = archiveList.size();
 						}
 
-						list.add((TileEntityBlueprintArchive) te);
+						archiveList.add((TileEntityBlueprintArchive) te);
 					}
 				}
 			}
 		}
 		
-		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 0, 15, 20));
-		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 1, 15, 53));
+		for (ItemStack stack : playerInventory.mainInventory)
+		{
+			if (stack != null && stack.getItem() == CyberwareContent.componentBox.ib)
+			{
+				if (!stack.hasTagCompound())
+				{
+					stack.setTagCompound(new NBTTagCompound());
+				}
+				if (!stack.getTagCompound().hasKey("contents"))
+				{
+					ItemStackHandler slots = new ItemStackHandlerComponent(18);
+					stack.getTagCompound().setTag("contents", slots.serializeNBT());
+				}
+				if (componentBox == null )
+				{
+					componentBox = stack;
+					componentBoxIndex = componentBoxList.size();
+				}
+
+				componentBoxList.add(stack);
+			}
+		}
+		
+		for (int y = -2; y < 2; y++)
+		{
+			for (int x = -2; x < 3; x++)
+			{
+				for (int z = -2; z < 3; z++)
+				{
+					BlockPos pos = engineering.getPos().add(x, y, z);
+					TileEntity te = engineering.getWorld().getTileEntity(pos);
+					if (te != null && te instanceof TileEntityComponentBox)
+					{
+						if (componentBox == null )
+						{
+							componentBox = (TileEntityComponentBox) te;
+							componentBoxIndex = componentBoxList.size();
+						}
+
+						componentBoxList.add((TileEntityComponentBox) te);
+					}
+				}
+			}
+		}
+		
+		int offset = componentBox == null ? 0 : 65;
+		
+		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 0, 15 + offset, 20));
+		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 1, 15 + offset, 53));
 		
 		for (int w = 0; w < 2; w++)
 		{
 			for (int h = 0; h < 3; h++)
 			{
-				this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 2 + h * 2 + w, 71 + w * 18, 17 + h * 18));
+				this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 2 + h * 2 + w, 71 + w * 18 + offset, 17 + h * 18));
 			}
 		}
 		
-		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 8, 115, 53));
-		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 9, 145, 21));
+		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 8, 115 + offset, 53));
+		this.addSlotToContainer(new SlotEngineering(engineering.guiSlots, 9, 145 + offset, 21));
 
 
 		for (int i = 0; i < 3; ++i)
 		{
 			for (int j = 0; j < 9; ++j)
 			{
-				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18 + offset, 84 + i * 18));
 			}
 		}
 
 		for (int k = 0; k < 9; ++k)
 		{
-			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18 + offset, 142));
 		}
 		
 		if (archive != null)
@@ -138,7 +196,28 @@ public class ContainerEngineeringTable extends Container
 			{
 				for (int k = 0; k < numRows; ++k)
 				{
-					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18, 22 + j * 18));
+					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18 + offset, 22 + j * 18));
+				}
+			}
+		}
+		if (componentBox != null)
+		{
+			if (componentBox instanceof TileEntityComponentBox)
+			{
+				componentHandler = ((TileEntityComponentBox) componentBox).slots;
+			}
+			else
+			{
+				ItemStackHandler slots = new ItemStackHandlerComponent(18);
+				slots.deserializeNBT(((ItemStack) componentBox).getTagCompound().getCompoundTag("contents"));
+				componentHandler = slots;
+			}
+			int numRows = componentHandler.getSlots() / 6;
+			for (int j = 0; j < 6; ++j)
+			{
+				for (int k = 0; k < numRows; ++k)
+				{
+					this.addSlotToContainer(new SlotItemHandler(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
 				}
 			}
 		}
@@ -149,15 +228,72 @@ public class ContainerEngineeringTable extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return engineering.isUseableByPlayer(playerIn) && (archive == null || archive.getWorld().getTileEntity(archive.getPos()) == archive);
+		while (archive != null && archive.getWorld().getTileEntity(archive.getPos()) != archive)
+		{
+			archiveList.remove(this.archiveIndex);
+			if (archiveList.size() == 0)
+			{
+				int offset = (this.componentBox == null ? 0 : 18);
+				int numRows = 18 / 6;
+				for (int j = 0; j < 6; ++j)
+				{
+					for (int k = 0; k < numRows; ++k)
+					{
+						this.inventorySlots.remove(this.inventorySlots.size() - 1 - offset);
+						this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1 - offset);
+
+					}
+				}
+				archive = null;
+			}
+			else
+			{
+				archiveIndex = archiveIndex - 1;
+				this.nextArchive();
+			}
+		}
+		
+		while (componentBox != null
+				&& (componentBox instanceof TileEntityComponentBox && ((TileEntityComponentBox) componentBox).getWorld().getTileEntity(((TileEntityComponentBox) componentBox).getPos()) != componentBox))
+		{
+			componentBoxList.remove(this.componentBoxIndex);
+			if (componentBoxList.size() == 0)
+			{
+				int numRows = 18 / 6;
+				for (int j = 0; j < 6; ++j)
+				{
+					for (int k = 0; k < numRows; ++k)
+					{
+						this.inventorySlots.remove(this.inventorySlots.size() - 1);
+						this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
+
+					}
+				}
+				componentBox = null;
+			}
+			else
+			{
+				componentBoxIndex = componentBoxIndex - 1;
+				this.nextComponentBox();
+			}
+		}
+		return engineering.isUseableByPlayer(playerIn);
 	}
-	
+
+
 	@Nullable
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(index);
 		boolean doUpdate = false;
+		
+		int componentLow = (this.archive == null ? 46 : 64);
+		int componentHigh = componentLow + 18;
+		int archiveLow = 46;
+		int archiveHigh = archiveLow + 18;
+		
+		
 		if (slot != null && slot.getHasStack())
 		{
 			ItemStack itemstack1 = slot.getStack();
@@ -177,14 +313,14 @@ public class ContainerEngineeringTable extends Container
 			}
 			else if (index == 8 && archive != null)
 			{
-				if (!this.mergeItemStack(itemstack1, 46, 64, true) && !this.mergeItemStack(itemstack1, 10, 46, false))
+				if (!this.mergeItemStack(itemstack1, archiveLow, archiveHigh, true) && !this.mergeItemStack(itemstack1, 10, 46, false))
 				{
 					return null;
 				}
 			}
 			else if (index == 1 && archive != null)
 			{
-				if (!this.mergeItemStack(itemstack1, 46, 64, true) && !this.mergeItemStack(itemstack1, 10, 46, false))
+				if (!this.mergeItemStack(itemstack1, archiveLow, archiveHigh, true) && !this.mergeItemStack(itemstack1, 10, 46, false))
 				{
 					return null;
 				}
@@ -211,14 +347,22 @@ public class ContainerEngineeringTable extends Container
 				}
 				else if (index >= 10 && index < 37)
 				{
-					if ((archive == null || !this.mergeItemStack(itemstack1, 46, 64, false)) && !this.mergeItemStack(itemstack1, 2, 8, false) && !this.mergeItemStack(itemstack1, 37, 46, false))
+					if ((archive == null || !this.mergeItemStack(itemstack1, archiveLow, archiveHigh, false)) && !this.mergeItemStack(itemstack1, 2, 8, false)  && (componentBox == null || !this.mergeItemStack(itemstack1, componentLow, componentHigh, false))  && !this.mergeItemStack(itemstack1, 37, 46, false))
 					{
 						return null;
 					}
 				}
-				else if (index >= 46 && index < 64)
+				else if (index >= archiveLow && index < archiveHigh)
 				{
 					if (!this.mergeItemStack(itemstack1, 10, 37, false) && !this.mergeItemStack(itemstack1, 37, 46, false))
+					{
+						return null;
+					}
+				}
+				else if (index >= componentLow && index < componentHigh)
+				{
+					
+					if (!this.mergeItemStack(itemstack1, 2, 8, false) && !this.mergeItemStack(itemstack1, 10, 37, false) && !this.mergeItemStack(itemstack1, 37, 46, false))
 					{
 						return null;
 					}
@@ -228,7 +372,7 @@ public class ContainerEngineeringTable extends Container
 					return null;
 				}
 			}
-			else if ((archive == null || !this.mergeItemStack(itemstack1, 46, 64, false)) && !this.mergeItemStack(itemstack1, 10, 46, false))
+			else if ((componentBox == null || !this.mergeItemStack(itemstack1, componentLow, componentHigh, false)) && (archive == null || !this.mergeItemStack(itemstack1, archiveLow, archiveHigh, false)) && !this.mergeItemStack(itemstack1, 10, 46, false))
 			{
 				return null;
 			}
@@ -257,39 +401,61 @@ public class ContainerEngineeringTable extends Container
 
 		return itemstack;
 	}
+	
+
+
 
 	public void nextArchive()
 	{
-		if (archive != null)
-		{
-			int numRows = archive.slots.getSlots() / 6;
-			for (int j = 0; j < 6; ++j)
-			{
-				for (int k = 0; k < numRows; ++k)
-				{
-					this.inventorySlots.remove(this.inventorySlots.size() - 1);
-					this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
-
-				}
-			}
-		}
-		index = (index + 1) % list.size();
-		archive = list.get(index);
-		if (archive != null)
-		{
-			int numRows = archive.slots.getSlots() / 6;
-			for (int j = 0; j < 6; ++j)
-			{
-				for (int k = 0; k < numRows; ++k)
-				{
-					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18, 22 + j * 18));
-				}
-			}
-		}
+		clearSlots();
+		archiveIndex = (archiveIndex + 1) % archiveList.size();
+		archive = archiveList.get(archiveIndex);
+		createSlots();
 	}
 
 	public void prevArchive()
 	{
+		clearSlots();
+		archiveIndex = (archiveIndex + archiveList.size() - 1) % archiveList.size();
+		archive = archiveList.get(archiveIndex);
+		createSlots();
+	}
+	
+	
+	public void nextComponentBox()
+	{
+		clearSlots();
+		handleClosingBox();
+		componentBoxIndex = (componentBoxIndex + 1) % componentBoxList.size();
+		componentBox = componentBoxList.get(componentBoxIndex);
+		createSlots();
+		
+	}
+	
+	public void prevComponentBox()
+	{
+		clearSlots();
+		handleClosingBox();
+		componentBoxIndex = (componentBoxIndex + componentBoxList.size() - 1) % componentBoxList.size();
+		componentBox = componentBoxList.get(componentBoxIndex);
+		createSlots();
+	}
+	
+	public void clearSlots()
+	{
+		int numOccupied = 0;
+		if (componentBox != null) numOccupied += 18;
+		if (archive != null) numOccupied += 18;
+		for (int k = 0; k < numOccupied; ++k)
+		{
+			this.inventorySlots.remove(this.inventorySlots.size() - 1);
+			this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
+
+		}
+	}
+	
+	public void createSlots()
+	{
 		if (archive != null)
 		{
 			int numRows = archive.slots.getSlots() / 6;
@@ -297,24 +463,52 @@ public class ContainerEngineeringTable extends Container
 			{
 				for (int k = 0; k < numRows; ++k)
 				{
-					this.inventorySlots.remove(this.inventorySlots.size() - 1);
-					this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
-
+					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18 + (componentBox == null ? 0 : 65), 22 + j * 18));
 				}
 			}
 		}
-		index = (index + list.size() - 1) % list.size();
-		archive = list.get(index);
-		if (archive != null)
+		if (componentBox != null)
 		{
-			int numRows = archive.slots.getSlots() / 6;
+			if (componentBox instanceof TileEntityComponentBox)
+			{
+				componentHandler = ((TileEntityComponentBox) componentBox).slots;
+			}
+			else
+			{
+				ItemStackHandler slots = new ItemStackHandlerComponent(18);
+				slots.deserializeNBT(((ItemStack) componentBox).getTagCompound().getCompoundTag("contents"));
+				componentHandler = slots;
+			}
+			
+			int numRows = componentHandler.getSlots() / 6;
 			for (int j = 0; j < 6; ++j)
 			{
 				for (int k = 0; k < numRows; ++k)
 				{
-					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18, 22 + j * 18));
+					this.addSlotToContainer(new SlotItemHandler(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
 				}
 			}
+		}
+	}
+	
+	@Override
+	public void onContainerClosed(EntityPlayer playerIn)
+	{
+		super.onContainerClosed(playerIn);
+		handleClosingBox();
+	}
+	
+	public void handleClosingBox()
+	{
+		if (componentBox != null && componentBox instanceof ItemStack)
+		{
+			ItemStack item = (ItemStack) componentBox;
+			NBTTagCompound comp = componentHandler.serializeNBT();
+			if (!item.hasTagCompound())
+			{
+				item.setTagCompound(new NBTTagCompound());
+			}
+			item.getTagCompound().setTag("contents", comp);
 		}
 	}
 }

@@ -7,6 +7,9 @@ tile.cyberware.engineeringTable.name=Cyberware Engineering Table
 tile.cyberware.scanner.name=Cyberware Scanner
 tile.cyberware.blueprintArchive.name=Blueprint Archive
 item.cyberware.engineeringTable.name=Cyberware Engineering Table
+tile.cyberware.componentBox.name=Component Box
+item.cyberware.componentBox.name=Component Box
+
 
 # ITEMS
 item.cyberware.bodyPart.brain.name=Human Brain
@@ -147,6 +150,11 @@ cyberware.tooltip.joinerOr=or
 
 cyberware.tooltip.neuropozyne=Anti-Rejection (20:00)
 cyberware.potion.neuropozyne=Anti-Rejection
+
+cyberware.tooltip.componentBox=Shift-click to place or pick up
+cyberware.tooltip.componentBox2=Accessible by Engineering Table if nearby or in inventory
+
+cyberware.tooltip.blueprintArchive=Accessible by Engineering Table if nearby
 
 cyberware.tooltip.blueprint=Creates %1$s
 cyberware.tooltip.craftBlueprint=Craft with a piece of Cyberware
@@ -330,3 +338,4 @@ cyberware.gui.scannerSaying.67=Wiping System32
 cyberware.container.engineering=Cyberware Engineering
 cyberware.container.scanner=Scanner
 cyberware.container.blueprintArchive=Blueprint Archive
+cyberware.container.componentBox=Component Box

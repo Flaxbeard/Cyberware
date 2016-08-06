@@ -27,6 +27,7 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
+import flaxbeard.cyberware.common.block.BlockComponentBox;
 import flaxbeard.cyberware.common.block.BlockEngineeringTable;
 import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
@@ -72,6 +73,7 @@ public class CyberwareContent
 	public static Block engineering;
 	public static Block scanner;
 	public static Block blueprintArchive;
+	public static BlockComponentBox componentBox;
 
 	
 	public static Item bodyPart;
@@ -134,6 +136,8 @@ public class CyberwareContent
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
 
 		blueprintArchive = new BlockBlueprintArchive();
+		componentBox = new BlockComponentBox();
+
 		surgeryApparatus = new BlockSurgery();
 		surgeryChamber = new BlockSurgeryChamber();
 		charger = new BlockCharger();
@@ -367,7 +371,6 @@ public class CyberwareContent
 					if (entry.entityClass == EntityZombie.class)
 					{
 						biomes.add(biome);
-						System.out.println("EEE " + biome);
 					}
 				}
 			}

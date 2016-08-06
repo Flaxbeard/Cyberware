@@ -20,19 +20,22 @@ public class EngineeringSwitchArchivePacket implements IMessage
 	private int dimensionId;
 	private int entityId;
 	private boolean direction;
-	
-	public EngineeringSwitchArchivePacket(BlockPos pos, EntityPlayer player, boolean direction)
+	private boolean isComponent;
+
+	public EngineeringSwitchArchivePacket(BlockPos pos, EntityPlayer player, boolean direction, boolean isComponent)
 	{
 		this.dimensionId = player.worldObj.provider.getDimension();
 		this.entityId = player.getEntityId();
 		this.pos = pos;
 		this.direction = direction;
+		this.isComponent = isComponent;
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeBoolean(direction);
+		buf.writeBoolean(isComponent);
 		buf.writeInt(entityId);
 		buf.writeInt(pos.getX());
 		buf.writeInt(pos.getY());
@@ -44,6 +47,7 @@ public class EngineeringSwitchArchivePacket implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		direction = buf.readBoolean();
+		isComponent = buf.readBoolean();
 		entityId = buf.readInt();
 		int x = buf.readInt();
 		int y = buf.readInt();
@@ -58,7 +62,7 @@ public class EngineeringSwitchArchivePacket implements IMessage
 		@Override
 		public IMessage onMessage(EngineeringSwitchArchivePacket message, MessageContext ctx)
 		{
-			DimensionManager.getWorld(message.dimensionId).addScheduledTask(new DoSync(message.pos, message.dimensionId, message.entityId, message.direction));
+			DimensionManager.getWorld(message.dimensionId).addScheduledTask(new DoSync(message.pos, message.dimensionId, message.entityId, message.direction, message.isComponent));
 
 			return null;
 		}
@@ -71,13 +75,15 @@ public class EngineeringSwitchArchivePacket implements IMessage
 		private int dimensionId;
 		private int entityId;
 		private boolean direction;
+		private boolean isComponent;
 
-		private DoSync(BlockPos pos, int dimensionId, int entityId, boolean direction)
+		private DoSync(BlockPos pos, int dimensionId, int entityId, boolean direction, boolean isComponent)
 		{
 			this.pos = pos;
 			this.dimensionId = dimensionId;
 			this.entityId = entityId;
 			this.direction = direction;
+			this.isComponent = isComponent;
 		}
 
 		@Override
@@ -88,18 +94,38 @@ public class EngineeringSwitchArchivePacket implements IMessage
 			if (e instanceof EntityPlayer)
 			{
 				EntityPlayer p = (EntityPlayer) e;
-				if (p.openContainer instanceof ContainerEngineeringTable)
+				
+				if (isComponent)
 				{
-					if (direction)
+					if (p.openContainer instanceof ContainerEngineeringTable)
 					{
-						((ContainerEngineeringTable) p.openContainer).nextArchive();
+						if (direction)
+						{
+							((ContainerEngineeringTable) p.openContainer).nextComponentBox();
+						}
+						else
+						{
+							((ContainerEngineeringTable) p.openContainer).prevComponentBox();
+						}
+						TileEntityEngineeringTable te = (TileEntityEngineeringTable) world.getTileEntity(pos);
+						//te.lastPlayerArchive.put(p.getCachedUniqueIdString(), ((ContainerEngineeringTable) p.openContainer).archive.getPos());
 					}
-					else
+				}
+				else
+				{
+					if (p.openContainer instanceof ContainerEngineeringTable)
 					{
-						((ContainerEngineeringTable) p.openContainer).prevArchive();
+						if (direction)
+						{
+							((ContainerEngineeringTable) p.openContainer).nextArchive();
+						}
+						else
+						{
+							((ContainerEngineeringTable) p.openContainer).prevArchive();
+						}
+						TileEntityEngineeringTable te = (TileEntityEngineeringTable) world.getTileEntity(pos);
+						te.lastPlayerArchive.put(p.getCachedUniqueIdString(), ((ContainerEngineeringTable) p.openContainer).archive.getPos());
 					}
-					TileEntityEngineeringTable te = (TileEntityEngineeringTable) world.getTileEntity(pos);
-					te.lastPlayerArchive.put(p.getCachedUniqueIdString(), ((ContainerEngineeringTable) p.openContainer).archive.getPos());
 				}
 			}
 			
