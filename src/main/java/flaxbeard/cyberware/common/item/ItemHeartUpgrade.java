@@ -6,11 +6,12 @@ import java.util.Map;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -23,7 +24,6 @@ import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
-import flaxbeard.cyberware.common.network.DodgePacket;
 import flaxbeard.cyberware.common.network.ParticlePacket;
 
 public class ItemHeartUpgrade extends ItemCyberware
@@ -51,7 +51,8 @@ public class ItemHeartUpgrade extends ItemCyberware
 		if (CyberwareAPI.isCyberwareInstalled(e, test) && !event.isCanceled())
 		{
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
-			if (cyberware.usePower(test, this.getPowerConsumption(test), false))
+			ItemStack stack = CyberwareAPI.getCyberware(e, test);
+			if ((!CyberwareAPI.getCyberwareNBT(stack).hasKey("used")) && cyberware.usePower(test, this.getPowerConsumption(test), false))
 			{
 				ItemStack[] items = cyberware.getInstalledCyberware(EnumSlot.HEART);
 				ItemStack[] itemsNew = items.clone();
@@ -64,11 +65,18 @@ public class ItemHeartUpgrade extends ItemCyberware
 						break;
 					}
 				}
-				cyberware.setInstalledCyberware(e, EnumSlot.HEART, itemsNew);
-				cyberware.updateCapacity();
-				if (!e.worldObj.isRemote)
+				if (e instanceof EntityPlayer)
 				{
-					CyberwareAPI.updateData(e);
+					cyberware.setInstalledCyberware(e, EnumSlot.HEART, itemsNew);
+					cyberware.updateCapacity();
+					if (!e.worldObj.isRemote)
+					{
+						CyberwareAPI.updateData(e);
+					}
+				}
+				else
+				{
+					CyberwareAPI.getCyberwareNBT(stack).setBoolean("used", true);
 				}
 				e.setHealth(e.getMaxHealth() / 3F);
 				event.setCanceled(true);
