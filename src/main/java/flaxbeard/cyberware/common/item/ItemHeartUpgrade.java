@@ -52,7 +52,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		{
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
 			ItemStack stack = CyberwareAPI.getCyberware(e, test);
-			if ((!stack.hasTagCompound() || !stack.getTagCompound().hasKey("used")) && cyberware.usePower(test, this.getPowerConsumption(test), false))
+			if ((!CyberwareAPI.getCyberwareNBT(stack).hasKey("used")) && cyberware.usePower(test, this.getPowerConsumption(test), false))
 			{
 				ItemStack[] items = cyberware.getInstalledCyberware(EnumSlot.HEART);
 				ItemStack[] itemsNew = items.clone();
@@ -76,11 +76,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 				}
 				else
 				{
-					if (!stack.hasTagCompound())
-					{
-						stack.setTagCompound(new NBTTagCompound());
-					}
-					stack.getTagCompound().setBoolean("used", true);
+					CyberwareAPI.getCyberwareNBT(stack).setBoolean("used", true);
 				}
 				e.setHealth(e.getMaxHealth() / 3F);
 				event.setCanceled(true);
