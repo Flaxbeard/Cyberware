@@ -76,11 +76,11 @@ public class ItemHeartUpgrade extends ItemCyberware
 				}
 				else
 				{
-					if (!test.hasTagCompound())
+					if (!stack.hasTagCompound())
 					{
-						test.setTagCompound(new NBTTagCompound());
+						stack.setTagCompound(new NBTTagCompound());
 					}
-					test.getTagCompound().setBoolean("used", true);
+					stack.getTagCompound().setBoolean("used", true);
 				}
 				e.setHealth(e.getMaxHealth() / 3F);
 				event.setCanceled(true);
