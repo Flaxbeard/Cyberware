@@ -246,6 +246,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 			if (!timesPlatelets.containsKey(e))
 			{
 				timesPlatelets.put(e, e.ticksExisted);
+				return 0;
 			}
 			return e.ticksExisted - timesPlatelets.get(e);
 		}
@@ -260,6 +261,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 			{
 				timesMedkit.put(e, e.ticksExisted);
 				damageMedkit.put(e, 0F);
+				return 0;
 			}
 			return e.ticksExisted - timesMedkit.get(e);
 		}
