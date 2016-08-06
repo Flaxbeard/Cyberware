@@ -4,6 +4,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -83,7 +85,7 @@ public class TileEntityBlueprintArchive extends TileEntity
 		
 		slots.deserializeNBT(compound.getCompoundTag("inv"));
 		
-		if (compound.hasKey("CustomName", 8))
+		if (compound.hasKey("CustomName"))
 		{
 			customName = compound.getString("CustomName");
 		}
@@ -104,6 +106,26 @@ public class TileEntityBlueprintArchive extends TileEntity
 		return compound;
 	}
 
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.getNbtCompound();
+		this.readFromNBT(data);
+	}
+	
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		this.writeToNBT(data);
+		return new SPacketUpdateTileEntity(pos, 0, data);
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		return writeToNBT(new NBTTagCompound());
+	}
 	
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{

@@ -32,7 +32,7 @@ public class GuiHandler implements IGuiHandler
 			case 1:
 				return new ContainerPlayerExpandedCrafting(player.inventory, false, player);
 			case 2:
-				return new ContainerEngineeringTable(player.inventory, (TileEntityEngineeringTable) world.getTileEntity(new BlockPos(x, y, z)));
+				return new ContainerEngineeringTable(player.getCachedUniqueIdString(), player.inventory, (TileEntityEngineeringTable) world.getTileEntity(new BlockPos(x, y, z)));
 			case 3:
 				return new ContainerScanner(player.inventory, (TileEntityScanner) world.getTileEntity(new BlockPos(x, y, z)));
 			default:

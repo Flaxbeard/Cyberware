@@ -5,12 +5,11 @@ import java.util.Arrays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,6 +23,7 @@ import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.EngineeringDestroyPacket;
+import flaxbeard.cyberware.common.network.EngineeringSwitchArchivePacket;
 
 @SideOnly(Side.CLIENT)
 public class GuiEngineeringTable extends GuiContainer
@@ -61,6 +61,41 @@ public class GuiEngineeringTable extends GuiContainer
 		}
 	}
 	
+	private static class NextPageButton extends GuiButton
+	{
+		private final boolean isForward;
+	
+		public NextPageButton(int p_i46316_1_, int p_i46316_2_, int p_i46316_3_, boolean p_i46316_4_)
+		{
+			super(p_i46316_1_, p_i46316_2_, p_i46316_3_, 23, 13, "");
+			this.isForward = p_i46316_4_;
+		}
+	
+		public void drawButton(Minecraft mc, int mouseX, int mouseY)
+		{
+			if (this.visible)
+			{
+				boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+				mc.getTextureManager().bindTexture(ENGINEERING_GUI_TEXTURES);
+				int i = 21;
+				int j = 166;
+	
+				if (flag)
+				{
+					i += 23;
+				}
+	
+				if (!this.isForward)
+				{
+					j += 13;
+				}
+	
+				this.drawTexturedModalRect(this.xPosition, this.yPosition, i, j, 23, 13);
+			}
+		}
+	}
+	
 	private static final ResourceLocation ENGINEERING_GUI_TEXTURES = new ResourceLocation(Cyberware.MODID + ":textures/gui/engineering.png");
 
 	private InventoryPlayer playerInventory;
@@ -72,21 +107,12 @@ public class GuiEngineeringTable extends GuiContainer
 
 	public GuiEngineeringTable(InventoryPlayer playerInv, TileEntityEngineeringTable engineering)
 	{
-		super(new ContainerEngineeringTable(playerInv, engineering));
+		super(new ContainerEngineeringTable(Minecraft.getMinecraft().thePlayer.getCachedUniqueIdString(), playerInv, engineering));
 		this.playerInventory = playerInv;
 		this.engineering = engineering;
 		
 		BlockPos pos = engineering.getPos().add(0, -1, 0);
-		archive = null;
-		for (EnumFacing facing : EnumFacing.HORIZONTALS)
-		{
-			TileEntity te = engineering.getWorld().getTileEntity(pos.add(facing.getDirectionVec()));
-			if (te instanceof TileEntityBlueprintArchive)
-			{
-				archive = (TileEntityBlueprintArchive) te;
-				break;
-			}
-		}
+		archive = ((ContainerEngineeringTable) this.inventorySlots).archive;
 		
 		if (archive != null)
 		{
@@ -166,6 +192,13 @@ public class GuiEngineeringTable extends GuiContainer
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.buttonList.add(smash = new SmashButton(0, i + 39, j + 34));
+		
+		if (archive != null && ((ContainerEngineeringTable) this.inventorySlots).list.size() > 1)
+		{
+			this.buttonList.add(new NextPageButton(1, i + 180, j + 131, false));
+			this.buttonList.add(new NextPageButton(2, i + 216, j + 131, true));
+		}
+
 	}
 	
 	protected void actionPerformed(GuiButton button) throws IOException
@@ -174,5 +207,35 @@ public class GuiEngineeringTable extends GuiContainer
 		{
 			CyberwarePacketHandler.INSTANCE.sendToServer(new EngineeringDestroyPacket(engineering.getPos(), engineering.getWorld().provider.getDimension()));
 		}
+		
+		if (button.id == 2)
+		{
+			nextArchive();
+		}
+		
+		if (button.id == 1)
+		{
+			prevArchive();
+		}
+	}
+	
+	private void nextArchive()
+	{
+		CyberwarePacketHandler.INSTANCE.sendToServer(new EngineeringSwitchArchivePacket(engineering.getPos(), mc.thePlayer, true));
+
+		((ContainerEngineeringTable) this.inventorySlots).nextArchive();
+		archive = ((ContainerEngineeringTable) this.inventorySlots).archive;
+		engineering.lastPlayerArchive.put(mc.thePlayer.getCachedUniqueIdString(), archive.getPos());
+
+	}
+	
+	private void prevArchive()
+	{
+		CyberwarePacketHandler.INSTANCE.sendToServer(new EngineeringSwitchArchivePacket(engineering.getPos(), mc.thePlayer, false));
+
+		((ContainerEngineeringTable) this.inventorySlots).prevArchive();
+		archive = ((ContainerEngineeringTable) this.inventorySlots).archive;
+		engineering.lastPlayerArchive.put(mc.thePlayer.getCachedUniqueIdString(), archive.getPos());
+
 	}
 }

@@ -7,6 +7,7 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket.CyberwareSyncPacketHandler;
 import flaxbeard.cyberware.common.network.DodgePacket.DodgePacketHandler;
 import flaxbeard.cyberware.common.network.EngineeringDestroyPacket.EngineeringDestroyPacketHandler;
+import flaxbeard.cyberware.common.network.EngineeringSwitchArchivePacket.EngineeringSwitchArchivePacketHandler;
 import flaxbeard.cyberware.common.network.GuiPacket.GuiPacketHandler;
 import flaxbeard.cyberware.common.network.ParticlePacket.ParticlePacketHandler;
 import flaxbeard.cyberware.common.network.ScannerSmashPacket.ScannerSmashPacketHandler;
@@ -27,6 +28,7 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(ParticlePacketHandler.class, ParticlePacket.class, 5, Side.CLIENT);
 		INSTANCE.registerMessage(EngineeringDestroyPacketHandler.class, EngineeringDestroyPacket.class, 6, Side.SERVER);
 		INSTANCE.registerMessage(ScannerSmashPacketHandler.class, ScannerSmashPacket.class, 7, Side.CLIENT);
+		INSTANCE.registerMessage(EngineeringSwitchArchivePacketHandler.class, EngineeringSwitchArchivePacket.class, 8, Side.SERVER);
 
 	}
 }

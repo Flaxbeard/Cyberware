@@ -1,6 +1,7 @@
 package flaxbeard.cyberware.common.block.tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -9,6 +10,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -234,6 +237,7 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 	public String customName = null;
 	public float clickedTime = -100F;
 	private int time;
+	public HashMap<String, BlockPos> lastPlayerArchive = new HashMap<String, BlockPos>();
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
@@ -276,6 +280,20 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 		}
 		
 		this.time = compound.getInteger("time");
+		
+		lastPlayerArchive = new HashMap<String, BlockPos>();
+		NBTTagList list = (NBTTagList) compound.getTag("playerArchive");
+		for (int i = 0; i < list.tagCount(); i++)
+		{
+			NBTTagCompound comp = list.getCompoundTagAt(i);
+			String name = comp.getString("name");
+			int x = comp.getInteger("x");
+			int y = comp.getInteger("y");
+			int z = comp.getInteger("z");
+			BlockPos pos = new BlockPos(x, y, z);
+			lastPlayerArchive.put(name, pos);
+		}
+
 	}
 	
 	@Override
@@ -291,7 +309,18 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 		}
 		
 		compound.setInteger("time", time);
-		
+		NBTTagList list = new NBTTagList();
+		for (String name : this.lastPlayerArchive.keySet())
+		{
+			NBTTagCompound entry = new NBTTagCompound();
+			entry.setString("name", name);
+			BlockPos pos = lastPlayerArchive.get(name);
+			entry.setInteger("x", pos.getX());
+			entry.setInteger("y", pos.getY());
+			entry.setInteger("z", pos.getZ());
+			list.appendTag(entry);
+		}
+		compound.setTag("playerArchive", list);
 		return compound;
 	}
 	

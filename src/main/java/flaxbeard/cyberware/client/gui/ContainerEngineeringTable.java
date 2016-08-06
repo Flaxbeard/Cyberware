@@ -1,5 +1,7 @@
 package flaxbeard.cyberware.client.gui;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,20 +68,38 @@ public class ContainerEngineeringTable extends Container
 	}
 	
 	private final TileEntityEngineeringTable engineering;
-	private TileEntityBlueprintArchive archive;
+	public TileEntityBlueprintArchive archive;
+	public int index = 0;
+	public ArrayList<TileEntityBlueprintArchive> list = new ArrayList<TileEntityBlueprintArchive>();
 	
-	public ContainerEngineeringTable(InventoryPlayer playerInventory, TileEntityEngineeringTable engineering)
+	public ContainerEngineeringTable(String uuid, InventoryPlayer playerInventory, TileEntityEngineeringTable engineering)
 	{
 		this.engineering = engineering;
 		archive = null;
-		BlockPos pos = engineering.getPos().add(0, -1, 0);
-		for (EnumFacing facing : EnumFacing.HORIZONTALS)
+		BlockPos target = null;
+		if (engineering.lastPlayerArchive.containsKey(uuid))
 		{
-			TileEntity te = engineering.getWorld().getTileEntity(pos.add(facing.getDirectionVec()));
-			if (te instanceof TileEntityBlueprintArchive)
+			target = engineering.lastPlayerArchive.get(uuid);
+		}
+		for (int y = -2; y < 2; y++)
+		{
+			for (int x = -2; x < 3; x++)
 			{
-				archive = (TileEntityBlueprintArchive) te;
-				break;
+				for (int z = -2; z < 3; z++)
+				{
+					BlockPos pos = engineering.getPos().add(x, y, z);
+					TileEntity te = engineering.getWorld().getTileEntity(pos);
+					if (te != null && te instanceof TileEntityBlueprintArchive)
+					{
+						if (archive == null || te.getPos().equals(target))
+						{
+							archive = (TileEntityBlueprintArchive) te;
+							index = list.size();
+						}
+
+						list.add((TileEntityBlueprintArchive) te);
+					}
+				}
 			}
 		}
 		
@@ -129,13 +149,12 @@ public class ContainerEngineeringTable extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return engineering.isUseableByPlayer(playerIn);
+		return engineering.isUseableByPlayer(playerIn) && (archive == null || archive.getWorld().getTileEntity(archive.getPos()) == archive);
 	}
 	
 	@Nullable
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
 	{
-		System.out.println(playerIn.worldObj.isRemote);
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(index);
 		boolean doUpdate = false;
@@ -237,5 +256,65 @@ public class ContainerEngineeringTable extends Container
 		}
 
 		return itemstack;
+	}
+
+	public void nextArchive()
+	{
+		if (archive != null)
+		{
+			int numRows = archive.slots.getSlots() / 6;
+			for (int j = 0; j < 6; ++j)
+			{
+				for (int k = 0; k < numRows; ++k)
+				{
+					this.inventorySlots.remove(this.inventorySlots.size() - 1);
+					this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
+
+				}
+			}
+		}
+		index = (index + 1) % list.size();
+		archive = list.get(index);
+		if (archive != null)
+		{
+			int numRows = archive.slots.getSlots() / 6;
+			for (int j = 0; j < 6; ++j)
+			{
+				for (int k = 0; k < numRows; ++k)
+				{
+					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18, 22 + j * 18));
+				}
+			}
+		}
+	}
+
+	public void prevArchive()
+	{
+		if (archive != null)
+		{
+			int numRows = archive.slots.getSlots() / 6;
+			for (int j = 0; j < 6; ++j)
+			{
+				for (int k = 0; k < numRows; ++k)
+				{
+					this.inventorySlots.remove(this.inventorySlots.size() - 1);
+					this.inventoryItemStacks.remove(this.inventoryItemStacks.size() - 1);
+
+				}
+			}
+		}
+		index = (index + list.size() - 1) % list.size();
+		archive = list.get(index);
+		if (archive != null)
+		{
+			int numRows = archive.slots.getSlots() / 6;
+			for (int j = 0; j < 6; ++j)
+			{
+				for (int k = 0; k < numRows; ++k)
+				{
+					this.addSlotToContainer(new SlotItemHandler(archive.slots, k + j * numRows, 181 + k * 18, 22 + j * 18));
+				}
+			}
+		}
 	}
 }
