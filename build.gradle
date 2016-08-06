@@ -21,7 +21,7 @@ plugins {
 }
 */
 
-version = "beta-0.2.0pre1"
+version = "beta-0.2.0pre2"
 group= "flaxbeard.cyberware" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cyberware"
 
@@ -57,7 +57,8 @@ jar {
 dependencies {
     compile files(
         'Baubles.jar',
-        'Botania.jar'
+        'Botania.jar',
+        'TaN.jar'
     )
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..

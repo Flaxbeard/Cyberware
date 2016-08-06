@@ -71,7 +71,7 @@ public class CyberwareContent
 	public static Block surgeryApparatus;
 	public static BlockSurgeryChamber surgeryChamber;
 	public static Block charger;
-	public static Block engineering;
+	public static BlockEngineeringTable engineering;
 	public static Block scanner;
 	public static Block blueprintArchive;
 	public static BlockComponentBox componentBox;
@@ -330,7 +330,7 @@ public class CyberwareContent
 				new ItemStack(blueprint, 1, OreDictionary.WILDCARD_VALUE)
 				));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(engineering),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(engineering.ib),
 				" PI",
 				"III",
 				"ICI",
@@ -341,7 +341,7 @@ public class CyberwareContent
 				"PPP",
 				"AAA",
 				"PPP",
-				Character.valueOf('P'), "plankWood", Character.valueOf('A'), "paper"
+				Character.valueOf('P'), "ingotIron", Character.valueOf('A'), "paper"
 				));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(componentBox),
