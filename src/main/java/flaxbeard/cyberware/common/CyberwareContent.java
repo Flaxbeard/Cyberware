@@ -340,6 +340,13 @@ public class CyberwareContent
 				Character.valueOf('P'), "plankWood", Character.valueOf('A'), "paper"
 				));
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(componentBox),
+				" O ",
+				"ICI",
+				" I ",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('C'), "chestWood", Character.valueOf('O'), new ItemStack(component, 1, OreDictionary.WILDCARD_VALUE)
+				));
+		
 		if (CyberwareConfig.SURGERY_CRAFTING)
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(surgeryApparatus),
