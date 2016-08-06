@@ -1,39 +1,21 @@
 package flaxbeard.cyberware.common.item;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.util.CombatTracker;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ICyberwareUserData;
-import flaxbeard.cyberware.api.ICyberware.EnumSlot;
-import flaxbeard.cyberware.common.lib.LibConstants;
-import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
-import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket;
 
 public class ItemBoneUpgrade extends ItemCyberware
 {
@@ -69,6 +51,18 @@ public class ItemBoneUpgrade extends ItemCyberware
 			
 			multimap.put(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), new AttributeModifier(healthId, "Bone hp upgrade", 4F * stack.stackSize, 0));
 			entity.getAttributeMap().removeAttributeModifiers(multimap);
+		}
+	}
+	
+	@SubscribeEvent
+	public void handleJoinWorld(EntityJoinWorldEvent event)
+	{
+		Entity e = event.getEntity();
+		
+		ItemStack test = new ItemStack(this, 1, 0);
+		if (e instanceof EntityLivingBase && CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			this.onAdded((EntityLivingBase) e, CyberwareAPI.getCyberware(e, test));
 		}
 	}
 	
