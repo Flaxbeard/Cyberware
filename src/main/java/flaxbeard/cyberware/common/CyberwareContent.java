@@ -271,10 +271,12 @@ public class CyberwareContent
 				);
 		
 		legUpgrades = new ItemLegUpgrade("legUpgrades", EnumSlot.LEG,
-				new String[] { "jumpBoost" });
-		legUpgrades.setEssenceCost(3);
-		legUpgrades.setWeights(RARE);
-		legUpgrades.setComponents(new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2) });
+				new String[] { "jumpBoost", "fallDamage" });
+		legUpgrades.setEssenceCost(3, 2);
+		legUpgrades.setWeights(RARE, RARE);
+		legUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2) },
+				new ItemStack[] { new ItemStack(component, 3, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 5) });
 		
 		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
 				new String[] { "spurs", "aqua" });

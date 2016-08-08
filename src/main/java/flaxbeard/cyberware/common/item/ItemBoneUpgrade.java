@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.google.common.collect.HashMultimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemBoneUpgrade extends ItemCyberware
 {

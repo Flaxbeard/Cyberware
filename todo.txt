@@ -1,2 +1,2 @@
-boneUpgrades_bonebattery
-boneUpgrades_bonebattery_scavenged
+legUpgrades_fallDamage
+legUpgrades_fallDamage_scavenged

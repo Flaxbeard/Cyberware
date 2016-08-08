@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "cyberware:items/legUpgrades_fallDamage"
+    }
+}

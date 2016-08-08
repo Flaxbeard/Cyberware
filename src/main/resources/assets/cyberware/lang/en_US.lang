@@ -75,6 +75,7 @@ item.cyberware.handUpgrades.mining.name=Reinforced Fist
 item.cyberware.footUpgrades.spurs.name=Implanted Spurs
 item.cyberware.footUpgrades.aqua.name=Aquatic Propulsion System
 item.cyberware.legUpgrades.jumpBoost.name=Linear Actuators
+item.cyberware.legUpgrades.fallDamage.name=Fall Bracers
 
 item.cyberware.toughAsNailsUpgrades.sweat.name=Supercooled Sweat Glands
 item.cyberware.toughAsNailsUpgrades.blubber.name=Blubber
@@ -246,6 +247,7 @@ cyberware.tooltip.handUpgrades.2=Hands mine at stone level
 cyberware.tooltip.footUpgrades.0=Speed up horses
 cyberware.tooltip.footUpgrades.1=Swim faster\nMore powerful with two Cyberlegs
 cyberware.tooltip.legUpgrades.0=Jump higher\nShift jump to launch yourself\nMore powerful with two Cyberlegs
+cyberware.tooltip.legUpgrades.1=Absorb small impacts
 cyberware.tooltip.toughAsNailsUpgrades.0=Cool off when hot\nusing thirst
 cyberware.tooltip.toughAsNailsUpgrades.1=Keeps you warm
 

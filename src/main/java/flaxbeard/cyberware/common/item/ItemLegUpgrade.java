@@ -1,15 +1,12 @@
 package flaxbeard.cyberware.common.item;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
@@ -77,10 +74,22 @@ public class ItemLegUpgrade extends ItemCyberware
 			}
 		}
 	}
+	
+	@SubscribeEvent
+	public void onFallDamage(LivingAttackEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		
+		ItemStack test = new ItemStack(this, 1, 1);
+		if (event.getSource() == DamageSource.fall && event.getAmount() <= 6F && CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			event.setCanceled(true);
+		}
+	}
 
 	@Override
 	public int getPowerConsumption(ItemStack stack)
 	{
-		return LibConstants.JUMPBOOST_CONSUMPTION;
+		return stack.getItemDamage() == 0 ? LibConstants.JUMPBOOST_CONSUMPTION : 0;
 	}
 }
