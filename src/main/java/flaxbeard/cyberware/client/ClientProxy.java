@@ -27,6 +27,7 @@ import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
+import flaxbeard.cyberware.common.handler.CyberwareMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemCyberware;
@@ -65,6 +66,7 @@ public class ClientProxy extends CommonProxy
 		KeyBinds.init();
 		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandlerClient.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(CreativeMenuHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(CyberwareMenuHandler.INSTANCE);
 
 	}
 	

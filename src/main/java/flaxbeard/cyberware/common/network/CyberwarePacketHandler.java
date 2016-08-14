@@ -13,6 +13,8 @@ import flaxbeard.cyberware.common.network.ParticlePacket.ParticlePacketHandler;
 import flaxbeard.cyberware.common.network.ScannerSmashPacket.ScannerSmashPacketHandler;
 import flaxbeard.cyberware.common.network.SurgeryRemovePacket.SurgeryRemovePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket.SwitchHeldItemAndRotationPacketHandler;
+import flaxbeard.cyberware.common.network.SyncHotkeyPacket.SyncHotkeyPacketHandler;
+import flaxbeard.cyberware.common.network.TriggerActiveAbilityPacket.TriggerActiveAbilityPacketHandler;
 
 public class CyberwarePacketHandler
 {
@@ -29,6 +31,8 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(EngineeringDestroyPacketHandler.class, EngineeringDestroyPacket.class, 6, Side.SERVER);
 		INSTANCE.registerMessage(ScannerSmashPacketHandler.class, ScannerSmashPacket.class, 7, Side.CLIENT);
 		INSTANCE.registerMessage(EngineeringSwitchArchivePacketHandler.class, EngineeringSwitchArchivePacket.class, 8, Side.SERVER);
+		INSTANCE.registerMessage(SyncHotkeyPacketHandler.class, SyncHotkeyPacket.class, 9, Side.SERVER);
+		INSTANCE.registerMessage(TriggerActiveAbilityPacketHandler.class, TriggerActiveAbilityPacket.class, 10, Side.SERVER);
 
 	}
 }

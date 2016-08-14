@@ -192,7 +192,7 @@ public class CreativeMenuHandler
 			{
 				pageSelected = manufactured.offset;
 			}
-			Method tab = ReflectionHelper.findMethod(GuiContainerCreative.class, gui, new String[] { "setCurrentCreativeTab" }, CreativeTabs.class);
+			Method tab = ReflectionHelper.findMethod(GuiContainerCreative.class, gui, new String[] { "setCurrentCreativeTab", "func_147050_b" }, CreativeTabs.class);
 			try
 			{
 				tab.invoke(gui, Cyberware.creativeTab);

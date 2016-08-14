@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
 import flaxbeard.cyberware.client.gui.GuiSurgery;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemHandUpgrade;
@@ -61,11 +62,12 @@ public class RenderPlayerCyberware extends RenderPlayer
 		Minecraft.getMinecraft().getTextureManager().bindTexture(robo);
 		super.renderRightArm(clientPlayer);
 		
-		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 1)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT && clientPlayer.getHeldItemMainhand() == null)
+		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 1)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT && clientPlayer.getHeldItemMainhand() == null
+				&& EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))))
 		{
 			GL11.glPushMatrix();
 
-			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - 5 - ItemHandUpgrade.clawsTime) / 4F);
+			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - ItemHandUpgrade.clawsTime) / 4F);
 			percent = Math.min(1.0F, percent);
 			percent = Math.max(0F, percent);
 			percent = (float) Math.sin(percent * Math.PI / 2F);
@@ -84,11 +86,14 @@ public class RenderPlayerCyberware extends RenderPlayer
 		Minecraft.getMinecraft().getTextureManager().bindTexture(robo);
 		super.renderLeftArm(clientPlayer);
 		
-		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 0)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.LEFT && clientPlayer.getHeldItemMainhand() == null)
+		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))
+			&& CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))
+			&& Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.LEFT && clientPlayer.getHeldItemMainhand() == null
+			&& EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))))
 		{
 			GL11.glPushMatrix();
 
-			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - 5 - ItemHandUpgrade.clawsTime) / 4F);
+			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - ItemHandUpgrade.clawsTime) / 4F);
 			percent = Math.min(1.0F, percent);
 			percent = Math.max(0F, percent);
 			percent = (float) Math.sin(percent * Math.PI / 2F);

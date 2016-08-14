@@ -28,11 +28,13 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket;
 
-public class ItemMuscleUpgrade extends ItemCyberware
+public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemMuscleUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -53,7 +55,7 @@ public class ItemMuscleUpgrade extends ItemCyberware
 			//System.out.println("ADDED0");
 			HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
 			
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Muscle speed upgrade", 5F, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Muscle speed upgrade", 1.5F, 0));
 			entity.getAttributeMap().applyAttributeModifiers(multimap);
 		}
 		else if (stack.getItemDamage() == 1)
@@ -74,7 +76,7 @@ public class ItemMuscleUpgrade extends ItemCyberware
 			//System.out.println("REMOVED0");
 			HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
 			
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Muscle speed upgrade", 5F, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Muscle speed upgrade", 1.5F, 0));
 			entity.getAttributeMap().removeAttributeModifiers(multimap);
 		}
 		else if (stack.getItemDamage() == 1)
@@ -98,8 +100,9 @@ public class ItemMuscleUpgrade extends ItemCyberware
 	{
 		EntityLivingBase e = event.getEntityLiving();
 
-		int rank = CyberwareAPI.getCyberwareRank(e, new ItemStack(this, 1, 0));
-		if (!event.isCanceled() && e instanceof EntityPlayer && (rank > 1) && getLastBoostSpeed(e))
+		ItemStack test = new ItemStack(this, 1, 0);
+		int rank = CyberwareAPI.getCyberwareRank(e, test);
+		if (!event.isCanceled() && e instanceof EntityPlayer && (rank > 1) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)) && getLastBoostSpeed(e))
 		{
 			EntityPlayer p = (EntityPlayer) e;
 			if (event.getSource() instanceof EntityDamageSource && !(event.getSource() instanceof EntityDamageSourceIndirect))
@@ -210,27 +213,27 @@ public class ItemMuscleUpgrade extends ItemCyberware
 		}
 		
 		test = new ItemStack(this, 1, 0);
-		if (CyberwareAPI.isCyberwareInstalled(e, test))
+		if (CyberwareAPI.isCyberwareInstalled(e, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 		{
 			boolean last = getLastBoostSpeed(e);
 			boolean powerUsed = e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last;
 			if (powerUsed)
 			{
-				if (!last)
-				{
-					this.onAdded(e, test);
-				}
+				this.onAdded(e, test);
 			}
-			else if (last)
+			else
 			{
 				this.onRemoved(e, test);
 			}
 			
 			lastBoostSpeed.put(e, powerUsed);
 		}
-		else
+		else 
 		{
-			lastBoostSpeed.put(e, true);
+
+			this.onRemoved(e, test);
+			
+			lastBoostSpeed.remove(e);
 		}
 	}
 	
@@ -274,5 +277,23 @@ public class ItemMuscleUpgrade extends ItemCyberware
 			}
 		}
 		return super.getUnmodifiedEssenceCost(stack);
+	}
+
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 0;
+	}
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+	}
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
 	}
 }

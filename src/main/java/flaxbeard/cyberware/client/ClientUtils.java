@@ -9,7 +9,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
+import flaxbeard.cyberware.common.network.TriggerActiveAbilityPacket;
 
 public class ClientUtils
 {
@@ -43,5 +48,12 @@ public class ClientUtils
 	public static void drawHoveringText(GuiScreen gui, List<String> textLines, int x, int y, FontRenderer font)
 	{
 		net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(textLines, x, y, gui.width, gui.height, -1, font);
+	}
+	
+	
+	public static void useActiveItemClient(Entity entity, ItemStack stack)
+	{
+		CyberwarePacketHandler.INSTANCE.sendToServer(new TriggerActiveAbilityPacket(stack));
+		CyberwareAPI.useActiveItem(entity, stack);
 	}
 }

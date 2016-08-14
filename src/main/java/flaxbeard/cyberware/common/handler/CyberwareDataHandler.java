@@ -135,7 +135,7 @@ public class CyberwareDataHandler
 							}
 						}
 					}
-					data.resetWare();
+					data.resetWare(p);
 				}
 			}
 		}
@@ -190,9 +190,9 @@ public class CyberwareDataHandler
 		
 		List<ItemStack> installed = new ArrayList<ItemStack>();
 
-		//ItemStack re = new ItemStack(CyberwareContent.heartUpgrades, 1, 2);
-		//wares.get(((ICyberware) re.getItem()).getSlot(re).ordinal()).add(re);
-		//installed.add(re);
+		/*ItemStack re = new ItemStack(CyberwareContent.heartUpgrades, 1, 0);
+		wares.get(((ICyberware) re.getItem()).getSlot(re).ordinal()).add(re);
+		installed.add(re);*/
 		
 		List<ZombieItem> items = new ArrayList(CyberwareContent.zombieItems);
 		for (int i = 0; i < numberOfItemsToInstall; i++)
@@ -233,7 +233,6 @@ public class CyberwareDataHandler
 					{
 						ItemStack req = requiredCategory[cyberZombie.worldObj.rand.nextInt(requiredCategory.length)].copy();
 						ICyberware reqWare = CyberwareAPI.getCyberware(req);
-						reqWare.setQuality(req, CyberwareAPI.QUALITY_SCAVENGED);
 						req.stackSize = reqWare.installedStackSize(req);
 						wares.get(reqWare.getSlot(req).ordinal()).add(req);
 						installed.add(req);

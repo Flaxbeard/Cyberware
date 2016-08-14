@@ -65,6 +65,10 @@ public class ItemBoneUpgrade extends ItemCyberware
 		{
 			this.onAdded((EntityLivingBase) e, CyberwareAPI.getCyberware(e, test));
 		}
+		else if (CyberwareAPI.hasCapability(e))
+		{
+			this.onRemoved((EntityLivingBase) e, test);
+		}
 	}
 	
 	@SubscribeEvent

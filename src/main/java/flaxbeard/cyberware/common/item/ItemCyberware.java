@@ -9,11 +9,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem;
@@ -360,10 +360,11 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 			}
 			return stack;
 		}
-		return CyberwareAPI.writeQualityTag(stack, quality);
+		return this.canHoldQuality(stack, quality) ? CyberwareAPI.writeQualityTag(stack, quality) : stack;
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack)
 	{
 		Quality q = getQuality(stack);

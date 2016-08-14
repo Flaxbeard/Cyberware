@@ -98,6 +98,19 @@ public class ParticlePacket implements IMessage
 									new int[0]);
 						}
 						break;
+					case 1:
+						for (int i = 0; i < 5; i++)
+						{
+							world.spawnParticle(EnumParticleTypes.VILLAGER_ANGRY,
+									x + 1F * (world.rand.nextFloat() - .5F),
+									y + 1F * (world.rand.nextFloat() - .5F),
+									z + 1F * (world.rand.nextFloat() - .5F),
+									2F * (world.rand.nextFloat() - .5F),
+									.5F,
+									2F * (world.rand.nextFloat() - .5F),
+									new int[0]);
+						}
+						break;
 				}
 			}
 			
@@ -107,21 +120,5 @@ public class ParticlePacket implements IMessage
 
 	}
 	
-	private static class DodgeNotification implements ItemCybereyeUpgrade.INotification
-	{
-
-		@Override
-		public void render(int x, int y)
-		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(ItemCybereyeUpgrade.HUD_TEXTURE);
-			ClientUtils.drawTexturedModalRect(x + 1, y + 1, 0, 39, 15, 14);
-		}
-
-		@Override
-		public int getDuration()
-		{
-			return 5;
-		}
-	}
 
 }

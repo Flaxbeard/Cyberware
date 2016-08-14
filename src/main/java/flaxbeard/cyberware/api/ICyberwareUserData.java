@@ -40,6 +40,11 @@ public interface ICyberwareUserData
 	public boolean hasEssential(EnumSlot slot, EnumSide side);
 	public int getEssence();
 	public void setEssence(int e);
-	void resetWare();
+	void resetWare(EntityLivingBase e);
 	int getMaxEssence();
+	public int getNumActiveItems();
+	public List<ItemStack> getActiveItems();
+	public void removeHotkey(int i);
+	public void addHotkey(int i, ItemStack stack);
+	public ItemStack getHotkey(int i);
 }

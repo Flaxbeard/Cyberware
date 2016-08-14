@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,10 +24,12 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.api.item.HotkeyHelper;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -46,15 +49,27 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private List<ItemStack> specialBatteries = new ArrayList<ItemStack>();
 	private int essence = 0;
 	private int maxEssence = 0;
-
+	private List<ItemStack> activeItems = new ArrayList<ItemStack>();
+	private ItemStack[] hotkeys = new ItemStack[10];
+	
 	public CyberwareUserDataImpl()
 	{
-		resetWare();
+		resetWare(null);
 	}
 	
 	@Override
-	public void resetWare()
+	public void resetWare(EntityLivingBase e)
 	{
+		for (ItemStack[] slot : this.wares)
+		{
+			for (ItemStack item : slot)
+			{
+				if (CyberwareAPI.isCyberware(item))
+				{
+					CyberwareAPI.getCyberware(item).onRemoved(e, item);
+				}
+			}
+		}
 		essence = maxEssence = CyberwareConfig.ESSENCE;
 		for (int i = 0; i < wares.length; i++)
 		{
@@ -376,6 +391,9 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	{
 		powerCap = 0;
 		specialBatteries = new ArrayList<ItemStack>();
+		activeItems = new ArrayList<ItemStack>();
+		hotkeys = new ItemStack[10];
+		
 		for (EnumSlot slot : EnumSlot.values())
 		{
 			for (ItemStack wareStack : getInstalledCyberware(slot))
@@ -384,6 +402,16 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 				{
 					ICyberware ware = CyberwareAPI.getCyberware(wareStack);
 					
+					if (ware instanceof IMenuItem && ((IMenuItem) ware).hasMenu(wareStack))
+					{
+						this.activeItems.add(wareStack);
+						
+						int hotkey = HotkeyHelper.getHotkey(wareStack);
+						if (hotkey != -1)
+						{
+							this.hotkeys[hotkey] = wareStack;
+						}
+					}
 					
 					if (ware instanceof ISpecialBattery)
 					{
@@ -719,6 +747,36 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	public void setEssence(int e)
 	{
 		essence = e;
+	}
+
+	@Override
+	public int getNumActiveItems()
+	{
+		return activeItems.size();
+	}
+
+	@Override
+	public List<ItemStack> getActiveItems()
+	{
+		return activeItems;
+	}
+
+	@Override
+	public void removeHotkey(int i)
+	{
+		hotkeys[i] = null;
+	}
+
+	@Override
+	public void addHotkey(int i, ItemStack stack)
+	{
+		hotkeys[i] = stack;
+	}
+	
+	@Override
+	public ItemStack getHotkey(int i)
+	{
+		return hotkeys[i];
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -28,11 +29,13 @@ import com.google.common.collect.HashMultimap;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.GuiPacket;
 
-public class ItemHandUpgrade extends ItemCyberware
+public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemHandUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -87,7 +90,7 @@ public class ItemHandUpgrade extends ItemCyberware
 					(e.getPrimaryHand() == EnumHandSide.RIGHT ? 
 							(CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 1))) : 
 							(CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))));
-			if (isEquipped)
+			if (isEquipped && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 			{
 				this.addUnarmedDamage(e, test);
 				lastClaws.put(e, true);
@@ -96,7 +99,7 @@ public class ItemHandUpgrade extends ItemCyberware
 				{
 					if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
 					{
-						updateHand(e);
+						updateHand(e, true);
 					}
 				}
 			}
@@ -109,17 +112,18 @@ public class ItemHandUpgrade extends ItemCyberware
 		}
 		else
 		{
+			
 			lastClaws.put(e, false);
 		}
 	}
 	
-	private void updateHand(EntityLivingBase e)
+	private void updateHand(EntityLivingBase e, boolean delay)
 	{
 		if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().thePlayer != null)
 		{
 			if (e == Minecraft.getMinecraft().thePlayer)
 			{
-				clawsTime = Minecraft.getMinecraft().getRenderPartialTicks() + e.ticksExisted;
+				clawsTime = Minecraft.getMinecraft().getRenderPartialTicks() + e.ticksExisted + (delay ? 5 : 0);
 			}
 		}
 	}
@@ -199,5 +203,27 @@ public class ItemHandUpgrade extends ItemCyberware
 	}
 	
 	private static final UUID strengthId = UUID.fromString("63c32801-94fb-40d4-8bd2-89135c1e44b1");
+
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 1;
+	}
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+		if (e instanceof EntityLivingBase && FMLCommonHandler.instance().getSide() == Side.CLIENT)
+		{
+			updateHand((EntityLivingBase) e, false);
+		}
+	}
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
+	}
 
 }

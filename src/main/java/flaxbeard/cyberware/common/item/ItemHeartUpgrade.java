@@ -76,9 +76,16 @@ public class ItemHeartUpgrade extends ItemCyberware
 				}
 				else
 				{
-					CyberwareAPI.getCyberwareNBT(stack).setBoolean("used", true);
+					stack = CyberwareAPI.getCyberware(e, test);
+					NBTTagCompound com = CyberwareAPI.getCyberwareNBT(stack);
+					com.setBoolean("used", true);
+					stack.getTagCompound().setTag(CyberwareAPI.DATA_TAG, com);
+
+					CyberwareAPI.updateData(e);
 				}
 				e.setHealth(e.getMaxHealth() / 3F);
+				CyberwarePacketHandler.INSTANCE.sendToAllAround(new ParticlePacket(1, (float) e.posX, (float) e.posY + e.height / 2F, (float) e.posZ), 
+						new TargetPoint(e.worldObj.provider.getDimension(), e.posX, e.posY, e.posZ, 20));
 				event.setCanceled(true);
 			}
 		}

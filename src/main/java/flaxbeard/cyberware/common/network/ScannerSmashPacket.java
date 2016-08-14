@@ -97,21 +97,6 @@ public class ScannerSmashPacket implements IMessage
 
 	}
 	
-	private static class DodgeNotification implements ItemCybereyeUpgrade.INotification
-	{
 
-		@Override
-		public void render(int x, int y)
-		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(ItemCybereyeUpgrade.HUD_TEXTURE);
-			ClientUtils.drawTexturedModalRect(x + 1, y + 1, 0, 39, 15, 14);
-		}
-
-		@Override
-		public int getDuration()
-		{
-			return 5;
-		}
-	}
 
 }

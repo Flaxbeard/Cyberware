@@ -53,7 +53,7 @@ public class CommandClearCyberware extends CommandBase
 		EntityPlayerMP entityplayermp = args.length == 0 ? getCommandSenderAsPlayer(sender) : getPlayer(server, sender, args[0]);
 		NBTTagCompound nbttagcompound = null;
 
-		CyberwareAPI.getCapability(entityplayermp).resetWare();
+		CyberwareAPI.getCapability(entityplayermp).resetWare(entityplayermp);
 		CyberwareAPI.updateData(entityplayermp);
 		
 		notifyCommandListener(sender, this, "cyberware.commands.clearCyberware.success", new Object[] {entityplayermp.getName()});

@@ -122,6 +122,7 @@ public class EntityCyberZombie extends EntityZombie
 					int random = worldObj.rand.nextInt(allWares.size());
 					drop = ItemStack.copyItemStack(allWares.get(random));
 					drop = CyberwareAPI.sanitize(drop);
+					drop = CyberwareAPI.getCyberware(drop).setQuality(drop, CyberwareAPI.QUALITY_SCAVENGED);
 					drop.stackSize = 1;
 					count++;
 				}

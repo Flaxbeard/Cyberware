@@ -73,8 +73,8 @@ public class BlockEngineeringTable extends BlockContainer
 	
 	private static final AxisAlignedBB s = new AxisAlignedBB(4F / 16F, 0F, 0F / 16F, 12F / 16F, 1F, 12F / 16F);
 	private static final AxisAlignedBB n = new AxisAlignedBB(4F / 16F, 0F, 4F / 16F, 12F / 16F, 1F, 16F / 16F);
-	private static final AxisAlignedBB w = new AxisAlignedBB(0F / 16F, 0F, 4F / 16F, 12F / 16F, 1F, 12F / 16F);
-	private static final AxisAlignedBB e = new AxisAlignedBB(4F / 16F, 0F, 4F / 16F, 16F / 16F, 1F, 12F / 16F);
+	private static final AxisAlignedBB e = new AxisAlignedBB(0F / 16F, 0F, 4F / 16F, 12F / 16F, 1F, 12F / 16F);
+	private static final AxisAlignedBB w = new AxisAlignedBB(4F / 16F, 0F, 4F / 16F, 16F / 16F, 1F, 12F / 16F);
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)

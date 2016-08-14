@@ -33,12 +33,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.DodgePacket;
 
-public class ItemBrainUpgrade extends ItemCyberware
+public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemBrainUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -123,7 +125,8 @@ public class ItemBrainUpgrade extends ItemCyberware
 	{
 		EntityPlayer p = event.getEntityPlayer();
 		
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 3)) && isContextWorking(p) && !p.isSneaking())
+		ItemStack test = new ItemStack(this, 1, 3);
+		if (CyberwareAPI.isCyberwareInstalled(p, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(p, test)) && isContextWorking(p) && !p.isSneaking())
 		{
 			IBlockState state = event.getState();
 			ItemStack tool = p.getHeldItem(EnumHand.MAIN_HAND);
@@ -156,7 +159,7 @@ public class ItemBrainUpgrade extends ItemCyberware
 		EntityLivingBase e = event.getEntityLiving();
 		
 		ItemStack test = new ItemStack(this, 1, 3);
-		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test))
+		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 		{
 			isContextWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
@@ -289,5 +292,26 @@ public class ItemBrainUpgrade extends ItemCyberware
 	{
 		return stack.getItemDamage() == 3 ? LibConstants.CONTEXTUALIZER_CONSUMPTION :
 			 stack.getItemDamage() == 4 ? LibConstants.MATRIX_CONSUMPTION: 0;
+	}
+
+
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 3;
+	}
+
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+	}
+
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
 	}
 }

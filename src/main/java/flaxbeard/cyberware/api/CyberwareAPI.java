@@ -23,6 +23,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
@@ -39,12 +40,12 @@ public final class CyberwareAPI
 	/**
 	 * Quality for Cyberware scavenged from mobs
 	 */
-	public static final Quality QUALITY_SCAVENGED = new Quality("cyberware.quality.scavenged", ChatFormatting.GRAY, "cyberware.quality.scavenged.nameModifier", "scavenged");
+	public static final Quality QUALITY_SCAVENGED = new Quality("cyberware.quality.scavenged", null, "cyberware.quality.scavenged.nameModifier", "scavenged");
 	
 	/**
 	 * Quality for Cyberware built at the Engineering Table
 	 */
-	public static final Quality QUALITY_MANUFACTURED = new Quality("cyberware.quality.manufactured", ChatFormatting.GOLD);
+	public static final Quality QUALITY_MANUFACTURED = new Quality("cyberware.quality.manufactured", null);
 
 	@CapabilityInject(ICyberwareUserData.class)
 	public static final Capability<ICyberwareUserData> CYBERWARE_CAPABILITY = null;
@@ -372,4 +373,10 @@ public final class CyberwareAPI
 		}
 
 	}
+	
+	public static void useActiveItem(Entity entity, ItemStack stack)
+	{
+		((IMenuItem) stack.getItem()).use(entity, stack);
+	}
+
 }

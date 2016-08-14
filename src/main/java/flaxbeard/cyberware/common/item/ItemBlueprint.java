@@ -105,6 +105,7 @@ public class ItemBlueprint extends Item implements IBlueprint
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{

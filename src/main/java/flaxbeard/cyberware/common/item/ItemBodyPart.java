@@ -1,9 +1,11 @@
 package flaxbeard.cyberware.common.item;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.IMenuItem;
 
 public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 {
@@ -65,4 +67,5 @@ public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 	{
 		return false;
 	}
+
 }

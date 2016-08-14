@@ -176,9 +176,14 @@ cyberware.quality.scavenged=Salvaged
 cyberware.quality.scavenged.nameModifier=Salvaged %1$s
 cyberware.quality.manufactured=Manufactured
 
+cyberware.gui.active.enable=Enable
+cyberware.gui.active.disable=Disable
+
+
 # KEYBINDS
 cyberware.keybinds.category=Cyberware
 cyberware.keybinds.zoom=Zoom
+cyberware.keybinds.menu=Cyberware Menu
 
 # ITEM TOOLTIPS
 cyberware.tooltip.spiderEye=Provides spider vision\nSee in the dark
