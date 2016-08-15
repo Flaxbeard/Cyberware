@@ -42,6 +42,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 	public int wrongSlot = -1;
 	public int ticksWrong = 0;
 	public int lastEntity = -1;
+	public int cooldownTicks = 0;
 	public boolean missingPower = false;
 
 	public boolean isUseableByPlayer(EntityPlayer player)
@@ -472,12 +473,18 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			inProgress = false;
 			progressTicks = 0;
 			targetEntity = null;
+			cooldownTicks = 60;
 			
 			IBlockState state = worldObj.getBlockState(getPos().down());
 			if (state.getBlock() instanceof BlockSurgeryChamber)
 			{
 				((BlockSurgeryChamber) state.getBlock()).toggleDoor(true, state, getPos().down(), worldObj);
 			}
+		}
+		
+		if (cooldownTicks > 0)
+		{
+			cooldownTicks--;
 		}
 	}
 
@@ -578,7 +585,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 	public boolean canOpen()
 	{
-		return !inProgress;
+		return !inProgress && cooldownTicks <= 0;
 	}
 
 	public void notifyChange()
