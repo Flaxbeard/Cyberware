@@ -505,6 +505,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 			for (int j = slotIndex * LibConstants.WARE_PER_SLOT; j < (slotIndex + 1) * LibConstants.WARE_PER_SLOT; j++)
 			{
 				ItemStack newStack = slots.getStackInSlot(j);
+
 				ItemStack targetEntityStack = ItemStack.copyItemStack(slotsPlayer.getStackInSlot(j));
 				if (newStack != null && newStack.stackSize > 0)
 				{
@@ -537,6 +538,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					if (discardSlots[j])
 					{				
 						targetEntityStack = CyberwareAPI.sanitize(targetEntityStack);
+
 						addItemStack(targetEntity, targetEntityStack);
 						
 					}
@@ -566,7 +568,6 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 
 	private void addItemStack(EntityLivingBase entity, ItemStack stack)
 	{
-		
 		boolean flag = true;
 		
 		if (entity instanceof EntityPlayer)

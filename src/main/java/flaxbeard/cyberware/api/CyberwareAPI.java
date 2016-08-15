@@ -35,7 +35,7 @@ public final class CyberwareAPI
 	 */
 	public static final String DATA_TAG = "cyberwareFunctionData";
 	
-	public static final String QUALITY_TAG = "cyberwareFunctionData";
+	public static final String QUALITY_TAG = "cyberwareQuality";
 
 	/**
 	 * Quality for Cyberware scavenged from mobs
