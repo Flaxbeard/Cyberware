@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -44,12 +45,14 @@ import org.lwjgl.opengl.GL11;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 
-public class ItemCybereyeUpgrade extends ItemCyberware
+public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemCybereyeUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -82,8 +85,8 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 	public void handleHighlight(RenderTickEvent event)
 	{
 		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 3)))
+		ItemStack testItem = new ItemStack(this, 1, 3);
+		if (CyberwareAPI.isCyberwareInstalled(p, testItem) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(p, testItem)))
 		{
 			
 			
@@ -582,4 +585,21 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 		return new ArrayList(Arrays.asList(new String[] { before + Keyboard.getKeyName(KeyBinds.zoom.getKeyCode()) + after }));
 	}
 	
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 3;
+	}
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+	}
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
+	}
 }

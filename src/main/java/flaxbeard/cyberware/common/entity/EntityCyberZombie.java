@@ -63,9 +63,10 @@ public class EntityCyberZombie extends EntityZombie
 			CyberwareDataHandler.addRandomCyberware(this, isBrute());
 			if (isBrute())
 			{
-				this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Brute Bonus", 4D, 2));
-				this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("Brute Bonus", 1D, 2));
+				this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Brute Bonus", 6D, 0));
+				this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("Brute Bonus", 1D, 0));
 			}
+			this.setHealth(this.getMaxHealth());
 			hasWare = true;
 		}
 		if (isBrute() && this.height != (1.95F * 1.2F))

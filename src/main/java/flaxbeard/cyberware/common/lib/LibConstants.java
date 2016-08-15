@@ -34,7 +34,8 @@ public class LibConstants
 	public static final float RADIO_BRUTE_CHANCE = 50F;
 	public static final float NATURAL_BRUTE_CHANCE = 5F;
 	public static final int MORE_ITEMS_BRUTE = 2;
-	
+	public static final int WHEEL_CONSUMPTION = 2;
+
 	// Tough As Nails
 	public static final int SWEAT_TEMP = 18;
 }

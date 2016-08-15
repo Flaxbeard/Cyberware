@@ -14,10 +14,12 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
-public class ItemFootUpgrade extends ItemCyberware
+public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemFootUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -30,7 +32,7 @@ public class ItemFootUpgrade extends ItemCyberware
 	@Override
 	public ItemStack[][] required(ItemStack stack)
 	{
-		if (stack.getItemDamage() == 0) return new ItemStack[0][0];
+		if (stack.getItemDamage() != 1) return new ItemStack[0][0];
 		
 		return new ItemStack[][] { 
 				new ItemStack[] { new ItemStack(CyberwareContent.cyberlimbs, 1, 2), new ItemStack(CyberwareContent.cyberlimbs, 1, 3) }};
@@ -56,6 +58,8 @@ public class ItemFootUpgrade extends ItemCyberware
 
 	
 	private Map<EntityLivingBase, Boolean> lastAqua = new HashMap<EntityLivingBase, Boolean>();
+	private Map<EntityLivingBase, Integer> lastWheels = new HashMap<EntityLivingBase, Integer>();
+	private Map<Integer, Float> stepAssist = new HashMap<Integer, Float>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
 	public void handleLivingUpdate(LivingUpdateEvent event)
@@ -91,6 +95,46 @@ public class ItemFootUpgrade extends ItemCyberware
 		{
 			lastAqua.put(e, true);
 		}
+		
+		test = new ItemStack(this, 1, 2);
+		if (CyberwareAPI.isCyberwareInstalled(e, test))
+		{
+			boolean last = getLastWheels(e) > 0;
+
+			boolean powerUsed = (e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test));
+			if (powerUsed)
+			{
+				if (!stepAssist.containsKey(e.getEntityId()))
+				{
+					stepAssist.put(e.getEntityId(), Math.max(e.stepHeight, .6F));
+				}
+				e.stepHeight = 1F;
+
+			}
+			else if (stepAssist.containsKey(e.getEntityId()) && last)
+			{
+
+				e.stepHeight = stepAssist.get(e.getEntityId());
+			}
+		
+			
+			lastWheels.put(e, powerUsed ? 10 : 0);
+		}
+		else if (stepAssist.containsKey(e.getEntityId()))
+		{
+
+			e.stepHeight = stepAssist.get(e.getEntityId());
+			
+			int glw = getLastWheels(e) - 1;
+			
+			if (glw == 0)
+			{
+				stepAssist.remove(e.getEntityId());
+			}
+
+			lastWheels.put(e, glw);
+
+		}
 	}
 	
 	private boolean getLastAqua(EntityLivingBase e)
@@ -102,9 +146,37 @@ public class ItemFootUpgrade extends ItemCyberware
 		return lastAqua.get(e);
 	}
 	
+	private int getLastWheels(EntityLivingBase e)
+	{
+		if (!lastWheels.containsKey(e))
+		{
+			lastWheels.put(e, 10);
+		}
+		return lastWheels.get(e);
+	}
+	
 	@Override
 	public int getPowerConsumption(ItemStack stack)
 	{
-		return stack.getItemDamage() == 0 ? 0 : LibConstants.AQUA_CONSUMPTION;
+		return stack.getItemDamage() == 1 ? LibConstants.AQUA_CONSUMPTION :
+				stack.getItemDamage() == 2 ? LibConstants.WHEEL_CONSUMPTION : 0;
+	}
+	
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 2;
+	}
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+	}
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
 	}
 }

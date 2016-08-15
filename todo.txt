@@ -1,2 +1,2 @@
-legUpgrades_fallDamage
-legUpgrades_fallDamage_scavenged
+footUpgrades_wheels
+footUpgrades_wheels_scavenged

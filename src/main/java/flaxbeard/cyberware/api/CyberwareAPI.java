@@ -40,12 +40,12 @@ public final class CyberwareAPI
 	/**
 	 * Quality for Cyberware scavenged from mobs
 	 */
-	public static final Quality QUALITY_SCAVENGED = new Quality("cyberware.quality.scavenged", null, "cyberware.quality.scavenged.nameModifier", "scavenged");
+	public static final Quality QUALITY_SCAVENGED = new Quality("cyberware.quality.scavenged", "cyberware.quality.scavenged.nameModifier", "scavenged");
 	
 	/**
 	 * Quality for Cyberware built at the Engineering Table
 	 */
-	public static final Quality QUALITY_MANUFACTURED = new Quality("cyberware.quality.manufactured", null);
+	public static final Quality QUALITY_MANUFACTURED = new Quality("cyberware.quality.manufactured");
 
 	@CapabilityInject(ICyberwareUserData.class)
 	public static final Capability<ICyberwareUserData> CYBERWARE_CAPABILITY = null;

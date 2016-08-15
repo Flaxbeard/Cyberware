@@ -282,12 +282,13 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 3, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 5) });
 		
 		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
-				new String[] { "spurs", "aqua" });
-		footUpgrades.setEssenceCost(1, 2);
-		footUpgrades.setWeights(UNCOMMON, RARE);
+				new String[] { "spurs", "aqua", "wheels" });
+		footUpgrades.setEssenceCost(1, 2, 3);
+		footUpgrades.setWeights(UNCOMMON, RARE, UNCOMMON);
 		footUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4) },
-				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 9) });
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 9) },
+				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 9) });
 
 		cyberlimbs = new ItemCyberlimb("cyberlimbs", 
 				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },

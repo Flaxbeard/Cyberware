@@ -40,19 +40,17 @@ public interface ICyberware
 		private static Map<String, Quality> mapping = new HashMap<String, Quality>();
 		public static List<Quality> qualities = new ArrayList<Quality>();
 		private String unlocalizedName;
-		private String color;
 		private String nameModifier;
 		private String spriteSuffix;
 
-		public Quality(String unlocalizedName, String color)
+		public Quality(String unlocalizedName)
 		{
-			this(unlocalizedName, color, null, null);
+			this(unlocalizedName, null, null);
 		}
 		
-		public Quality(String unlocalizedName, String color, String nameModifier, String spriteSuffix)
+		public Quality(String unlocalizedName, String nameModifier, String spriteSuffix)
 		{
 			this.unlocalizedName = unlocalizedName;
-			this.color = color;
 			this.nameModifier = nameModifier;
 			this.spriteSuffix = spriteSuffix;
 			mapping.put(unlocalizedName, this);
@@ -63,12 +61,7 @@ public interface ICyberware
 		{
 			return unlocalizedName;
 		}
-		
-		public String getColor()
-		{
-			return this.color;
-		}
-		
+
 		public static Quality getQualityFromString(String name)
 		{
 			if (mapping.containsKey(name))

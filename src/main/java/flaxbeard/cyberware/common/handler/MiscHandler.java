@@ -95,7 +95,7 @@ public class MiscHandler
 				
 				if (quality != null)
 				{
-					event.getToolTip().add(quality.getColor() + I18n.format(quality.getUnlocalizedName()));
+					event.getToolTip().add(I18n.format(quality.getUnlocalizedName()));
 				}
 			}
 			else
