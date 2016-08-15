@@ -1,2 +1,2 @@
-footUpgrades_wheels
-footUpgrades_wheels_scavenged
+armUpgrades_bow
+armUpgrades_bow_scavenged

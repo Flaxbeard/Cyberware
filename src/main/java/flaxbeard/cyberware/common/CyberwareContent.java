@@ -37,6 +37,7 @@ import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
+import flaxbeard.cyberware.common.item.ItemArmUpgrade;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
@@ -92,6 +93,7 @@ public class CyberwareContent
 	public static ItemCyberware skinUpgrades;
 	public static ItemCyberware muscleUpgrades;
 	public static ItemCyberware boneUpgrades;
+	public static ItemCyberware armUpgrades;
 	public static ItemCyberware handUpgrades;
 	public static ItemCyberware legUpgrades;
 	public static ItemCyberware footUpgrades;
@@ -262,6 +264,13 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 3, 1), new ItemStack(component, 2, 2), new ItemStack(component, 2, 8) },
 				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 2, 8), new ItemStack(component, 1, 9) }
 				);
+		
+		armUpgrades = new ItemArmUpgrade("armUpgrades", EnumSlot.ARM,
+				new String[] { "bow"  });
+		armUpgrades.setEssenceCost(3);
+		armUpgrades.setWeights(RARE);
+		armUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 4) });
 		
 		handUpgrades = new ItemHandUpgrade("handUpgrades", EnumSlot.HAND,
 				new String[] { "craftHands", "claws", "mining" });

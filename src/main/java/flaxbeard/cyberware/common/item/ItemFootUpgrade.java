@@ -101,7 +101,7 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 		{
 			boolean last = getLastWheels(e) > 0;
 
-			boolean powerUsed = (e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test));
+			boolean powerUsed = EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)) && (e.ticksExisted % 20 == 0 ? CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)) : last);
 			if (powerUsed)
 			{
 				if (!stepAssist.containsKey(e.getEntityId()))
@@ -109,16 +109,24 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 					stepAssist.put(e.getEntityId(), Math.max(e.stepHeight, .6F));
 				}
 				e.stepHeight = 1F;
+				
+				lastWheels.put(e, 10);
+
 
 			}
 			else if (stepAssist.containsKey(e.getEntityId()) && last)
 			{
 
 				e.stepHeight = stepAssist.get(e.getEntityId());
+				
+				lastWheels.put(e, getLastWheels(e) - 1);
+			}
+			else
+			{
+				lastWheels.put(e, 0);
 			}
 		
 			
-			lastWheels.put(e, powerUsed ? 10 : 0);
 		}
 		else if (stepAssist.containsKey(e.getEntityId()))
 		{

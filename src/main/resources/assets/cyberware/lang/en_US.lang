@@ -76,6 +76,7 @@ item.cyberware.handUpgrades.mining.name=Reinforced Fist
 item.cyberware.footUpgrades.spurs.name=Implanted Spurs
 item.cyberware.footUpgrades.aqua.name=Aquatic Propulsion System
 item.cyberware.footUpgrades.wheels.name=Deployable Wheels
+item.cyberware.armUpgrades.bow.name=Quickdraw Flywheels
 item.cyberware.legUpgrades.jumpBoost.name=Linear Actuators
 item.cyberware.legUpgrades.fallDamage.name=Fall Bracers
 
@@ -252,6 +253,7 @@ cyberware.tooltip.cyberlimbs.3=Enables Cyberleg upgrades
 cyberware.tooltip.handUpgrades.0=3x3 personal crafting
 cyberware.tooltip.handUpgrades.1=Stronger unarmed attacks
 cyberware.tooltip.handUpgrades.2=Hands mine at stone level
+cyberware.tooltip.armUpgrades.0=Draw bows faster
 cyberware.tooltip.footUpgrades.0=Speed up horses
 cyberware.tooltip.footUpgrades.1=Swim faster\nMore powerful with two Cyberlegs
 cyberware.tooltip.footUpgrades.2=Walk up full blocks
