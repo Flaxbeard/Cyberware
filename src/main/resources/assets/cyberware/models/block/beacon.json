@@ -1,0 +1,91 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "0": "cyberware:blocks/beaconPoleSide",
+        "1": "cyberware:blocks/beaconPoleTop",
+        "2": "cyberware:blocks/beaconBarSide",
+        "3": "cyberware:blocks/beaconBarTop",
+        "4": "cyberware:blocks/beaconOtherSmallSide",
+        "5": "cyberware:blocks/beaconOtherBigSide"
+    },
+    "elements": [
+        {
+            "name": "Pole",
+            "from": [ 6.5, 0.0, 6.5 ], 
+            "to": [ 9.5, 16.0, 9.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 3.0, 16.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 3.0, 16.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 3.0, 16.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 3.0, 16.0 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 3.0, 3.0 ] }
+            }
+        },
+        {
+            "name": "Bar1",
+            "from": [ 5.0, 7.0, 3.0 ], 
+            "to": [ 7.0, 15.0, 5.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        },
+        {
+            "name": "OtherPart",
+            "from": [ 7.0, 8.0, 3.5 ], 
+            "to": [ 9.0, 14.0, 12.5 ], 
+            "faces": {
+                "north": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 6.0 ] },
+                "east": { "texture": "#5", "uv": [ 0.0, 0.0, 9.0, 6.0 ] },
+                "south": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 6.0 ] },
+                "west": { "texture": "#5", "uv": [ 0.0, 0.0, 9.0, 6.0 ] },
+                "up": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 9.0 ] },
+                "down": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 9.0 ] }
+            }
+        },
+        {
+            "name": "Bar2",
+            "from": [ 9.0, 7.0, 3.0 ], 
+            "to": [ 11.0, 15.0, 5.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        },
+        {
+            "name": "Bar4",
+            "from": [ 9.0, 7.0, 11.0 ], 
+            "to": [ 11.0, 15.0, 13.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        },
+        {
+            "name": "Bar3",
+            "from": [ 5.0, 7.0, 11.0 ], 
+            "to": [ 7.0, 15.0, 13.0 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        }
+    ]
+}

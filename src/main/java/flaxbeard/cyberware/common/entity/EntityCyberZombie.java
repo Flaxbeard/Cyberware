@@ -5,24 +5,29 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUserDataImpl;
-import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.handler.CyberwareDataHandler;
+import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class EntityCyberZombie extends EntityZombie
 {
-	
+	private static final DataParameter<Integer> CYBER_VARIANT = EntityDataManager.<Integer>createKey(EntityCyberZombie.class, DataSerializers.VARINT);
+
 	public boolean hasWare;
 	private CyberwareUserDataImpl cyberware;
 	
@@ -32,6 +37,12 @@ public class EntityCyberZombie extends EntityZombie
 		cyberware = new CyberwareUserDataImpl();
 		hasWare = false;
 		//CyberwareDataHandler.addRandomCyberware(this);
+	}
+	
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataManager.register(CYBER_VARIANT, Integer.valueOf(0));
 	}
 	
 	@Override
@@ -45,10 +56,41 @@ public class EntityCyberZombie extends EntityZombie
 	{
 		if (!this.hasWare && !this.worldObj.isRemote)
 		{
-			CyberwareDataHandler.addRandomCyberware(this);
+			if (!isBrute() && this.worldObj.rand.nextFloat() < (LibConstants.NATURAL_BRUTE_CHANCE / 100F))
+			{
+				this.setBrute();
+			}
+			CyberwareDataHandler.addRandomCyberware(this, isBrute());
+			if (isBrute())
+			{
+				this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("Brute Bonus", 4D, 2));
+				this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("Brute Bonus", 1D, 2));
+			}
 			hasWare = true;
 		}
+		if (isBrute() && this.height != (1.95F * 1.2F))
+		{
+			this.setSizeNormal(0.6F * 1.2F, 1.95F * 1.2F);
+		}
 		super.onLivingUpdate();
+	}
+	
+	
+	protected void setSizeNormal(float width, float height)
+	{
+		if (width != this.width || height != this.height)
+		{
+			float f = this.width;
+			this.width = width;
+			this.height = height;
+			AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
+			this.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)this.width, axisalignedbb.minY + (double)this.height, axisalignedbb.minZ + (double)this.width));
+
+			if (this.width > f && !this.firstUpdate && !this.worldObj.isRemote)
+			{
+				this.moveEntity((double)(f - this.width), 0.0D, (double)(f - this.width));
+			}
+		}
 	}
 
 	@Override
@@ -57,6 +99,7 @@ public class EntityCyberZombie extends EntityZombie
 		compound = super.writeToNBT(compound);
 
 		compound.setBoolean("hasRandomWare", hasWare);
+		compound.setBoolean("brute", isBrute());
 
 		if (hasWare)
 		{
@@ -71,6 +114,11 @@ public class EntityCyberZombie extends EntityZombie
 	{
 		super.readFromNBT(compound);
 		
+		boolean brute = compound.getBoolean("brute");
+		if (brute)
+		{
+			this.setBrute();
+		}
 		this.hasWare = compound.getBoolean("hasRandomWare");
 		if (compound.hasKey("ware"))
 		{
@@ -86,7 +134,6 @@ public class EntityCyberZombie extends EntityZombie
 		{
 			return (T) cyberware;
 		}
-		System.out.println(capability);
 		return super.getCapability(capability, facing);
 	}
 
@@ -133,5 +180,22 @@ public class EntityCyberZombie extends EntityZombie
 				}
 			}
 		}
+	}
+
+	public boolean isBrute()
+	{
+		return ((Integer)this.dataManager.get(CYBER_VARIANT)).intValue() == 1;
+	}
+	
+	public boolean setBrute()
+	{
+		this.setChild(false);
+		this.dataManager.set(CYBER_VARIANT, Integer.valueOf(1));
+
+		if (!this.hasWare)
+		{
+			return true;
+		}
+		return false;
 	}
 }

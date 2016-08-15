@@ -9,6 +9,7 @@ tile.cyberware.blueprintArchive.name=Blueprint Archive
 item.cyberware.engineeringTable.name=Cyberware Engineering Table
 tile.cyberware.componentBox.name=Component Box
 item.cyberware.componentBox.name=Component Box
+tile.cyberware.beacon.name=Radio Beacon
 
 
 # ITEMS
@@ -161,6 +162,7 @@ cyberware.tooltip.componentBox=Shift-click to place or pick up
 cyberware.tooltip.componentBox2=Accessible by Engineering Table if nearby or in inventory
 
 cyberware.tooltip.blueprintArchive=Accessible by Engineering Table if nearby
+cyberware.tooltip.beacon=Attracts Cyberzombies
 
 cyberware.tooltip.blueprint=Creates %1$s
 cyberware.tooltip.craftBlueprint=Craft with a piece of Cyberware

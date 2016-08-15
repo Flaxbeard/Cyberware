@@ -47,6 +47,7 @@ import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 
 public class ItemCybereyeUpgrade extends ItemCyberware
 {
@@ -355,6 +356,37 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
+	private static class NotificationRadio implements INotification
+	{
+		private boolean on;
+		
+		private NotificationRadio(boolean on)
+		{
+			this.on = on;
+		}
+
+		@Override
+		public void render(int x, int y)
+		{
+			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
+			if (on)
+			{
+				ClientUtils.drawTexturedModalRect(x, y + 1, 13, 39, 15, 14);
+			}
+			else
+			{
+				ClientUtils.drawTexturedModalRect(x, y + 1, 28, 39, 15, 14);
+			}
+		}
+
+		@Override
+		public int getDuration()
+		{
+			return 40;
+		}
+	}
+	
 	public static void addNotification(NotificationInstance not)
 	{
 		notifications.push(not);
@@ -367,6 +399,7 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 	private static int cachedCap = 0;
 	private static int cachedTotal = 0;
 	private static float cachedPercent = 0;
+	private static boolean radioRange = false;
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -406,6 +439,13 @@ public class ItemCybereyeUpgrade extends ItemCyberware
 				cachedPercent = data.getPercentFull();
 				cachedCap = data.getCapacity();
 				cachedTotal = data.getStoredPower();
+				
+				boolean temp = radioRange;
+				radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
+				if (radioRange != temp)
+				{
+					addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
+				}
 			}
 			if (cachedPercent != -1)
 			{

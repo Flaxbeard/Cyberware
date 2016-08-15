@@ -25,6 +25,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.common.block.BlockBeacon;
 import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockComponentBox;
@@ -75,6 +76,7 @@ public class CyberwareContent
 	public static Block scanner;
 	public static Block blueprintArchive;
 	public static BlockComponentBox componentBox;
+	public static BlockBeacon radio;
 
 	
 	public static Item bodyPart;
@@ -144,6 +146,7 @@ public class CyberwareContent
 		charger = new BlockCharger();
 		engineering = new BlockEngineeringTable();
 		scanner = new BlockScanner();
+		radio = new BlockBeacon();
 
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");
@@ -351,6 +354,14 @@ public class CyberwareContent
 				"ICI",
 				" I ",
 				Character.valueOf('I'), "ingotIron", Character.valueOf('C'), "chestWood", Character.valueOf('O'), new ItemStack(component, 1, OreDictionary.WILDCARD_VALUE)
+				));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radio),
+				"III",
+				"PCP",
+				"IFI",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('P'), new ItemStack(component, 1, 4),
+				Character.valueOf('C'), new ItemStack(component, 1, 9), Character.valueOf('F'), new ItemStack(component, 1, 5)
 				));
 		
 		if (CyberwareConfig.SURGERY_CRAFTING)

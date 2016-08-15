@@ -8,9 +8,11 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.WeightedRandom;
@@ -19,6 +21,7 @@ import net.minecraft.world.GameRules.ValueType;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.event.world.WorldEvent;
@@ -33,7 +36,9 @@ import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.NumItems;
 import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
+import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
@@ -146,30 +151,44 @@ public class CyberwareDataHandler
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void handleCZSpawn(EntityJoinWorldEvent event)
+	public void handleCZSpawn(LivingSpawnEvent.SpecialSpawn event)
 	{
 
-		/*if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
+		if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
-			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (CyberwareConfig.ZOMBIE_RARITY / 100F))) return;
+			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (LibConstants.RADIO_CHANCE / 100F))) return;
 			
 			EntityZombie zombie = (EntityZombie) event.getEntityLiving();
-			EntityCyberZombie cyberZombie = new EntityCyberZombie(event.getWorld());
-			cyberZombie.setLocationAndAngles(zombie.posX, zombie.posY, zombie.posZ, zombie.rotationYaw, zombie.rotationPitch);
-
-			for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
+			
+			if (TileEntityBeacon.isInRange(zombie.worldObj, zombie.posX, zombie.posY, zombie.posZ))
 			{
-				cyberZombie.setItemStackToSlot(slot, zombie.getItemStackFromSlot(slot));
+				EntityCyberZombie cyberZombie = new EntityCyberZombie(event.getWorld());
+				if (event.getWorld().rand.nextFloat() < (LibConstants.RADIO_BRUTE_CHANCE / 100F))
+				{
+					boolean works = cyberZombie.setBrute();
+					if (!works)
+					{
+						System.out.println("BAD!");
+					}
+					else
+					{
+						System.out.println(cyberZombie.isBrute());
+					}
+				}
+				cyberZombie.setLocationAndAngles(zombie.posX, zombie.posY, zombie.posZ, zombie.rotationYaw, zombie.rotationPitch);
+	
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
+				{
+					cyberZombie.setItemStackToSlot(slot, zombie.getItemStackFromSlot(slot));
+				}
+				event.getWorld().spawnEntityInWorld(cyberZombie);
+				zombie.deathTime = 19;
+				zombie.setHealth(0F);
 			}
-			event.getWorld().spawnEntityInWorld(cyberZombie);
-			event.setCanceled(true);
-			zombie.deathTime = 19;
-			zombie.setHealth(0F);
-			addRandomCyberware(cyberZombie);
-		}*/
+		}
 	}
 	
-	public static void addRandomCyberware(EntityCyberZombie cyberZombie)
+	public static void addRandomCyberware(EntityCyberZombie cyberZombie, boolean brute)
 	{	
 		ICyberwareUserData data = CyberwareAPI.getCapability(cyberZombie);
 		List<List<ItemStack>> wares = new ArrayList<List<ItemStack>>();
@@ -187,6 +206,10 @@ public class CyberwareDataHandler
 		wares.get(CyberwareContent.creativeBattery.getSlot(battery).ordinal()).add(battery);
 		
 		int numberOfItemsToInstall = ((NumItems) WeightedRandom.getRandomItem(cyberZombie.worldObj.rand, CyberwareContent.numItems)).num;
+		if (brute)
+		{
+			numberOfItemsToInstall += LibConstants.MORE_ITEMS_BRUTE;
+		}
 		
 		List<ItemStack> installed = new ArrayList<ItemStack>();
 

@@ -1,0 +1,18 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "cyberware:beacon",
+        "textures": {
+            "particle": "cyberware:blocks/surgeryChamberTop"
+        }
+    },
+    "variants": {
+        "facing": {
+            "east": { "y": 270 },
+            "west": { "y": 90 },
+            "north": { "y": 180 },
+            "south": { "y": 0 }
+        },
+        "inventory": [{}]
+    }
+}

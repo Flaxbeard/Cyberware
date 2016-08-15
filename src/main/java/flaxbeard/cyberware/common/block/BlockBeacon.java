@@ -1,33 +1,34 @@
+
 package flaxbeard.cyberware.common.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
-import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
-import flaxbeard.cyberware.common.block.tile.TileEntityScanner;
+import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 
 public class BlockBeacon extends BlockContainer
 {
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockBeacon()
 	{
@@ -41,17 +42,35 @@ public class BlockBeacon extends BlockContainer
 		this.setRegistryName(name);
 		GameRegistry.register(this);
 
-		ItemBlock ib = new ItemBlockCyberware(this);
+		ItemBlock ib = new ItemBlockCyberware(this, "cyberware.tooltip.beacon");
 		ib.setRegistryName(name);
 		GameRegistry.register(ib);
 		
 		this.setUnlocalizedName(Cyberware.MODID + "." + name);
 
 		this.setCreativeTab(Cyberware.creativeTab);
-		GameRegistry.registerTileEntity(TileEntityScanner.class, Cyberware.MODID + ":" + name);
+		GameRegistry.registerTileEntity(TileEntityBeacon.class, Cyberware.MODID + ":" + name);
 		
 		CyberwareContent.blocks.add(this);
 	}
+	
+	private static final AxisAlignedBB ew = new AxisAlignedBB(5F / 16F, 0F, 3F / 16F, 11F / 16F, 1F, 13F / 16F);
+	private static final AxisAlignedBB ns = new AxisAlignedBB(3F / 16F, 0F, 5F / 16F, 13F / 16F, 1F, 11F / 16F);
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+		EnumFacing face = state.getValue(FACING);
+		if (face == EnumFacing.NORTH || face == EnumFacing.SOUTH)
+		{
+			return ew;
+		}
+		else
+		{
+			return ns;
+		}
+	}
+
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -68,7 +87,7 @@ public class BlockBeacon extends BlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileEntityScanner();
+		return new TileEntityBeacon();
 	}
 	
 	@Override
@@ -78,58 +97,54 @@ public class BlockBeacon extends BlockContainer
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		if (stack.hasDisplayName())
-		{
-			TileEntity tileentity = worldIn.getTileEntity(pos);
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	{ 
 
-			if (tileentity instanceof TileEntityScanner)
-			{
-				((TileEntityScanner) tileentity).setCustomInventoryName(stack.getDisplayName());
-			}
-		}
+		super.breakBlock(worldIn, pos, state);
+
 	}
-	
 
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-		
-		if (tileentity instanceof TileEntityScanner)
+		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{
-			if (player.isCreative() && player.isSneaking())
-			{
-				TileEntityScanner scanner = ((TileEntityScanner) tileentity);
-				scanner.ticks = CyberwareConfig.SCANNER_TIME - 200;
-			}
-			player.openGui(Cyberware.INSTANCE, 3, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			enumfacing = EnumFacing.NORTH;
 		}
-		
-		return true;
-		
+
+		return this.getDefaultState().withProperty(FACING, enumfacing);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((EnumFacing)state.getValue(FACING)).getIndex();
+	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{
+		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{ 
-		TileEntity tileentity = worldIn.getTileEntity(pos);
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	{
+		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+	}
 
-		if (tileentity instanceof TileEntityScanner && !worldIn.isRemote)
-		{
-			TileEntityScanner scanner = (TileEntityScanner) tileentity;
-			
-			for (int i = 0; i < scanner.slots.getSlots(); i++)
-			{
-				ItemStack stack = scanner.slots.getStackInSlot(i);
-				if (stack != null)
-				{
-					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
-				}
-			}
-		}
-		super.breakBlock(worldIn, pos, state);
-
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
 
 }

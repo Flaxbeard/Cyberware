@@ -21,7 +21,7 @@ plugins {
 }
 */
 
-version = "beta-0.2.0pre10"
+version = "beta-0.2.0pre11"
 group= "flaxbeard.cyberware" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cyberware"
 

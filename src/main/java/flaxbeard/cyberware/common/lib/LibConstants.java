@@ -29,6 +29,11 @@ public class LibConstants
 	public static final int LIMB_CONSUMPTION = 10;
 	public static final int WARNING_ESSENCE = 25;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
+	public static final int BEACON_RANGE = 100;
+	public static final float RADIO_CHANCE = 15F;
+	public static final float RADIO_BRUTE_CHANCE = 50F;
+	public static final float NATURAL_BRUTE_CHANCE = 5F;
+	public static final int MORE_ITEMS_BRUTE = 2;
 	
 	// Tough As Nails
 	public static final int SWEAT_TEMP = 18;
