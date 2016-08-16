@@ -1,0 +1,207 @@
+# BLOCKS
+tile.cyberware.surgery.name=机械操作核心
+item.cyberware.surgeryChamber.name=手术台
+tile.cyberware.charger.name=电力转换充电器
+
+# ITEMS
+item.cyberware.bodyPart.brain.name=人类的脑子
+item.cyberware.bodyPart.eyes.name=人类的眼睛
+item.cyberware.bodyPart.heart.name=人类的心脏
+item.cyberware.bodyPart.lungs.name=人类的肺
+item.cyberware.bodyPart.stomach.name=人类的胃
+item.cyberware.bodyPart.skin.name=人类的表皮
+item.cyberware.bodyPart.muscles.name=人类的肌肉
+item.cyberware.bodyPart.bones.name=人类的骨头
+item.cyberware.bodyPart.armLeft.name=人类的左臂
+item.cyberware.bodyPart.armRight.name=人类的右臂
+item.cyberware.bodyPart.handLeft.name=人类的左手
+item.cyberware.bodyPart.handRight.name=人类的右手
+item.cyberware.bodyPart.legLeft.name=人类的左腿
+item.cyberware.bodyPart.legRight.name=人类的右腿
+item.cyberware.bodyPart.footLeft.name=人类的左脚
+item.cyberware.bodyPart.footRight.name=人类的右脚
+item.cyberware.cyberlimbs.cyberlegLeft.name=机械左腿
+item.cyberware.cyberlimbs.cyberlegRight.name=机械右腿
+item.cyberware.cyberlimbs.cyberarmLeft.name=机械左臂
+item.cyberware.cyberlimbs.cyberarmRight.name=机械右臂
+
+item.cyberware.manaseerLens.lens.name=Manaseer Lenses
+item.cyberware.manaseerLens.link.name=Manalink
+item.cyberware.cybereyes.name=机械眼睛
+item.cyberware.cybereyeUpgrades.nightVision.name=低敏光视觉感应器
+item.cyberware.cybereyeUpgrades.underwaterVision.name=液体折射光校准器
+item.cyberware.cybereyeUpgrades.hudjack.name=辅助信息板
+item.cyberware.cybereyeUpgrades.targeting.name=生物锁定器
+item.cyberware.cybereyeUpgrades.zoom.name=视距增强器
+item.cyberware.expCapsule.name=经验胶囊
+item.cyberware.brainUpgrades.corticalStack.name=经验转换器
+item.cyberware.brainUpgrades.enderJammer.name=Ender Jammer
+item.cyberware.brainUpgrades.consciousnessTransmitter.name=经验传送器
+item.cyberware.brainUpgrades.neuralContextualizer.name=神经处理器
+item.cyberware.brainUpgrades.matrix.name=Threat Matrix Calculator
+item.cyberware.cyberheart.name=机械血泵
+item.cyberware.creativeBattery.name=创造电容
+item.cyberware.heartUpgrades.defibrillator.name=小型除颤器
+item.cyberware.heartUpgrades.platelets.name=血小板分派器
+item.cyberware.heartUpgrades.medkit.name=干细胞合成器
+item.cyberware.heartUpgrades.coupler.name=Cardiovascular Coupler
+item.cyberware.lungsUpgrades.oxygen.name=压缩氧气补给器
+item.cyberware.lungsUpgrades.hyperoxygenation.name=高氧刺激器
+item.cyberware.lowerOrgansUpgrades.liverFilter.name=胃部过滤器
+item.cyberware.lowerOrgansUpgrades.metabolic.name=新陈代谢发电
+item.cyberware.lowerOrgansUpgrades.battery.name=内置电池
+item.cyberware.lowerOrgansUpgrades.adrenaline.name=肾上腺素泵
+item.cyberware.denseBattery.name=高密度电容
+item.cyberware.skinUpgrades.solarSkin.name=太阳能皮肤
+item.cyberware.skinUpgrades.subdermalSpikes.name=硬化皮肤
+item.cyberware.skinUpgrades.fakeSkin.name=合成皮肤
+item.cyberware.muscleUpgrades.wiredReflexes.name=反射神经芯片
+item.cyberware.muscleUpgrades.muscleReplacements.name=强化肌肉
+item.cyberware.boneUpgrades.bonelacing.name=筋骨
+item.cyberware.boneUpgrades.boneflex.name=韧骨
+item.cyberware.handUpgrades.craftHands.name=精细机械手
+item.cyberware.handUpgrades.claws.name=可伸缩机械爪
+item.cyberware.handUpgrades.mining.name=硬化拳头
+item.cyberware.footUpgrades.spurs.name=马刺[?]
+item.cyberware.legUpgrades.jumpBoost.name=腿部强化驱动器
+
+item.cyberware.neuropozyne.name=排斥反应抑制药剂
+
+# TOOLTIPS
+itemGroup.cyberware=机械战争
+
+cyberware.slot.eyes=器官:眼睛
+cyberware.gui.missingEssential.eyes=缺少眼睛!这会导致你失明!
+cyberware.slot.cranium=器官:脑子
+cyberware.gui.missingEssential.cranium=缺少脑子!这会导致你死亡!
+cyberware.slot.heart=器官:心脏
+cyberware.gui.missingEssential.heart=缺少心脏!这会导致你死亡!
+cyberware.slot.lungs=器官:肺
+cyberware.gui.missingEssential.lungs=缺少肺!这会导致你死亡!
+cyberware.slot.lowerOrgans=器官:胃
+cyberware.gui.missingEssential.lowerOrgans=缺少胃!这会导致你无法进食!
+cyberware.slot.skin=组织:皮肤
+cyberware.gui.missingEssential.skin=缺少皮肤!这会导致你更容易受伤!
+cyberware.slot.muscle=组织:肌肉
+cyberware.gui.missingEssential.muscle=缺少肌肉!这会导致你死亡!
+cyberware.slot.bone=组织:骨髓
+cyberware.gui.missingEssential.bone=缺少骨髓!这会导致你死亡!
+cyberware.slot.arm=关节:手臂
+cyberware.gui.missingEssential.arm.left=缺少左臂!
+cyberware.gui.missingEssential.arm.right=缺少右臂!
+cyberware.slot.hand=关节:手
+cyberware.gui.missingEssential.hand.left=缺少左手!
+cyberware.gui.missingEssential.hand.right=缺少右手!
+cyberware.slot.leg=关节:腿
+cyberware.gui.missingEssential.leg.left=缺少左腿!
+cyberware.gui.missingEssential.leg.right=缺少右腿!
+cyberware.slot.foot=关节:脚
+cyberware.gui.missingEssential.foot.left=缺少左脚!
+cyberware.gui.missingEssential.foot.right=缺少右脚!
+
+cyberware.gui.noEssence=严重机械排斥,这会导致你死亡!
+cyberware.gui.criticalEssence=轻微机械排斥
+cyberware.gui.back=返回(或者右键鼠标)
+cyberware.gui.noPower=没有需要的电力
+cyberware.gui.remove=(点击移除)
+cyberware.gui.add=(点击加入%1$s)
+cyberware.gui.index=索引
+cyberware.gui.click=点击查看详情
+cyberware.gui.installed=操作核心手术索引
+cyberware.gui.added=(将会被植入)
+cyberware.gui.removed=(将会被移除)
+
+cyberware.tooltip.shiftPrompt=长按shift获得详情
+cyberware.tooltip.requires=需要
+cyberware.tooltip.joiner=,
+cyberware.tooltip.joinerOr=或者
+
+cyberware.tooltip.neuropozyne=排斥抑制 (20:00)
+cyberware.potion.neuropozyne=排斥抑制
+
+cyberware.tooltip.powerConsumption=每秒花费%1$s 点电力
+cyberware.tooltip.powerProduction=每秒生产%1$s 点电力
+cyberware.tooltip.capacity=能储存%1$d点电力
+cyberware.tooltip.maxInstall=可同时安装%1$d个
+cyberware.tooltip.essence=排斥增加:%1$s
+
+# KEYBINDS
+cyberware.keybinds.category=机械战争
+cyberware.keybinds.zoom=放大
+
+# ITEM TOOLTIPS
+cyberware.tooltip.spiderEye=提供蜘蛛视角\n夜视能力
+cyberware.tooltip.bodyPart.0=
+cyberware.tooltip.bodyPart.1=
+cyberware.tooltip.bodyPart.2=
+cyberware.tooltip.bodyPart.3=
+cyberware.tooltip.bodyPart.4=
+cyberware.tooltip.bodyPart.5=
+cyberware.tooltip.bodyPart.6=
+cyberware.tooltip.bodyPart.7=
+cyberware.tooltip.bodyPart.8=
+cyberware.tooltip.bodyPart.9=
+cyberware.tooltip.bodyPart.10=
+cyberware.tooltip.bodyPart.11=
+cyberware.tooltip.bodyPart.12=
+cyberware.tooltip.bodyPart.13=
+cyberware.tooltip.bodyPart.14=
+cyberware.tooltip.bodyPart.15=
+cyberware.tooltip.cybereyes=无视致盲\n可安装眼睛强化部件
+cyberware.tooltip.cybereyeUpgrades.0=夜视能力
+cyberware.tooltip.cybereyeUpgrades.1=水下可视
+cyberware.tooltip.cybereyeUpgrades.2=显示自身电源信息\n可升级覆盖HUD
+cyberware.tooltip.cybereyeUpgrades.3=生物高亮
+cyberware.tooltip.cybereyeUpgrades.4.before=使用
+cyberware.tooltip.cybereyeUpgrades.4.after=键放大
+cyberware.tooltip.manaseerLens.0=Reveals functional radius of flowers\nDisplays additional redstone information
+cyberware.tooltip.manaseerLens.1=Reveals functional radius of flowers\nDisplays additional redstone information
+cyberware.tooltip.expCapsule.before=已存储
+cyberware.tooltip.expCapsule.after=点经验.
+cyberware.tooltip.brainUpgrades.0=死后经验将转变成胶囊
+cyberware.tooltip.brainUpgrades.1=Blocks ender teleportation nearby
+cyberware.tooltip.brainUpgrades.2=死后保存部分经验
+cyberware.tooltip.brainUpgrades.3=自动切换到合适工具
+cyberware.tooltip.brainUpgrades.4=很大几率闪避攻击\n(当身体足够轻或无穿戴)
+cyberware.tooltip.cyberheart=无视虚弱
+cyberware.tooltip.creativeBattery=无限电力
+cyberware.tooltip.heartUpgrades.0=防止死亡
+cyberware.tooltip.heartUpgrades.0.powerConsumption=每次需要%1$d 点电力
+cyberware.tooltip.heartUpgrades.1=当伤害非常轻微时自动治疗
+cyberware.tooltip.heartUpgrades.2=治疗最后一次受的伤\n需要一定时间进行治疗
+cyberware.tooltip.heartUpgrades.3=Harnesses the body's electrical pulses
+cyberware.tooltip.lungsUpgrades.0=缓慢增加氧气供给
+cyberware.tooltip.lungsUpgrades.1=增加跑步速度
+cyberware.tooltip.denseBattery=大容量电力储存\n充电速度相对缓慢
+cyberware.tooltip.lowerOrgansUpgrades.0=不会因为食物受到负面效果
+cyberware.tooltip.lowerOrgansUpgrades.1=通过热量产生电力
+cyberware.tooltip.lowerOrgansUpgrades.2=小容量电力储存
+cyberware.tooltip.lowerOrgansUpgrades.3=当生命值低的时候\n提高力量与速度
+cyberware.tooltip.skinUpgrades.0=阳光下会自动充点
+cyberware.tooltip.skinUpgrades.1=受伤更轻
+cyberware.tooltip.skinUpgrades.2=隐藏机械零件
+cyberware.tooltip.muscleUpgrades.0=R1: 可快速攻击\nR2: 切换速度更快\nR3: Automatically face attacker
+cyberware.tooltip.muscleUpgrades.1=移动速度更快\n肌肉强度更大
+cyberware.tooltip.boneUpgrades.0=生命力更强
+cyberware.tooltip.boneUpgrades.1=摔落伤害减轻
+cyberware.tooltip.cyberlimbs.0=可安装手臂强化部件
+cyberware.tooltip.cyberlimbs.1=可安装手臂强化部件
+cyberware.tooltip.cyberlimbs.2=可安装腿部强化部件
+cyberware.tooltip.cyberlimbs.3=可安装腿部强化部件
+cyberware.tooltip.handUpgrades.0=随身工作台
+cyberware.tooltip.handUpgrades.1=徒手攻击更强
+cyberware.tooltip.handUpgrades.2=徒手效果等同石制工具
+cyberware.tooltip.footUpgrades.0=骑马速度更快
+cyberware.tooltip.legUpgrades.0=跳得更高\n按住Shift推射自己\n两条腿一起会更强
+
+# DAMAGE TYPE
+death.attack.cyberware.brainless=%1$s 遗失了他的脑子.
+death.attack.cyberware.heartless=%1$s 丢掉了他的心脏.
+death.attack.cyberware.surgery=%1$s 到了最后也没能走出手术台...
+death.attack.cyberware.spineless=%1$s 无法支撑起自己.
+death.attack.cyberware.nomuscles=%1$s 无法控制自己...
+death.attack.cyberware.noessence=%1$s 死于排斥过大.
+
+# COMMAND
+cyberware.commands.clearCyberware.usage=使用方法: /clearcyberware [player]
+cyberware.commands.clearCyberware.success=已清除%1$s的身体机械
