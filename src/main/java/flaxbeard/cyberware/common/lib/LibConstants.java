@@ -30,6 +30,8 @@ public class LibConstants
 	public static final int WARNING_ESSENCE = 25;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
 	public static final int BEACON_RANGE = 75;
+	public static final int LARGE_BEACON_RANGE = 125;
+
 	public static final float RADIO_CHANCE = 15F;
 	public static final float RADIO_BRUTE_CHANCE = 50F;
 	public static final float NATURAL_BRUTE_CHANCE = 5F;

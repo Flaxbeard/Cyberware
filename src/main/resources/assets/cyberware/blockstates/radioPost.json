@@ -1,0 +1,50 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "cyberware:fence_post",
+        "textures": {
+            "particle": "cyberware:blocks/surgeryChamberTop",
+            "texture": "cyberware:blocks/radioPost"
+        }
+    },
+    "variants": {
+        "north": {
+            "true": {
+                "submodel": { 
+                    "walln": { "model": "cyberware:fence_bar_n" }
+                }
+            },
+            "false": {}
+        },
+        "south": {
+            "true": {
+                "submodel": { 
+                    "walls": { "model": "cyberware:fence_bar_n", "y": 180, "uvlock": true }
+                }
+            },
+            "false": {}
+        },
+        "east": {
+            "true": {
+                "submodel": { 
+                    "walle": { "model": "cyberware:fence_bar_n", "y": 90, "uvlock": true }
+                }
+            },
+            "false": {}
+        },
+        "west": {
+            "true": {
+                "submodel": { 
+                    "wallw": { "model": "cyberware:fence_bar_n", "y": 270, "uvlock": true }
+                }
+            },
+            "false": {}
+        },
+        "transformed": {
+            "0": {},
+            "1": {},
+            "2": {}
+        },
+        "inventory": [{}]
+    }
+}

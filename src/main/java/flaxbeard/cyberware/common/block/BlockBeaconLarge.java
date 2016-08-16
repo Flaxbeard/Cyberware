@@ -28,45 +28,43 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
-import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
+import flaxbeard.cyberware.common.block.tile.TileEntityBeaconLarge;
 
-public class BlockBeacon extends BlockContainer
+public class BlockBeaconLarge extends BlockContainer
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-	public BlockBeacon()
+	public BlockBeaconLarge()
 	{
 		super(Material.IRON);
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setSoundType(SoundType.METAL);
 		
-		String name = "beacon";
+		String name = "beaconLarge";
 		
 		this.setRegistryName(name);
 		GameRegistry.register(this);
 
-		ItemBlock ib = new ItemBlockCyberware(this, "cyberware.tooltip.beacon");
+		ItemBlock ib = new ItemBlockCyberware(this, "cyberware.tooltip.beaconLarge");
 		ib.setRegistryName(name);
 		GameRegistry.register(ib);
 		
 		this.setUnlocalizedName(Cyberware.MODID + "." + name);
 
 		this.setCreativeTab(Cyberware.creativeTab);
-		GameRegistry.registerTileEntity(TileEntityBeacon.class, Cyberware.MODID + ":" + name);
+		GameRegistry.registerTileEntity(TileEntityBeaconLarge.class, Cyberware.MODID + ":" + name);
 		
 		CyberwareContent.blocks.add(this);
 	}
 	
-	//private static final AxisAlignedBB ew = new AxisAlignedBB(5F / 16F, 0F, 3F / 16F, 11F / 16F, 1F, 13F / 16F);
-	//private static final AxisAlignedBB ns = new AxisAlignedBB(3F / 16F, 0F, 5F / 16F, 13F / 16F, 1F, 11F / 16F);
-	private static final AxisAlignedBB bound = new AxisAlignedBB(1F / 16F, 0F, 1F / 16F, 15F / 16F, 4F / 16F, 15F / 16F);
+	private static final AxisAlignedBB ew = new AxisAlignedBB(5F / 16F, 0F, 3F / 16F, 11F / 16F, 1F, 13F / 16F);
+	private static final AxisAlignedBB ns = new AxisAlignedBB(3F / 16F, 0F, 5F / 16F, 13F / 16F, 1F, 11F / 16F);
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return bound;
-		/*
+		
 		EnumFacing face = state.getValue(FACING);
 		if (face == EnumFacing.NORTH || face == EnumFacing.SOUTH)
 		{
@@ -76,7 +74,7 @@ public class BlockBeacon extends BlockContainer
 		{
 			return ns;
 		}
-		*/
+		
 	}
 
 	
@@ -95,19 +93,13 @@ public class BlockBeacon extends BlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileEntityBeacon();
+		return new TileEntityBeaconLarge();
 	}
 	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.MODEL;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
-	{
-		return BlockRenderLayer.CUTOUT;
 	}
 
 	
@@ -161,21 +153,4 @@ public class BlockBeacon extends BlockContainer
 	{
 		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
-	
-	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-	{
-		return super.canPlaceBlockAt(worldIn, pos) && worldIn.getBlockState(pos.down()).isFullyOpaque();
-	}
-	
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
-	{
-		if (!worldIn.getBlockState(pos.down()).isFullyOpaque())
-		{
-			this.dropBlockAsItem(worldIn, pos, state, 0);
-			worldIn.setBlockToAir(pos);
-		}
-	}
-
 }

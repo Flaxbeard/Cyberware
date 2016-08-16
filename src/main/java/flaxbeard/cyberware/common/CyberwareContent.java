@@ -26,6 +26,8 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.block.BlockBeacon;
+import flaxbeard.cyberware.common.block.BlockBeaconLarge;
+import flaxbeard.cyberware.common.block.BlockBeaconPost;
 import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockComponentBox;
@@ -78,6 +80,8 @@ public class CyberwareContent
 	public static Block blueprintArchive;
 	public static BlockComponentBox componentBox;
 	public static BlockBeacon radio;
+	public static BlockBeaconLarge radioLarge;
+	public static Block radioPost;
 
 	
 	public static Item bodyPart;
@@ -149,6 +153,8 @@ public class CyberwareContent
 		engineering = new BlockEngineeringTable();
 		scanner = new BlockScanner();
 		radio = new BlockBeacon();
+		radioLarge = new BlockBeaconLarge();
+		radioPost = new BlockBeaconPost();
 
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");

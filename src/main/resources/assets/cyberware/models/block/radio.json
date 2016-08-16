@@ -1,0 +1,62 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "0": "cyberware:blocks/radioBack",
+        "1": "cyberware:blocks/radioSide",
+        "2": "cyberware:blocks/radioFront",
+        "3": "cyberware:blocks/radioTop",
+        "4": "cyberware:blocks/radioAntennaBase",
+        "5": "cyberware:blocks/radioAntennaPole",
+        "6": "cyberware:blocks/transparent",
+        "7": "cyberware:blocks/radioWire"
+    },
+    "elements": [
+        {
+            "name": "Radio",
+            "from": [ 1.0, 0.0, 2.0 ], 
+            "to": [ 13.0, 4.0, 10.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 12.0, 4.0 ] },
+                "east": { "texture": "#1", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 4.0 ] },
+                "west": { "texture": "#1", "uv": [ 0.0, 0.0, 8.0, 4.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 0.0, 12.0, 8.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 12.0, 8.0 ] }
+            }
+        },
+        {
+            "name": "Antenna",
+            "from": [ 12.0, 0.0, 13.0 ], 
+            "to": [ 14.0, 1.0, 15.0 ], 
+            "faces": {
+                "north": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+                "east": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+                "south": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+                "west": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+                "up": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#4", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        },
+        {
+            "name": "AntennaPole",
+            "from": [ 12.5, 1.0, 13.5 ], 
+            "to": [ 13.5, 14.0, 14.5 ], 
+            "faces": {
+                "north": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 13.0 ] },
+                "east": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 13.0 ] },
+                "south": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 13.0 ] },
+                "west": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 13.0 ] },
+                "up": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+                "down": { "texture": "#5", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+            }
+        },
+        {
+            "name": "Wire",
+            "from": [ 0.0, 0.0, 0.0 ], 
+            "to": [ 16.0, 0.0, 16.0 ], 
+            "faces": {
+                "up": { "texture": "#7", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
+}

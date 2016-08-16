@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "cyberware:radio",
+        "model": "cyberware:beacon",
         "textures": {
             "particle": "cyberware:blocks/surgeryChamberTop"
         }
