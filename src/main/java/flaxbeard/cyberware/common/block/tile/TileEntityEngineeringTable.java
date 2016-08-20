@@ -451,7 +451,7 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 					numToRemove = 1;
 					break;
 				case HARD:
-					numToRemove = 3;
+					numToRemove = 2;
 					break;
 				case NORMAL:
 					numToRemove = 2;
@@ -462,6 +462,15 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 				default:
 					break;
 			}
+			
+			if (slots.getStackInSlot(0).isItemStackDamageable()) // Damaged items yield less
+			{
+				float percent = (slots.getStackInSlot(0).getItemDamage() * 1F  / slots.getStackInSlot(0).getMaxDamage());
+				int addl = (int) (random.size() * percent);
+				addl = Math.max(0, addl - 1);
+				numToRemove += addl;
+			}
+			
 			numToRemove = Math.min(numToRemove, random.size() - 1);
 			for (int i = 0; i < numToRemove; i++)
 			{
@@ -528,6 +537,11 @@ public class TileEntityEngineeringTable extends TileEntity implements ITickable
 				
 				if (!worldObj.isRemote)
 				{
+					float chance = CyberwareConfig.ENGINEERING_CHANCE;
+					if (toDestroy.isItemStackDamageable())
+					{
+						chance = Math.min(100F, CyberwareConfig.ENGINEERING_CHANCE * 5F * (1F - (slots.getStackInSlot(0).getItemDamage() * 1F  / slots.getStackInSlot(0).getMaxDamage())));
+					}
 					if (doBlueprint && getWorld().rand.nextFloat() < (CyberwareConfig.ENGINEERING_CHANCE / 100F))
 					{
 						ItemStack blue = ItemBlueprint.getBlueprintForItem(toDestroy);

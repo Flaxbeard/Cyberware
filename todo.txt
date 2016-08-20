@@ -1,2 +1,2 @@
-armUpgrades_bow
-armUpgrades_bow_scavenged
+brainUpgrades_radio
+brainUpgrades_radio_scavenged

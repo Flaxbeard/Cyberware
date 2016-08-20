@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -48,14 +50,15 @@ public class SyncHotkeyPacket implements IMessage
 		@Override
 		public IMessage onMessage(SyncHotkeyPacket message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(new DoSync(message.selectedPart, message.key, ctx.getServerHandler().playerEntity));
+			EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+			DimensionManager.getWorld(player.worldObj.provider.getDimension()).addScheduledTask(new DoSync(message.selectedPart, message.key, player));
 
 			return null;
 		}
 		
 	}
 	
-	private static class DoSync implements Callable<Void>
+	private static class DoSync implements Runnable
 	{
 		private int selectedPart;
 		private int key;
@@ -70,7 +73,7 @@ public class SyncHotkeyPacket implements IMessage
 
 		
 		@Override
-		public Void call() throws Exception
+		public void run()
 		{
 			if (p != null && CyberwareAPI.hasCapability(p))
 			{
@@ -79,7 +82,6 @@ public class SyncHotkeyPacket implements IMessage
 				HotkeyHelper.assignHotkey(d, d.getActiveItems().get(selectedPart), key);
 			}
 
-			return null;
 		}
 		
 

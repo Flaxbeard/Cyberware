@@ -362,20 +362,24 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 	@SideOnly(Side.CLIENT)
 	private static class NotificationRadio implements INotification
 	{
-		private boolean on;
+		private int tier;
 		
-		private NotificationRadio(boolean on)
+		private NotificationRadio(int tier)
 		{
-			this.on = on;
+			this.tier = tier;
 		}
 
 		@Override
 		public void render(int x, int y)
 		{
 			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
-			if (on)
+			if (tier > 0)
 			{
 				ClientUtils.drawTexturedModalRect(x, y + 1, 13, 39, 15, 14);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				String v = tier == 1 ? I18n.format("cyberware.gui.radioInternal") : Integer.toString(tier - 1);
+				FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+				fr.drawStringWithShadow(v, x + 15 - fr.getStringWidth(v), y + 9, 0xFFFFFF);
 			}
 			else
 			{
@@ -402,7 +406,7 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 	private static int cachedCap = 0;
 	private static int cachedTotal = 0;
 	private static float cachedPercent = 0;
-	private static boolean radioRange = false;
+	private static int radioRange = -1;
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -442,14 +446,15 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 				cachedPercent = data.getPercentFull();
 				cachedCap = data.getCapacity();
 				cachedTotal = data.getStoredPower();
-				
-				boolean temp = radioRange;
-				radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
-				if (radioRange != temp)
-				{
-					addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
-				}
 			}
+
+			int temp = radioRange;
+			radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
+			if (radioRange != temp)
+			{
+				addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
+			}
+			
 			if (cachedPercent != -1)
 			{
 				int amount = Math.round((21F * cachedPercent));
@@ -482,6 +487,7 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 					float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
 					
 					GL11.glPushMatrix();
+					GL11.glColor3f(1.0F, 1.0F, 1.0F);
 					GL11.glTranslatef(0F, move, 0F);
 					int index = (notifications.size() - 1) - i;
 					notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);

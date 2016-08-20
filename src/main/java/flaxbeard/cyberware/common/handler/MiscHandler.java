@@ -33,6 +33,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
+import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiCyberwareMenu;
@@ -102,6 +103,10 @@ public class MiscHandler
 			{
 				event.getToolTip().add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt"));
 			}
+		}
+		else if (stack.getItem() instanceof IDeconstructable)
+		{
+			event.getToolTip().add(1, ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.canDeconstruct"));
 		}
 	}
 	

@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockCyberware extends ItemBlock implements ICyberwareTabItem
 {
-	private String tt;
+	private String[] tt;
 	
 	public ItemBlockCyberware(Block block)
 	{
 		super(block);
 	}
 	
-	public ItemBlockCyberware(Block block, String tooltip)
+	public ItemBlockCyberware(Block block, String... tooltip)
 	{
 		super(block);
 		this.tt = tooltip;
@@ -40,7 +40,10 @@ public class ItemBlockCyberware extends ItemBlock implements ICyberwareTabItem
 	{
 		if (this.tt != null)
 		{
-			tooltip.add(ChatFormatting.DARK_GRAY + I18n.format(tt));
+			for (String str : tt)
+			{
+				tooltip.add(ChatFormatting.DARK_GRAY + I18n.format(str));
+			}
 		}
 	}
 }

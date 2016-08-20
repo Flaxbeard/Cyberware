@@ -198,7 +198,12 @@ public class GuiEngineeringTable extends GuiContainer
 			String[] tooltip;
 			if (engineering.slots.getStackInSlot(1) != null)
 			{
-				tooltip = new String[] { I18n.format("cyberware.gui.destroy"), I18n.format("cyberware.gui.destroyChance", Float.toString(Math.round(CyberwareConfig.ENGINEERING_CHANCE * 100F) / 100F) + "%") };
+				float chance = CyberwareConfig.ENGINEERING_CHANCE;
+				if (engineering.slots.getStackInSlot(0) != null && engineering.slots.getStackInSlot(0).isItemStackDamageable())
+				{
+					chance = Math.min(100F, CyberwareConfig.ENGINEERING_CHANCE * 5F * (1F - (engineering.slots.getStackInSlot(0).getItemDamage() * 1F  / engineering.slots.getStackInSlot(0).getMaxDamage())));
+				}
+				tooltip = new String[] { I18n.format("cyberware.gui.destroy"), I18n.format("cyberware.gui.destroyChance", Float.toString(Math.round(chance * 100F) / 100F) + "%") };
 			}
 			else
 			{

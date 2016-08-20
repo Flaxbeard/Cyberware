@@ -209,16 +209,16 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 	{
 		if (stack.getItemDamage() == 2)
 		{
-			switch (stack.stackSize)
+			switch (stack.stackSize) // 0.2.0 changed from 10 11 13 15
 			{
 				case 1:
-					return 10;
+					return 5;
 				case 2:
-					return 11;
+					return 7;
 				case 3:
-					return 13;
+					return 9;
 				case 4:
-					return 15;
+					return 11;
 			}
 		}
 		return super.getUnmodifiedEssenceCost(stack);

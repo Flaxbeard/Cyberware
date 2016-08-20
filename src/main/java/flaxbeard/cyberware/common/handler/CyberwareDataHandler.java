@@ -153,27 +153,22 @@ public class CyberwareDataHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleCZSpawn(LivingSpawnEvent.SpecialSpawn event)
 	{
-
 		if (event.getEntityLiving() instanceof EntityZombie && !(event.getEntityLiving() instanceof EntityCyberZombie) && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
-			if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (LibConstants.RADIO_CHANCE / 100F))) return;
 			
 			EntityZombie zombie = (EntityZombie) event.getEntityLiving();
 			
-			if (TileEntityBeacon.isInRange(zombie.worldObj, zombie.posX, zombie.posY, zombie.posZ))
+			int tier = TileEntityBeacon.isInRange(zombie.worldObj, zombie.posX, zombie.posY, zombie.posZ);
+			if (tier > 0)
 			{
+				float chance = (tier == 2 ? LibConstants.BEACON_CHANCE : (tier == 1 ? LibConstants.BEACON_CHANCE_INTERNAL :  LibConstants.LARGE_BEACON_CHANCE));
+				if (CyberwareConfig.NO_ZOMBIES || !(event.getWorld().rand.nextFloat() < (chance / 100F))) return;
+
+				
 				EntityCyberZombie cyberZombie = new EntityCyberZombie(event.getWorld());
-				if (event.getWorld().rand.nextFloat() < (LibConstants.RADIO_BRUTE_CHANCE / 100F))
+				if (event.getWorld().rand.nextFloat() < (LibConstants.BEACON_BRUTE_CHANCE / 100F))
 				{
 					boolean works = cyberZombie.setBrute();
-					if (!works)
-					{
-						System.out.println("BAD!");
-					}
-					else
-					{
-						System.out.println(cyberZombie.isBrute());
-					}
 				}
 				cyberZombie.setLocationAndAngles(zombie.posX, zombie.posY, zombie.posZ, zombie.rotationYaw, zombie.rotationPitch);
 	
@@ -184,6 +179,57 @@ public class CyberwareDataHandler
 				event.getWorld().spawnEntityInWorld(cyberZombie);
 				zombie.deathTime = 19;
 				zombie.setHealth(0F);
+				return;
+			}
+		}
+		if (event.getEntityLiving() instanceof EntityZombie && CyberwareConfig.CLOTHES && !(event.getEntityLiving() instanceof EntityPigZombie))
+		{
+			EntityZombie zom = (EntityZombie) event.getEntityLiving();
+
+			if (!zom.worldObj.isRemote && zom.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null && zom.worldObj.rand.nextFloat() < LibConstants.ZOMBIE_SHADES_CHANCE / 100F)
+			{
+				if (zom.worldObj.rand.nextBoolean())
+				{
+					zom.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(CyberwareContent.shades));
+				}
+				else
+				{
+					zom.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(CyberwareContent.shades2));
+				}
+				
+				zom.setDropChance(EntityEquipmentSlot.HEAD, .5F);
+			}
+			
+			float chestRand = zom.worldObj.rand.nextFloat();
+			
+			if (!zom.worldObj.isRemote && zom.getItemStackFromSlot(EntityEquipmentSlot.CHEST) == null && chestRand < LibConstants.ZOMBIE_TRENCH_CHANCE / 100F)
+			{
+				
+				ItemStack stack = new ItemStack(CyberwareContent.trenchcoat);
+				int rand = zom.worldObj.rand.nextInt(3);
+				if (rand == 0)
+				{
+					CyberwareContent.trenchcoat.setColor(stack, 0x664028);
+				}
+				else if (rand == 1)
+				{
+					CyberwareContent.trenchcoat.setColor(stack, 0xEAEAEA);
+				}
+				
+				zom.setItemStackToSlot(EntityEquipmentSlot.CHEST, stack);
+				
+				
+				zom.setDropChance(EntityEquipmentSlot.CHEST, .5F);
+			}
+			else if (!zom.worldObj.isRemote && zom.getItemStackFromSlot(EntityEquipmentSlot.CHEST) == null && chestRand - (LibConstants.ZOMBIE_TRENCH_CHANCE / 100F) < LibConstants.ZOMBIE_BIKER_CHANCE / 100F)
+			{
+				
+				ItemStack stack = new ItemStack(CyberwareContent.jacket);
+				
+				zom.setItemStackToSlot(EntityEquipmentSlot.CHEST, stack);
+				
+				
+				zom.setDropChance(EntityEquipmentSlot.CHEST, .5F);
 			}
 		}
 	}

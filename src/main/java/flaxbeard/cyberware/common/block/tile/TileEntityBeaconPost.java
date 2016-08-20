@@ -23,7 +23,7 @@ public class TileEntityBeaconPost extends TileEntity
 		@Override
 		public AxisAlignedBB getRenderBoundingBox()
 		{
-			return new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 10, pos.getZ() + 1);
+			return new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 10, pos.getZ() + 2);
 		}
 		
 		
@@ -38,9 +38,15 @@ public class TileEntityBeaconPost extends TileEntity
 	public boolean destructing = false;
 
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public double getMaxRenderDistanceSquared()
+	{
+		return 16384.0D;
+	}
+	
 	public void setMasterLoc(BlockPos start)
 	{
-		System.out.println("SET MASTER LOC");
 		this.master = start;
 		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(getPos()), worldObj.getBlockState(getPos()), 2);
 		this.markDirty();
@@ -49,9 +55,8 @@ public class TileEntityBeaconPost extends TileEntity
 	@Override
 	public void invalidate()
 	{
-		
-		super.invalidate();
 
+		super.invalidate();
 	}
 
 	public void destruct()
@@ -65,12 +70,7 @@ public class TileEntityBeaconPost extends TileEntity
 				{
 					for (int z = -1; z <= 1; z++)
 					{
-						if (y > 3 && (x != 0 && z != 0))
-						{
-							continue;
-						}
-						
-						if (y > 4 && (x != 0 || z != 0))
+						if (y > 3 && (x != 0 || z != 0))
 						{
 							continue;
 						}
@@ -101,13 +101,12 @@ public class TileEntityBeaconPost extends TileEntity
 		
 		if (!(this instanceof TileEntityBeaconPostMaster))
 		{
-			int x = compound.getInteger("x");
-			int y = compound.getInteger("y");
-			int z = compound.getInteger("z");
+			int x = compound.getInteger("xx");
+			int y = compound.getInteger("yy");
+			int z = compound.getInteger("zz");
 			this.master = new BlockPos(x, y, z);
 		}
 		
-		System.out.println(master);
 	}
 	
 	@Override
@@ -139,11 +138,9 @@ public class TileEntityBeaconPost extends TileEntity
 		
 		if (!(this instanceof TileEntityBeaconPostMaster))
 		{
-			compound.setInteger("x", master.getX());
-			compound.setInteger("y", master.getY());
-			compound.setInteger("z", master.getZ());
-			System.out.println(master);
-
+			compound.setInteger("xx", master.getX());
+			compound.setInteger("yy", master.getY());
+			compound.setInteger("zz", master.getZ());
 		}
 				
 		return compound;

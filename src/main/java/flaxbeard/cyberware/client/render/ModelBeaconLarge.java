@@ -10,7 +10,8 @@ public class ModelBeaconLarge extends ModelBase
 	public ModelRenderer bar2;
 	public ModelRenderer bar3;
 	public ModelRenderer bar4;
-	
+	public ModelRenderer base;
+
 	public ModelRenderer[] crossbars;
 
 	public ModelBeaconLarge()
@@ -39,6 +40,8 @@ public class ModelBeaconLarge extends ModelBase
 		this.bar4.addBox(-1.5F, 8F, -2F, 3, 163, 3);
 		this.bar4.rotateAngleY = (float) Math.toRadians(-135F);
 		this.bar4.rotateAngleX = (float) Math.toRadians(angle);
+
+		
 		
 		float hPercent = (float) -Math.cos(Math.toRadians(angle));
 		float wPercent = (float) Math.sin(Math.toRadians(angle));
@@ -78,13 +81,15 @@ public class ModelBeaconLarge extends ModelBase
 			crossbars[i * 4 + 3] = bar4;
 			
 			progress += progressChg;
-		
-			if (i == num - 1)
-			{
-				System.out.println(x * 2F);
-			}
 			
 		}
+		
+		
+		this.textureWidth = 256;
+		this.textureHeight = 64;
+		
+		this.base = new ModelRenderer(this, 0, 0);
+		this.base.addBox(-24F, -168F, -24F, 48, 4, 48);
 		
 	}
 	
@@ -95,6 +100,7 @@ public class ModelBeaconLarge extends ModelBase
 		this.bar2.render(f5);
 		this.bar3.render(f5);
 		this.bar4.render(f5);
+		this.base.render(f5);
 		
 		for (ModelRenderer bar : crossbars)
 		{
@@ -103,6 +109,11 @@ public class ModelBeaconLarge extends ModelBase
 				bar.render(f5);
 			}
 		}
+	}
+	
+	public void renderBase(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+	{
+		this.base.render(f5);
 	}
 	
 	

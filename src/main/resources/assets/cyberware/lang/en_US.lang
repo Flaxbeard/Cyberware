@@ -9,7 +9,9 @@ tile.cyberware.blueprintArchive.name=Blueprint Archive
 item.cyberware.engineeringTable.name=Cyberware Engineering Table
 tile.cyberware.componentBox.name=Component Box
 item.cyberware.componentBox.name=Component Box
-tile.cyberware.beacon.name=Radio Beacon
+tile.cyberware.beacon.name=Radio Kit
+tile.cyberware.beaconLarge.name=Radio Beacon
+tile.cyberware.radioPost.name=Radio Tower Component
 
 
 # ITEMS
@@ -48,6 +50,8 @@ item.cyberware.brainUpgrades.enderJammer.name=Ender Jammer
 item.cyberware.brainUpgrades.consciousnessTransmitter.name=Consciousness Transmitter
 item.cyberware.brainUpgrades.neuralContextualizer.name=Neural Contextualizer
 item.cyberware.brainUpgrades.matrix.name=Threat Matrix Calculator
+item.cyberware.brainUpgrades.radio.name=Cranial Broadcaster
+cyberware.gui.radioInternal=CB
 item.cyberware.cyberheart.name=Cardiomechanic Pump
 item.cyberware.creativeBattery.name=Creative Capacitor
 item.cyberware.heartUpgrades.defibrillator.name=Internal Defibrillator
@@ -97,6 +101,12 @@ item.cyberware.component.fullerene.name=Fullerene Microstructures
 item.cyberware.component.synthnerves.name=Synthetic Nerves
 item.cyberware.component.storage.name=Storage Cell
 item.cyberware.component.microelectric.name=Microelectric Cells
+
+item.cyberware.shades.name=Mirrorshades
+item.cyberware.shades2.name=Round Mirrorshades
+item.cyberware.katana.name=Katana
+item.cyberware.jacket.name=Biker Jacket
+item.cyberware.trenchcoat.name=Trenchcoat
 
 # TOOLTIPS
 itemGroup.cyberware=Cyberware
@@ -164,7 +174,13 @@ cyberware.tooltip.componentBox=Shift-click to place or pick up
 cyberware.tooltip.componentBox2=Accessible by Engineering Table if nearby or in inventory
 
 cyberware.tooltip.blueprintArchive=Accessible by Engineering Table if nearby
-cyberware.tooltip.beacon=Attracts Cyberzombies
+cyberware.tooltip.beacon=Slightly increases Cyberzombie spawns nearby
+cyberware.tooltip.beaconLarge=Increases Cyberzombie spawns nearby
+cyberware.tooltip.beaconPost.0=To construct:
+cyberware.tooltip.beaconPost.1=6 layers of 1 component, centered over
+cyberware.tooltip.beaconPost.2=4 layers of 3x3 components
+
+
 
 cyberware.tooltip.blueprint=Creates %1$s
 cyberware.tooltip.craftBlueprint=Craft with a piece of Cyberware
@@ -179,6 +195,8 @@ cyberware.tooltip.essenceAdd=Tolerance boost:%1$s
 cyberware.quality.scavenged=Salvaged
 cyberware.quality.scavenged.nameModifier=Salvaged %1$s
 cyberware.quality.manufactured=Manufactured
+
+cyberware.tooltip.canDeconstruct=Can deconstruct or scan
 
 cyberware.gui.active.enable=Enable
 cyberware.gui.active.disable=Disable
@@ -223,6 +241,7 @@ cyberware.tooltip.brainUpgrades.1=Blocks ender teleportation nearby
 cyberware.tooltip.brainUpgrades.2=Keep some XP after death
 cyberware.tooltip.brainUpgrades.3=Automatically switch to the right tool
 cyberware.tooltip.brainUpgrades.4=High chance to dodge attacks\nwhen in light or no armor
+cyberware.tooltip.brainUpgrades.5=Slightly increases\nCyberzombie spawns nearby
 cyberware.tooltip.cyberheart=Immunity to weakness
 cyberware.tooltip.creativeBattery=Limitless potential
 cyberware.tooltip.heartUpgrades.0=Prevents certain death once
@@ -284,7 +303,7 @@ entity.cyberware.cyberzombie.name=Cyberzombie
 # THE LANGUAGE YOU'RE TRANSLATING TO
 
 # THIS MUST BE THE NUMBER OF THE LAST KEY + 1 TO INCLUDE THE 0 SAYING
-cyberware.gui.scannerSaying.count=68
+cyberware.gui.scannerSaying.count=69
 
 cyberware.gui.scannerSaying.0=Reticulating Splines
 cyberware.gui.scannerSaying.1=Resolving GUID Conflict
@@ -354,7 +373,7 @@ cyberware.gui.scannerSaying.64=Solving Differential Equations
 cyberware.gui.scannerSaying.65=Commencing Spatial Simulation
 cyberware.gui.scannerSaying.66=Instantiating Child Elements
 cyberware.gui.scannerSaying.67=Wiping System32
-
+cyberware.gui.scannerSaying.68=Remembering Lycaon
 
 
 # MISC

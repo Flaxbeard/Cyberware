@@ -83,6 +83,10 @@ public class GuiScanner extends GuiContainer
 		if (scanner.slots.getStackInSlot(0) != null)
 		{
 			chance = CyberwareConfig.SCANNER_CHANCE + (CyberwareConfig.SCANNER_CHANCE_ADDL * (scanner.slots.getStackInSlot(0).stackSize - 1));
+			if (scanner.slots.getStackInSlot(0).isItemStackDamageable())
+			{
+				chance = 50F * (1F - (scanner.slots.getStackInSlot(0).getItemDamage() * 1F  / scanner.slots.getStackInSlot(0).getMaxDamage()));
+			}
 			chance = Math.min(chance, 50F);
 		}
 		String num = Float.toString(Math.round(chance * 100F) / 100F) + "%";

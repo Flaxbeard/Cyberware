@@ -152,6 +152,7 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 	
 	private static Map<EntityLivingBase, Boolean> isContextWorking = new HashMap<EntityLivingBase, Boolean>();
 	private static Map<EntityLivingBase, Boolean> isMatrixWorking = new HashMap<EntityLivingBase, Boolean>();
+	private static Map<Integer, Boolean> isRadioWorking = new HashMap<Integer, Boolean>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
 	public void handleLivingUpdate(LivingUpdateEvent event)
@@ -170,6 +171,22 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 			isMatrixWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
 		
+		test = new ItemStack(this, 1, 5);
+		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
+		{
+			isRadioWorking.put(e.getEntityId(), CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
+		}
+		
+	}
+	
+	private boolean isRadioWorking(EntityLivingBase e)
+	{
+		if (!isRadioWorking.containsKey(e.getEntityId()))
+		{
+			isRadioWorking.put(e.getEntityId(), false);
+		}
+		
+		return isRadioWorking.get(e.getEntityId());
 	}
 	
 	private boolean isContextWorking(EntityLivingBase e)
@@ -291,14 +308,15 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 	public int getPowerConsumption(ItemStack stack)
 	{
 		return stack.getItemDamage() == 3 ? LibConstants.CONTEXTUALIZER_CONSUMPTION :
-			 stack.getItemDamage() == 4 ? LibConstants.MATRIX_CONSUMPTION: 0;
+			 stack.getItemDamage() == 4 ? LibConstants.MATRIX_CONSUMPTION :
+			 stack.getItemDamage() == 5 ? LibConstants.RADIO_CONSUMPTION: 0;
 	}
 
 
 	@Override
 	public boolean hasMenu(ItemStack stack)
 	{
-		return stack.getItemDamage() == 3;
+		return stack.getItemDamage() == 3 || stack.getItemDamage() == 5;
 	}
 
 

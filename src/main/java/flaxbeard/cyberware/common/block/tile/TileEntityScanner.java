@@ -291,6 +291,10 @@ public class TileEntityScanner extends TileEntity implements ITickable
 				if (!worldObj.isRemote && (slots.getStackInSlot(1) != null && slots.getStackInSlot(1).stackSize > 0))
 				{
 					float chance = CyberwareConfig.SCANNER_CHANCE + (CyberwareConfig.SCANNER_CHANCE_ADDL * (slots.getStackInSlot(0).stackSize - 1));
+					if (slots.getStackInSlot(0).isItemStackDamageable())
+					{
+						chance = 50F * (1F - (slots.getStackInSlot(0).getItemDamage() * 1F / slots.getStackInSlot(0).getMaxDamage()));
+					}
 					chance = Math.min(chance, 50F);
 					
 					if (worldObj.rand.nextFloat() < (chance / 100F))

@@ -37,6 +37,9 @@ public class CyberwareConfig
 	
 	public static boolean DEFAULT_DROP = false;
 	public static boolean DEFAULT_KEEP = false;
+
+	public static boolean KATANA = true;
+	public static boolean CLOTHES = true;
 	
 	public static int TESLA_PER_POWER = 1;
 
@@ -96,6 +99,10 @@ public class CyberwareConfig
 		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", "Machines", SCANNER_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", "Machines", SCANNER_CHANCE_ADDL, 0, 100F, "");
 		SCANNER_TIME = config.getInt("Ticks taken per Scanner operation", "Machines", SCANNER_TIME, 0, Integer.MAX_VALUE, "24000 is one Minecraft day, 1200 is one real-life minute");
+		
+		KATANA = config.getBoolean("Enable Katana", "Other", KATANA, "");
+		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", "Other", CLOTHES, "");
+
 		config.save();
 		
 	}

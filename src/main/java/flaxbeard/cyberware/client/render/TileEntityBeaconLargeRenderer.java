@@ -4,7 +4,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.client.ClientUtils;
@@ -15,6 +14,7 @@ public class TileEntityBeaconLargeRenderer extends TileEntitySpecialRenderer<Til
 {
 	private static ModelBeaconLarge model = new ModelBeaconLarge();
 	private static String texture = "cyberware:textures/models/radio.png";
+	private static String texture2 = "cyberware:textures/models/radioBase.png";
 
 	@Override
 	public void renderTileEntityAt(TileEntityBeaconPostMaster te, double x, double y, double z, float partialTicks, int destroyStage)
@@ -34,10 +34,8 @@ public class TileEntityBeaconLargeRenderer extends TileEntitySpecialRenderer<Til
 
 				ClientUtils.bindTexture(texture);
 				model.render(null, 0, 0, 0, 0, 0, 0.0625F);
-				if (Keyboard.isKeyDown(Keyboard.KEY_SEMICOLON))
-				{
-					model = new ModelBeaconLarge();
-				}
+				ClientUtils.bindTexture(texture2);
+				model.renderBase(null, 0, 0, 0, 0, 0, 0.0625F);
 				GL11.glPopMatrix();
 			}
 		}

@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,7 @@ import flaxbeard.cyberware.client.render.TileEntityEngineeringRenderer;
 import flaxbeard.cyberware.client.render.TileEntityScannerRenderer;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeaconPost.TileEntityBeaconPostMaster;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
@@ -31,6 +33,7 @@ import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.CyberwareMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
+import flaxbeard.cyberware.common.item.ItemArmorCyberware;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 import flaxbeard.cyberware.common.item.ItemCyberwareBase;
@@ -71,6 +74,17 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(CreativeMenuHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(CyberwareMenuHandler.INSTANCE);
 
+		if (CyberwareConfig.CLOTHES)
+		{
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
+			{
+				public int getColorFromItemstack(ItemStack stack, int tintIndex)
+				{
+					return tintIndex > 0 ? -1 : ((ItemArmorCyberware)stack.getItem()).getColor(stack);
+				}
+			}, new Item[] { CyberwareContent.trenchcoat });
+		}
+		
 	}
 	
 	

@@ -117,7 +117,7 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 					int loc = -1;
 					if (weapon != null)
 					{
-						if (weapon.getItem() instanceof ItemSword || weapon.getItem().getAttributeModifiers(EntityEquipmentSlot.MAINHAND, weapon).containsKey(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName()))
+						if (p.getItemInUseCount() > 0 || weapon.getItem() instanceof ItemSword || weapon.getItem().getAttributeModifiers(EntityEquipmentSlot.MAINHAND, weapon).containsKey(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName()))
 						{
 							loc = p.inventory.currentItem;
 						}

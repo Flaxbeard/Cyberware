@@ -75,7 +75,10 @@ public class BlockBeaconPost extends BlockContainer
 		GameRegistry.register(this);
 		
 
-		ItemBlock ib = new ItemBlockCyberware(this);
+		ItemBlock ib = new ItemBlockCyberware(this,
+				"cyberware.tooltip.beaconPost.0",
+				"cyberware.tooltip.beaconPost.1",
+				"cyberware.tooltip.beaconPost.2");
 		ib.setRegistryName(name);
 		GameRegistry.register(ib);
 		
@@ -137,12 +140,7 @@ public class BlockBeaconPost extends BlockContainer
 			{
 				for (int z = -1; z <= 1; z++)
 				{
-					if (y > 3 && (x != 0 && z != 0))
-					{
-						continue;
-					}
-					
-					if (y > 4 && (x != 0 || z != 0))
+					if (y > 3 && (x != 0 || z != 0))
 					{
 						continue;
 					}
@@ -164,12 +162,7 @@ public class BlockBeaconPost extends BlockContainer
 			{
 				for (int z = -1; z <= 1; z++)
 				{
-					if (y > 3 && (x != 0 && z != 0))
-					{
-						continue;
-					}
-					
-					if (y > 4 && (x != 0 || z != 0))
+					if (y > 3 && (x != 0 || z != 0))
 					{
 						continue;
 					}
@@ -397,7 +390,6 @@ public class BlockBeaconPost extends BlockContainer
 				TileEntityBeaconPost post = (TileEntityBeaconPost) te;
 				if (state.getValue(TRANSFORMED) == 2)
 				{
-					System.out.println("DESTRUCTING");
 					post.destruct();
 				}
 				else if (post.master != null && !post.master.equals(pos) && !post.destructing)
@@ -417,6 +409,12 @@ public class BlockBeaconPost extends BlockContainer
 			}
 		}
 	}
+	
+    @Override
+    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)
+    {
+    	return state.getValue(TRANSFORMED) > 0;
+    }
 
 	
 }

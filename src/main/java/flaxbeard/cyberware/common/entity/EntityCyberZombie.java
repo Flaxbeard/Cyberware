@@ -8,13 +8,15 @@ import java.util.List;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUserDataImpl;
@@ -22,6 +24,7 @@ import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.handler.CyberwareDataHandler;
+import flaxbeard.cyberware.common.item.ItemArmorCyberware;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class EntityCyberZombie extends EntityZombie
@@ -145,13 +148,40 @@ public class EntityCyberZombie extends EntityZombie
 	}
 	
 	@Override
-	public void onDeath(DamageSource cause)
+	protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
 	{
-		super.onDeath(cause);
+		super.dropEquipment(wasRecentlyHit, lootingModifier);
+		
+		if (CyberwareConfig.KATANA && this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND) != null && this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == CyberwareContent.katana)
+		{
+			
+			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).copy();
+			if (itemstack.isItemStackDamageable())
+			{
+				int i = Math.max(itemstack.getMaxDamage() - 25, 1);
+				int j = itemstack.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(i) + 1);
+
+				if (j > i)
+				{
+					j = i;
+				}
+
+				if (j < 1)
+				{
+					j = 1;
+				}
+
+				itemstack.setItemDamage(j);
+			}
+
+			this.entityDropItem(itemstack, 0.0F);
+		}
+		
 		
 		if (hasWare)
 		{
-			if (worldObj.rand.nextFloat() < (CyberwareConfig.DROP_RARITY / 100F))
+			float rarity = Math.min(100, CyberwareConfig.DROP_RARITY + lootingModifier * 5F);
+			if (worldObj.rand.nextFloat() < (rarity / 100F))
 			{
 				List<ItemStack> allWares = new ArrayList<ItemStack>();
 				for (EnumSlot slot : EnumSlot.values())
@@ -180,6 +210,18 @@ public class EntityCyberZombie extends EntityZombie
 					this.entityDropItem(drop, 0.0F);
 				}
 			}
+		}
+	}
+	
+	@Override
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)
+	{
+		super.setEquipmentBasedOnDifficulty(difficulty);
+		
+		if (CyberwareConfig.KATANA && this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND) != null && this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == Items.IRON_SWORD)
+		{
+			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(CyberwareContent.katana));
+			this.setDropChance(EntityEquipmentSlot.MAINHAND, 0F);
 		}
 	}
 

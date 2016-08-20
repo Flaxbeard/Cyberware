@@ -8,13 +8,18 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -40,6 +45,7 @@ import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
 import flaxbeard.cyberware.common.item.ItemArmUpgrade;
+import flaxbeard.cyberware.common.item.ItemArmorCyberware;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
@@ -62,8 +68,10 @@ import flaxbeard.cyberware.common.item.ItemLungsUpgrade;
 import flaxbeard.cyberware.common.item.ItemMuscleUpgrade;
 import flaxbeard.cyberware.common.item.ItemNeuropozyne;
 import flaxbeard.cyberware.common.item.ItemSkinUpgrade;
+import flaxbeard.cyberware.common.item.ItemSwordCyberware;
 import flaxbeard.cyberware.common.item.VanillaWares.SpiderEyeWare;
 import flaxbeard.cyberware.common.misc.BlueprintCraftingHandler;
+import flaxbeard.cyberware.common.misc.CyberwareDyingHandler;
 
 public class CyberwareContent
 {
@@ -83,7 +91,20 @@ public class CyberwareContent
 	public static BlockBeaconLarge radioLarge;
 	public static Block radioPost;
 
+	private static ArmorMaterial shadesMat1;
+	private static ArmorMaterial shadesMat2;
+	public static Item shades;
+	public static Item shades2;
 	
+	private static ArmorMaterial jacketMat;
+	public static Item jacket;
+	
+	public static ArmorMaterial trenchMat;
+	public static ItemArmorCyberware trenchcoat;
+	
+	private static ToolMaterial katanaMat;
+	public static Item katana;
+
 	public static Item bodyPart;
 	public static ItemCyberware cybereyes;
 	public static ItemCyberware cybereyeUpgrades;
@@ -159,14 +180,45 @@ public class CyberwareContent
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");
 		component = new ItemCyberwareBase("component", "actuator", "reactor", "titanium", "ssc", "plating", "fiberoptics", "fullerene", "synthnerves", "storage", "microelectric");
+		
+		if (CyberwareConfig.CLOTHES)
+		{
+			shadesMat1 = EnumHelper.addArmorMaterial("SHADES", "cyberware:vanity", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+			shadesMat1.customCraftingMaterial = Item.getItemFromBlock(Blocks.GLASS);
+			shadesMat2 = EnumHelper.addArmorMaterial("SHADES2", "cyberware:vanity_2", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+			shadesMat2.customCraftingMaterial = Item.getItemFromBlock(Blocks.GLASS);
+			shades = new ItemArmorCyberware("shades", shadesMat1, 0, EntityEquipmentSlot.HEAD);
+			shades2 = new ItemArmorCyberware("shades2", shadesMat2, 0, EntityEquipmentSlot.HEAD);
+			
+			jacketMat = EnumHelper.addArmorMaterial("JACKET", "cyberware:jacket", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+			jacketMat.customCraftingMaterial = Items.LEATHER;
+			jacket = new ItemArmorCyberware("jacket", jacketMat, 0, EntityEquipmentSlot.CHEST);
+			
+			trenchMat = EnumHelper.addArmorMaterial("TRENCHCOAT", "cyberware:trenchcoat", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+			trenchMat.customCraftingMaterial = Items.LEATHER;
+			trenchcoat = new ItemArmorCyberware("trenchcoat", trenchMat, 0, EntityEquipmentSlot.CHEST);
+		}
 
+		if (CyberwareConfig.KATANA)
+		{
+			katanaMat = EnumHelper.addToolMaterial("KATANA", 
+					ToolMaterial.IRON.getHarvestLevel(), 
+					ToolMaterial.IRON.getMaxUses(), 
+					ToolMaterial.IRON.getEfficiencyOnProperMaterial(), 
+					ToolMaterial.IRON.getDamageVsEntity(), 
+					ToolMaterial.IRON.getEnchantability());
+			katanaMat.setRepairItem(new ItemStack(component, 1, 4));
+			
+			katana = new ItemSwordCyberware("katana", katanaMat);
+		}
+		
 		bodyPart = new ItemBodyPart("bodyPart", 
 				new EnumSlot[] { EnumSlot.EYES, EnumSlot.CRANIUM, EnumSlot.HEART, EnumSlot.LUNGS, EnumSlot.LOWER_ORGANS, EnumSlot.SKIN, EnumSlot.MUSCLE, EnumSlot.BONE, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
 				new String[] { "eyes", "brain", "heart", "lungs", "stomach", "skin", "muscles", "bones", "armLeft", "armRight", "legLeft", "legRight"});
 		
 		
 		cybereyes = new ItemCybereyes("cybereyes", EnumSlot.EYES);
-		cybereyes.setEssenceCost(10);
+		cybereyes.setEssenceCost(8); // 0.2.0 Changed from 10
 		cybereyes.setWeights(UNCOMMON);
 		cybereyes.setComponents(new ItemStack[] { new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 2, 7) });
 		
@@ -185,15 +237,16 @@ public class CyberwareContent
 		CyberwareAPI.linkCyberware(Items.SPIDER_EYE, new SpiderEyeWare());
 		
 		brainUpgrades = new ItemBrainUpgrade("brainUpgrades", EnumSlot.CRANIUM,
-				new String[] { "corticalStack", "enderJammer", "consciousnessTransmitter", "neuralContextualizer", "matrix" });
-		brainUpgrades.setEssenceCost(3, 10, 2, 2, 10);
-		brainUpgrades.setWeights(RARE, UNCOMMON, UNCOMMON, COMMON, UNCOMMON);
+				new String[] { "corticalStack", "enderJammer", "consciousnessTransmitter", "neuralContextualizer", "matrix", "radio" });
+		brainUpgrades.setEssenceCost(3, 10, 2, 2, 8, 2); // TMC 0.2.0 changed from 10
+		brainUpgrades.setWeights(RARE, UNCOMMON, UNCOMMON, COMMON, UNCOMMON, UNCOMMON);
 		brainUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 1, 7), new ItemStack(component, 2, 8) },
 				new ItemStack[] { new ItemStack(component, 1, 2), new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 2, 9) },
 				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 6), new ItemStack(component, 3, 7) },
 				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 6), new ItemStack(component, 3, 7) },
-				new ItemStack[] { new ItemStack(component, 3, 3), new ItemStack(component, 1, 5), new ItemStack(component, 2, 9) }
+				new ItemStack[] { new ItemStack(component, 3, 3), new ItemStack(component, 1, 5), new ItemStack(component, 2, 9) },
+				new ItemStack[] { new ItemStack(component, 1, 2), new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 9) }
 				);
 		expCapsule = new ItemExpCapsule("expCapsule");
 		
@@ -242,8 +295,8 @@ public class CyberwareContent
 				);
 		
 		skinUpgrades = new ItemSkinUpgrade("skinUpgrades", EnumSlot.SKIN,
-				new String[] { "solarSkin", "subdermalSpikes", "fakeSkin", "immuno"});
-		skinUpgrades.setEssenceCost(15, 12, 0, -25);
+				new String[] { "solarSkin", "subdermalSpikes", "fakeSkin", "immuno"}); // Solar changed from 15 0.2.0
+		skinUpgrades.setEssenceCost(12, 12, 0, -25);
 		skinUpgrades.setWeights(VERY_COMMON, UNCOMMON, UNCOMMON, RARE);
 		skinUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 1), new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 1, 9) },
@@ -316,6 +369,20 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) }
 				);
 		
+		
+		ItemStack actuator = new ItemStack(component, 1, 0);
+		ItemStack reactor = new ItemStack(component, 1, 1);
+		ItemStack reinforcement = new ItemStack(component, 1, 2);
+		ItemStack circuit = new ItemStack(component, 1, 3);
+		ItemStack plating = new ItemStack(component, 1, 4);
+		ItemStack fiber = new ItemStack(component, 1, 5);
+		ItemStack material = new ItemStack(component, 1, 6);
+		ItemStack nerves = new ItemStack(component, 1, 7);
+		ItemStack storage = new ItemStack(component, 1, 8);
+		ItemStack cell = new ItemStack(component, 1, 9);
+
+		
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(surgeryChamber.ib),
 				"III",
 				"IBI",
@@ -373,12 +440,31 @@ public class CyberwareContent
 				));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radio),
+				"F  ",
 				"III",
-				"PCP",
-				"IFI",
-				Character.valueOf('I'), "ingotIron", Character.valueOf('P'), new ItemStack(component, 1, 4),
-				Character.valueOf('C'), new ItemStack(component, 1, 9), Character.valueOf('F'), new ItemStack(component, 1, 5)
+				"ICI",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('F'), fiber.copy(),
+				Character.valueOf('C'), circuit.copy()
 				));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radioLarge),
+				"IEI",
+				"PRP",
+				"ICI",
+				Character.valueOf('I'), "ingotIron", Character.valueOf('R'), new ItemStack(radio), Character.valueOf('E'), new ItemStack(Items.ENDER_EYE),
+				Character.valueOf('P'), reinforcement.copy(), Character.valueOf('C'), circuit.copy()
+				));
+		
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radioPost, 6),
+				"B B",
+				"BFB",
+				"BPB",
+				Character.valueOf('B'), new ItemStack(Blocks.IRON_BARS), Character.valueOf('P'), plating.copy(),
+				Character.valueOf('F'), fiber.copy()
+				));
+		
+		GameRegistry.addRecipe(new CyberwareDyingHandler());
 		
 		if (CyberwareConfig.SURGERY_CRAFTING)
 		{
