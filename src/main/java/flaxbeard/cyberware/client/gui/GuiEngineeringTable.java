@@ -7,8 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +18,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 import flaxbeard.cyberware.common.block.tile.TileEntityComponentBox;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
@@ -98,6 +102,7 @@ public class GuiEngineeringTable extends GuiContainer
 	}
 	
 	private static final ResourceLocation ENGINEERING_GUI_TEXTURES = new ResourceLocation(Cyberware.MODID + ":textures/gui/engineering.png");
+	private static final ResourceLocation GREEN_TEXTURES = new ResourceLocation(Cyberware.MODID + ":textures/blocks/greenscreen.png");
 
 	private InventoryPlayer playerInventory;
 
@@ -137,6 +142,8 @@ public class GuiEngineeringTable extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+
+		
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		String s = this.engineering.getDisplayName().getUnformattedText();
@@ -146,6 +153,8 @@ public class GuiEngineeringTable extends GuiContainer
 		next.visible = prev.visible = (archive() != null && ((ContainerEngineeringTable) this.inventorySlots).archiveList.size() > 1);
 		nextC.visible = prevC.visible = (componentBox() != null && ((ContainerEngineeringTable) this.inventorySlots).componentBoxList.size() > 1);
 
+
+		
 		((ContainerEngineeringTable) this.inventorySlots).canInteractWith(mc.thePlayer);
 		
 		if (archive() != null)
@@ -225,6 +234,7 @@ public class GuiEngineeringTable extends GuiContainer
 			this.drawHoveringText(Arrays.asList(new String[] { I18n.format("cyberware.gui.blueprint") } ), mouseX - i, mouseY - j, fontRendererObj);
 		}
 		
+		
 	}
 
 	@Override
@@ -240,6 +250,22 @@ public class GuiEngineeringTable extends GuiContainer
 		{
 			this.mc.getTextureManager().bindTexture(GuiComponentBox.BOX_GUI_TEXTURE);
 			this.drawTexturedModalRect(i, j, 176, 0, 65, this.ySize);
+		}
+
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderHelper.enableGUIStandardItemLighting();
+
+		int size = 10;
+		
+		this.mc.getTextureManager().bindTexture(GREEN_TEXTURES);
+		this.drawTexturedModalRect(0, 0, 0, 0, 16 * size, 16 * size);
+		
+		if (engineering.slots.getStackInSlot(2) != null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(size, size, 1);
+			this.itemRender.renderItemAndEffectIntoGUI(engineering.slots.getStackInSlot(2), 0, 0);
+			GlStateManager.popMatrix();
 		}
 	}
 	
