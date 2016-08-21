@@ -57,6 +57,7 @@ public class EntityCyberZombie extends EntityZombie
 	@Override
 	public void onLivingUpdate()
 	{
+		this.extinguish();
 		if (!this.hasWare && !this.worldObj.isRemote)
 		{
 			if (!isBrute() && this.worldObj.rand.nextFloat() < (LibConstants.NATURAL_BRUTE_CHANCE / 100F))
@@ -77,6 +78,7 @@ public class EntityCyberZombie extends EntityZombie
 			this.setSizeNormal(0.6F * 1.2F, 1.95F * 1.2F);
 		}
 		super.onLivingUpdate();
+		this.extinguish();
 	}
 	
 	

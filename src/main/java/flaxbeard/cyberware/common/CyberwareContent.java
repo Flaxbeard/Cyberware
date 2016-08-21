@@ -37,6 +37,7 @@ import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockComponentBox;
 import flaxbeard.cyberware.common.block.BlockEngineeringTable;
+import flaxbeard.cyberware.common.block.BlockGreenscreen;
 import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
@@ -79,6 +80,8 @@ public class CyberwareContent
 	public static final int UNCOMMON = 25;
 	public static final int COMMON = 50;
 	public static final int VERY_COMMON = 100;
+	
+	public static Block green;
 
 	public static Block surgeryApparatus;
 	public static BlockSurgeryChamber surgeryChamber;
@@ -162,6 +165,8 @@ public class CyberwareContent
 				FMLInterModComms.sendMessage("EnderIO", "poweredSpawner:blacklist:add", "cyberware.cyberzombie");
 			}
 		}
+		
+		green = new BlockGreenscreen();
 		
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
 
