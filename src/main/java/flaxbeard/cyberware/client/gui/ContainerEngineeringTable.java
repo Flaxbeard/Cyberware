@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +42,7 @@ public class ContainerEngineeringTable extends Container
 		@Override
 		public void onSlotChanged()
 		{
+			super.onSlotChanged();
 			engineering.markDirty();
 			
 			if (this.slotNumber >= 2 && this.slotNumber <= 8)
@@ -52,6 +54,7 @@ public class ContainerEngineeringTable extends Container
 		@Override
 		public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
 		{
+			super.onPickupFromSlot(playerIn, stack);
 			engineering.markDirty();
 		}
 		
@@ -71,6 +74,92 @@ public class ContainerEngineeringTable extends Container
 		}
 	}
 	
+	public class SlotInv extends Slot
+	{
+		public SlotInv(IInventory inventoryIn, int index, int xPosition, int yPosition)
+		{
+			super(inventoryIn, index, xPosition, yPosition);
+		}
+
+		@Override
+		public void onSlotChanged()
+		{
+			super.onSlotChanged();
+			seeIfCheckNewBox();
+		}
+		
+		@Override
+		public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
+		{
+			super.onPickupFromSlot(playerIn, stack);
+			seeIfCheckNewBox();
+		}
+		
+		@Override
+		public void putStack(ItemStack stack)
+		{
+			super.putStack(stack);
+			seeIfCheckNewBox();
+		}
+		
+		private void seeIfCheckNewBox()
+		{
+			if (componentBoxList.size() <= 1)
+			{
+				checkForNewBoxes();
+			}
+		}
+		
+	}
+	
+	public class SlotComponentBox extends SlotItemHandler
+	{
+
+		public SlotComponentBox(IItemHandler itemHandler, int index, int xPosition, int yPosition)
+		{
+			super(itemHandler, index, xPosition, yPosition);
+		}
+		
+		@Override
+		public void onSlotChanged()
+		{
+			super.onSlotChanged();
+			updateNBT();
+		}
+		
+		@Override
+		public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
+		{
+			super.onPickupFromSlot(playerIn, stack);
+			updateNBT();
+		}
+		
+		@Override
+		public void putStack(ItemStack stack)
+		{
+			super.putStack(stack);
+			updateNBT();
+		}
+		
+		private void updateNBT()
+		{
+			if (componentBox != null && componentBox instanceof Integer)
+			{
+				ItemStack item = playerInv.mainInventory[(Integer) componentBox];
+				if (item != null && item.getItem() == CyberwareContent.componentBox.ib)
+				{
+					NBTTagCompound comp = componentHandler.serializeNBT();
+					if (!item.hasTagCompound())
+					{
+						item.setTagCompound(new NBTTagCompound());
+					}
+					item.getTagCompound().setTag("contents", comp);
+				}
+			}
+		}
+		
+	}
+	
 	private final TileEntityEngineeringTable engineering;
 	public TileEntityBlueprintArchive archive;
 	public int archiveIndex = 0;
@@ -81,9 +170,11 @@ public class ContainerEngineeringTable extends Container
 	public int componentBoxIndex = 0;
 	
 	ItemStackHandler componentHandler = null;
+	public InventoryPlayer playerInv;
 	
 	public ContainerEngineeringTable(String uuid, InventoryPlayer playerInventory, TileEntityEngineeringTable engineering)
 	{
+		this.playerInv = playerInventory;
 		this.engineering = engineering;
 		archive = null;
 		componentBox = null;
@@ -114,8 +205,9 @@ public class ContainerEngineeringTable extends Container
 			}
 		}
 		
-		for (ItemStack stack : playerInventory.mainInventory)
+		for (int i = 0; i < playerInventory.mainInventory.length; i++)
 		{
+			ItemStack stack = playerInventory.mainInventory[i];
 			if (stack != null && stack.getItem() == CyberwareContent.componentBox.ib)
 			{
 				if (!stack.hasTagCompound())
@@ -129,11 +221,11 @@ public class ContainerEngineeringTable extends Container
 				}
 				if (componentBox == null )
 				{
-					componentBox = stack;
+					componentBox = i;
 					componentBoxIndex = componentBoxList.size();
 				}
 
-				componentBoxList.add(stack);
+				componentBoxList.add(i);
 			}
 		}
 		
@@ -180,13 +272,13 @@ public class ContainerEngineeringTable extends Container
 		{
 			for (int j = 0; j < 9; ++j)
 			{
-				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18 + offset, 84 + i * 18));
+				this.addSlotToContainer(new SlotInv(playerInventory, j + i * 9 + 9, 8 + j * 18 + offset, 84 + i * 18));
 			}
 		}
 
 		for (int k = 0; k < 9; ++k)
 		{
-			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18 + offset, 142));
+			this.addSlotToContainer(new SlotInv(playerInventory, k, 8 + k * 18 + offset, 142));
 		}
 		
 		if (archive != null)
@@ -209,7 +301,8 @@ public class ContainerEngineeringTable extends Container
 			else
 			{
 				ItemStackHandler slots = new ItemStackHandlerComponent(18);
-				slots.deserializeNBT(((ItemStack) componentBox).getTagCompound().getCompoundTag("contents"));
+				ItemStack item = playerInv.mainInventory[(Integer) componentBox];
+				slots.deserializeNBT(item.getTagCompound().getCompoundTag("contents"));
 				componentHandler = slots;
 			}
 			int numRows = componentHandler.getSlots() / 6;
@@ -217,7 +310,7 @@ public class ContainerEngineeringTable extends Container
 			{
 				for (int k = 0; k < numRows; ++k)
 				{
-					this.addSlotToContainer(new SlotItemHandler(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
+					this.addSlotToContainer(new SlotComponentBox(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
 				}
 			}
 		}
@@ -254,7 +347,8 @@ public class ContainerEngineeringTable extends Container
 		}
 		
 		while (componentBox != null
-				&& (componentBox instanceof TileEntityComponentBox && ((TileEntityComponentBox) componentBox).getWorld().getTileEntity(((TileEntityComponentBox) componentBox).getPos()) != componentBox))
+				&& ((componentBox instanceof TileEntityComponentBox && ((TileEntityComponentBox) componentBox).getWorld().getTileEntity(((TileEntityComponentBox) componentBox).getPos()) != componentBox))
+				|| (componentBox instanceof Integer && (playerInv.mainInventory[(Integer) componentBox] == null || playerInv.mainInventory[(Integer) componentBox].getItem() != CyberwareContent.componentBox.ib)))
 		{
 			componentBoxList.remove(this.componentBoxIndex);
 			if (componentBoxList.size() == 0)
@@ -277,7 +371,7 @@ public class ContainerEngineeringTable extends Container
 				this.nextComponentBox();
 			}
 		}
-		return engineering.isUseableByPlayer(playerIn);
+		return playerIn == null ? false : engineering.isUseableByPlayer(playerIn);
 	}
 
 
@@ -403,6 +497,35 @@ public class ContainerEngineeringTable extends Container
 	}
 	
 
+	public void checkForNewBoxes()
+	{
+		for (int i = 0; i < playerInv.mainInventory.length; i++)
+		{
+			if (!this.componentBoxList.contains(i))
+			{
+				ItemStack stack = playerInv.mainInventory[i];
+				if (stack != null && stack.getItem() == CyberwareContent.componentBox.ib)
+				{
+					if (!stack.hasTagCompound())
+					{
+						stack.setTagCompound(new NBTTagCompound());
+					}
+					if (!stack.getTagCompound().hasKey("contents"))
+					{
+						ItemStackHandler slots = new ItemStackHandlerComponent(18);
+						stack.getTagCompound().setTag("contents", slots.serializeNBT());
+					}
+					if (componentBox == null )
+					{
+						componentBox = i;
+						componentBoxIndex = componentBoxList.size();
+					}
+	
+					componentBoxList.add(i);
+				}
+			}
+		}
+	}
 
 
 	public void nextArchive()
@@ -424,6 +547,7 @@ public class ContainerEngineeringTable extends Container
 	
 	public void nextComponentBox()
 	{
+		checkForNewBoxes();
 		clearSlots();
 		handleClosingBox();
 		componentBoxIndex = (componentBoxIndex + 1) % componentBoxList.size();
@@ -434,6 +558,7 @@ public class ContainerEngineeringTable extends Container
 	
 	public void prevComponentBox()
 	{
+		checkForNewBoxes();
 		clearSlots();
 		handleClosingBox();
 		componentBoxIndex = (componentBoxIndex + componentBoxList.size() - 1) % componentBoxList.size();
@@ -456,6 +581,7 @@ public class ContainerEngineeringTable extends Container
 	
 	public void createSlots()
 	{
+		canInteractWith(null);
 		if (archive != null)
 		{
 			int numRows = archive.slots.getSlots() / 6;
@@ -476,7 +602,8 @@ public class ContainerEngineeringTable extends Container
 			else
 			{
 				ItemStackHandler slots = new ItemStackHandlerComponent(18);
-				slots.deserializeNBT(((ItemStack) componentBox).getTagCompound().getCompoundTag("contents"));
+				ItemStack item = playerInv.mainInventory[(Integer) componentBox];
+				slots.deserializeNBT(item.getTagCompound().getCompoundTag("contents"));
 				componentHandler = slots;
 			}
 			
@@ -485,7 +612,7 @@ public class ContainerEngineeringTable extends Container
 			{
 				for (int k = 0; k < numRows; ++k)
 				{
-					this.addSlotToContainer(new SlotItemHandler(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
+					this.addSlotToContainer(new SlotComponentBox(componentHandler, k + j * numRows, 8 + k * 18, 22 + j * 18));
 				}
 			}
 		}
@@ -500,15 +627,6 @@ public class ContainerEngineeringTable extends Container
 	
 	public void handleClosingBox()
 	{
-		if (componentBox != null && componentBox instanceof ItemStack)
-		{
-			ItemStack item = (ItemStack) componentBox;
-			NBTTagCompound comp = componentHandler.serializeNBT();
-			if (!item.hasTagCompound())
-			{
-				item.setTagCompound(new NBTTagCompound());
-			}
-			item.getTagCompound().setTag("contents", comp);
-		}
+
 	}
 }

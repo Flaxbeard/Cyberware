@@ -176,7 +176,7 @@ public class GuiEngineeringTable extends GuiContainer
 			}
 			else
 			{
-				ogName = ((ItemStack) cb).getDisplayName();
+				ogName = name();
 			}
 			
 			String name = ogName.substring(0, Math.min(9, ogName.length())).trim();
@@ -298,6 +298,21 @@ public class GuiEngineeringTable extends GuiContainer
 	private Object componentBox()
 	{
 		return ((ContainerEngineeringTable) this.inventorySlots).componentBox;
+	}
+	
+	private String name()
+	{
+		ContainerEngineeringTable table = ((ContainerEngineeringTable) this.inventorySlots);
+		if (table.componentBox instanceof Integer)
+		{
+			ItemStack stack = table.playerInv.mainInventory[(Integer) table.componentBox];
+			if (stack != null)
+			{
+				return stack.getDisplayName();
+			}
+		}
+
+		return "";
 	}
 	
 	private void nextComponentBox()
