@@ -44,7 +44,7 @@ public class RenderCyberZombie extends RenderZombie
 				this.czRenderer.bindTexture(HIGHLIGHT);
 			}
 			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
+			//GlStateManager.disableAlpha();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
 			if (entitylivingbaseIn.isInvisible())

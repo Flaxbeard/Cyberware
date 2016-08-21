@@ -1,6 +1,7 @@
 package flaxbeard.cyberware.client.gui;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,6 +31,9 @@ public class GuiCyberwareMenu extends GuiScreen
 	boolean movedWheel = false;
 	int selectedPart = -1;
 	int lastMousedOverPart = -1;
+	boolean editing = false;
+	
+	float[] defaultColor = new float[] { 76 / 255F, 255 / 255F, 0F };
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
@@ -37,7 +41,7 @@ public class GuiCyberwareMenu extends GuiScreen
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		int d = Mouse.getDWheel();
-		if (!movedWheel && d != 0)
+		if (!movedWheel && d != 0 && !editing)
 		{
 			movedWheel = true;
 			if (selectedPart == -1 && d > 0)
@@ -45,6 +49,17 @@ public class GuiCyberwareMenu extends GuiScreen
 				d = 0;
 			}
 		}
+		
+		float radiusBase = 100F;
+		float innerRadiusBase = 40F;
+		
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((width / 2F) + radiusBase, (height / 2F) - radiusBase, 0F);
+		GlStateManager.scale(2F, 2F, 2F);
+		this.fontRendererObj.drawStringWithShadow("?", 0, 0, 0x4CFF00);
+		GlStateManager.popMatrix();
+
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture2D();
@@ -57,7 +72,7 @@ public class GuiCyberwareMenu extends GuiScreen
 		ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
 		int piePieces = data.getNumActiveItems();
 		
-		if (movedWheel)
+		if (movedWheel && !editing)
 		{
 			selectedPart = (selectedPart - Integer.signum(d));
 			while (selectedPart < 0)
@@ -71,38 +86,37 @@ public class GuiCyberwareMenu extends GuiScreen
 		
 		int maxStepsPerTrial = 5;
 		
-		boolean odd = false;
 		float mouseDist = (float) Math.sqrt((centerX - mouseX) * (centerX - mouseX) + (centerY - mouseY) * (centerY - mouseY));
 		float mouseAngle = (float) ((Math.atan2(mouseY - centerY, mouseX - centerX) * 180F / Math.PI) + 360F) % 360F;
-		float radiusBase = 100F;
-		float innerRadiusBase = 40F;
 		
 		for (int piece = 0; piece < piePieces; piece++)
 		{
 			
 			float rotation = (degreesPerPiece * piece + 270) % 360;
-						
-			if (mouseDist > innerRadiusBase)
+			
+			if (!editing)
 			{
-				movedWheel = false;
-				if (piePieces == 1 || (mouseAngle > rotation && mouseAngle < rotation + degreesPerPiece && lastMousedOverPart != piece))
+				if (mouseDist > innerRadiusBase)
 				{
-					lastMousedOverPart = piece;
-					selectedPart = piece;
+					movedWheel = false;
+					if (piePieces == 1 || (mouseAngle > rotation && mouseAngle < rotation + degreesPerPiece && lastMousedOverPart != piece))
+					{
+						lastMousedOverPart = piece;
+						selectedPart = piece;
+					}
 				}
-			}
-			else
-			{
-				lastMousedOverPart = -1;
-				if (!movedWheel)
+				else
 				{
-					selectedPart = -1;
+					lastMousedOverPart = -1;
+					if (!movedWheel)
+					{
+						selectedPart = -1;
+					}
 				}
 			}
 			
 			boolean selected = piece == selectedPart;
 			
-			odd = !odd;
 			
 			for (int deg = (int) (degreesPerPiece + .5F); deg > 0; deg -= maxStepsPerTrial)
 			{
@@ -113,14 +127,12 @@ public class GuiCyberwareMenu extends GuiScreen
 				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 				
 				float alpha = selected ? .8F : .5F;
-				if (odd && !selected)
-				{
-					GL11.glColor4f(69 / 255F, 161 / 255F, 30 / 255F, alpha);
-				}
-				else
-				{
-					GL11.glColor4f(76 / 255F, 255 / 255F, 0F, alpha);
-				}
+				
+				ItemStack stack = data.getActiveItems().get(piece);
+				float[] itemColor = ((IMenuItem) stack.getItem()).getColor(stack);
+				float[] color = (itemColor == null) ? defaultColor : itemColor;
+				GL11.glColor4f(color[0], color[1], color[2], alpha);
+				
 				double radians = ((rotation + deg) / 180F) * Math.PI;
 
 				float xS = centerX + ((float) Math.cos(radians) * innerRadius);
@@ -178,10 +190,37 @@ public class GuiCyberwareMenu extends GuiScreen
 			this.itemRender.renderItemIntoGUI(data.getActiveItems().get(piece), 0, 0);
 			GlStateManager.popMatrix();
 			
-			if (boundKey != -1)
+			if (piece == selectedPart && editing)
+			{
+				if ((mc.thePlayer.ticksExisted / 4) % 2 == 0)
+				{
+					GlStateManager.pushMatrix();
+					String str = "__";
+					int i = this.fontRendererObj.getStringWidth(str);
+		
+					GlStateManager.translate(xS - i / 2F, yS + offset, 0);
+					this.fontRendererObj.drawStringWithShadow(str, 0, 0, 0xFFFFFF);
+					GlStateManager.popMatrix();
+				}
+			}
+			else if (boundKey != -1)
 			{
 				GlStateManager.pushMatrix();
-				String str = mc.gameSettings.keyBindsHotbar[boundKey].getDisplayName();
+				
+				String str = "";
+				if (boundKey < 0)
+				{
+					boundKey = boundKey + 100;
+					str = Mouse.getButtonName(boundKey);
+				}
+				else if (boundKey > 900)
+				{
+					str = "SHIFT + " + Keyboard.getKeyName(boundKey - 900);
+				}
+				else
+				{
+					str = Keyboard.getKeyName(boundKey);
+				}
 				int i = this.fontRendererObj.getStringWidth(str);
 	
 				GlStateManager.translate(xS - i / 2F, yS + offset, 0);
@@ -201,6 +240,56 @@ public class GuiCyberwareMenu extends GuiScreen
 		
 		this.fontRendererObj.setUnicodeFlag(unicode);
 
+		
+		
+		GlStateManager.pushMatrix();
+
+		int sx = (int) ((width / 2F) + radiusBase);
+		int sy = (int) ((height / 2F) - radiusBase);
+		int sh = this.fontRendererObj.FONT_HEIGHT * 2;
+		int sw = this.fontRendererObj.getStringWidth("?") * 2;
+
+		if (this.isPointInRegion(sx, sy, sw, sh, mouseX, mouseY))
+		{
+			this.drawHoveringText(Arrays.asList(new String[] { I18n.format("cyberware.gui.keybind.0"), I18n.format("cyberware.gui.keybind.1"), I18n.format("cyberware.gui.keybind.2"), I18n.format("cyberware.gui.keybind.3") } ), mouseX, mouseY, fontRendererObj);
+		}
+
+		GlStateManager.popMatrix();
+
+	}
+	
+	protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)
+	{
+		return pointX >= rectX - 1 && pointX < rectX + rectWidth + 1 && pointY >= rectY - 1 && pointY < rectY + rectHeight + 1;
+	}
+	
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+	{
+		if (mouseButton == 0 && !editing)
+		{
+			editing = true;
+		}
+		if (mouseButton == 1)
+		{
+			if (editing)
+			{
+				editing = false;
+			}
+			else if (this.selectedPart != -1)
+			{
+				ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+
+				HotkeyHelper.removeHotkey(data, data.getActiveItems().get(selectedPart));
+				
+				CyberwarePacketHandler.INSTANCE.sendToServer(new SyncHotkeyPacket(selectedPart, Integer.MAX_VALUE));
+			}
+		}
+		
+		if (mouseButton > 1 && editing && this.selectedPart != -1) 
+		{
+			assignHotkey(mouseButton - 100);
+		}
 	}
 	
 	@Override
@@ -210,9 +299,9 @@ public class GuiCyberwareMenu extends GuiScreen
 	
 		if (mc != null && mc.gameSettings != null)
 		{
-			if (KeyBinds.menu != null && !mc.gameSettings.isKeyDown(KeyBinds.menu) || CyberwareAPI.getCapability(mc.thePlayer).getNumActiveItems() < 1)
+			if (KeyBinds.menu != null && (!mc.gameSettings.isKeyDown(KeyBinds.menu) && !editing) || CyberwareAPI.getCapability(mc.thePlayer).getNumActiveItems() < 1)
 			{
-				if (this.selectedPart != -1)
+				if (this.selectedPart != -1 && !editing)
 				{
 					ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
 					ItemStack hki = data.getActiveItems().get(this.selectedPart);
@@ -227,16 +316,21 @@ public class GuiCyberwareMenu extends GuiScreen
 			{
 				boolean ee = false;
 				int key = keybind.getKeyCode();
-				if (key < 0) {
-					int button = 100 + key;
-					ee = Mouse.isButtonDown(button);
-				}
-				else
+
+				if (!editing)
 				{
-					ee = Keyboard.isKeyDown(key);
+					if (key < 0) {
+						int button = 100 + key;
+						ee = Mouse.isButtonDown(button);
+					}
+					else
+					{
+						ee = Keyboard.isKeyDown(key);
+					}
 				}
 				KeyBinding.setKeyBindState(key, ee);
 			}
+			
 		}
 	}
 	
@@ -252,12 +346,38 @@ public class GuiCyberwareMenu extends GuiScreen
 		//mc.thePlayer.setSprinting(MiscHandler.wasSprinting);
 	}
 	
+	private void assignHotkey(int code)
+	{
+		ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+
+		
+		HotkeyHelper.removeHotkey(data, code);
+		HotkeyHelper.assignHotkey(data, data.getActiveItems().get(selectedPart), code);
+		
+		CyberwarePacketHandler.INSTANCE.sendToServer(new SyncHotkeyPacket(selectedPart, code));
+		editing = false;
+	}
+	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException
 	{
-		if (this.selectedPart != -1)
+		if (keyCode == Keyboard.KEY_ESCAPE)
 		{
-			for (int i = 0; i < mc.gameSettings.keyBindsHotbar.length; i++)
+			this.editing = false;
+		}
+		else if (keyCode == Keyboard.KEY_LSHIFT || keyCode == Keyboard.KEY_RSHIFT)
+		{
+			
+		}
+		else if (keyCode == KeyBinds.menu.getKeyCode())
+		{
+			
+		}
+		else if (this.selectedPart != -1 && editing)
+		{
+			boolean shiftPressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+			assignHotkey(keyCode + (shiftPressed ? 900 : 0));
+			/*for (int i = 0; i < mc.gameSettings.keyBindsHotbar.length; i++)
 			{
 				KeyBinding kb = mc.gameSettings.keyBindsHotbar[i];
 				if (kb.getKeyCode() == keyCode)
@@ -273,7 +393,7 @@ public class GuiCyberwareMenu extends GuiScreen
 
 					return;
 				}
-			}
+			}*/
 		}
 	}
 }

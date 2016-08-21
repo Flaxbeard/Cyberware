@@ -1,15 +1,19 @@
 package flaxbeard.cyberware.common.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiCyberwareMenu;
@@ -20,9 +24,9 @@ public class CyberwareMenuHandler
 	private Minecraft mc = Minecraft.getMinecraft();
 
 	int wasInScreen = 0;
-	int lastHotbarSlot = 0;
 	public static boolean wasSprinting = false;
-	boolean[] hotbarSlots = new boolean[10];
+	private static List<Integer> lastPressed = new ArrayList<Integer>();
+	private static List<Integer> pressed = new ArrayList<Integer>();
 	
 	@SubscribeEvent
 	public void tick(ClientTickEvent event)
@@ -51,28 +55,27 @@ public class CyberwareMenuHandler
 		if(event.phase == Phase.END)
 		{
 			
-			if (mc.thePlayer != null)
+			if (mc.thePlayer != null && mc.currentScreen == null)
 			{
 
-				for (int i = 0; i < mc.gameSettings.keyBindsHotbar.length; i++)
+				ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+				
+				for (int keyCode : data.getHotkeys())
 				{
-					KeyBinding kb = mc.gameSettings.keyBindsHotbar[i];
-					boolean pressed = kb.isKeyDown();
-					if (mc.gameSettings.keyBindSneak.isKeyDown())
+					if (isPressed(data, keyCode))
 					{
-						ItemStack hki = CyberwareAPI.getCapability(mc.thePlayer).getHotkey(i);
-						if (pressed && !hotbarSlots[i] && hki != null)
+						pressed.add(keyCode);
+						if (!lastPressed.contains(keyCode))
 						{
-							ReflectionHelper.setPrivateValue(EntityLivingBase.class, mc.thePlayer, 100, 22);
-							mc.thePlayer.inventory.currentItem = lastHotbarSlot;
-							ClientUtils.useActiveItemClient(mc.thePlayer, hki);
+							ClientUtils.useActiveItemClient(mc.thePlayer, data.getHotkey(keyCode));
 						}
 					}
-					hotbarSlots[i] = pressed;
 				}
+				
+				lastPressed = pressed;
+				pressed = new ArrayList<Integer>();
 			
 				
-				lastHotbarSlot = mc.thePlayer.inventory.currentItem;
 			}
 			
 			if (mc.thePlayer != null && CyberwareAPI.getCapability(mc.thePlayer).getNumActiveItems() > 0 && mc.gameSettings.isKeyDown(KeyBinds.menu) && mc.currentScreen == null)
@@ -95,6 +98,32 @@ public class CyberwareMenuHandler
 				wasSprinting = mc.thePlayer.isSprinting();
 			}
 			
+		}
+	}
+
+	private boolean isPressed(ICyberwareUserData data, int keyCode)
+	{
+		if (keyCode < 0)
+		{
+			keyCode = keyCode + 100;
+			return Mouse.isButtonDown(keyCode);
+		}
+		else if (keyCode > 900)
+		{
+			boolean shiftPressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+
+			keyCode = keyCode - 900;
+			return Keyboard.isKeyDown(keyCode) && shiftPressed;
+		}
+		else
+		{
+			if (data.getHotkey(keyCode + 900) != null)
+			{
+				boolean shiftPressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+
+				return Keyboard.isKeyDown(keyCode) && !shiftPressed;
+			}
+			return Keyboard.isKeyDown(keyCode);
 		}
 	}
 }

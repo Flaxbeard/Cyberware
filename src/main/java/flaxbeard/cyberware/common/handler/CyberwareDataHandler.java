@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
@@ -102,7 +103,7 @@ public class CyberwareDataHandler
 		if (e instanceof EntityPlayer && !e.worldObj.isRemote)
 		{
 			EntityPlayer p = (EntityPlayer) e;
-			if ((p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(DROP_WARE_GAMERULE) && !p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(KEEP_WARE_GAMERULE)) || (p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(KEEP_WARE_GAMERULE) && event.getSource() == EssentialsMissingHandler.noessence))
+			if ((p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(DROP_WARE_GAMERULE) && !p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(KEEP_WARE_GAMERULE)) || (p.worldObj.getWorldInfo().getGameRulesInstance().getBoolean(KEEP_WARE_GAMERULE) && shouldDropWare(event.getSource())))
 			{
 				if (CyberwareAPI.hasCapability(p))
 				{
@@ -150,6 +151,17 @@ public class CyberwareDataHandler
 		}
 	}
 	
+	private boolean shouldDropWare(DamageSource source)
+	{
+		if (source == EssentialsMissingHandler.noessence) return true;
+		if (source == EssentialsMissingHandler.heartless) return true;
+		if (source == EssentialsMissingHandler.brainless) return true;
+		if (source == EssentialsMissingHandler.nomuscles) return true;
+		if (source == EssentialsMissingHandler.spineless) return true;
+
+		return false;
+	}
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleCZSpawn(LivingSpawnEvent.SpecialSpawn event)
 	{

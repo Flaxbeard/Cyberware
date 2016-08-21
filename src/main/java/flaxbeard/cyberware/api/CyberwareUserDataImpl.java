@@ -50,7 +50,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private int essence = 0;
 	private int maxEssence = 0;
 	private List<ItemStack> activeItems = new ArrayList<ItemStack>();
-	private ItemStack[] hotkeys = new ItemStack[10];
+	private Map<Integer, ItemStack> hotkeys = new HashMap<Integer, ItemStack>();
 	
 	public CyberwareUserDataImpl()
 	{
@@ -392,7 +392,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		powerCap = 0;
 		specialBatteries = new ArrayList<ItemStack>();
 		activeItems = new ArrayList<ItemStack>();
-		hotkeys = new ItemStack[10];
+		hotkeys = new HashMap<Integer, ItemStack>();
 		
 		for (EnumSlot slot : EnumSlot.values())
 		{
@@ -409,7 +409,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 						int hotkey = HotkeyHelper.getHotkey(wareStack);
 						if (hotkey != -1)
 						{
-							this.hotkeys[hotkey] = wareStack;
+							hotkeys.put(hotkey, wareStack);
 						}
 					}
 					
@@ -764,19 +764,32 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	@Override
 	public void removeHotkey(int i)
 	{
-		hotkeys[i] = null;
+		if (hotkeys.containsKey(i))
+		{
+			hotkeys.remove(i);
+		}
 	}
 
 	@Override
 	public void addHotkey(int i, ItemStack stack)
 	{
-		hotkeys[i] = stack;
+		hotkeys.put(i, stack);
 	}
 	
 	@Override
 	public ItemStack getHotkey(int i)
 	{
-		return hotkeys[i];
+		if (!hotkeys.containsKey(i))
+		{
+			return null;
+		}
+		return hotkeys.get(i);
+	}
+
+	@Override
+	public Iterable<Integer> getHotkeys()
+	{
+		return hotkeys.keySet();
 	}
 
 }
