@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.item.IDeconstructable;
+import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.CyberwareContent;
 
 public class ItemArmorCyberware extends ItemArmor implements IDeconstructable
@@ -126,24 +127,20 @@ public class ItemArmorCyberware extends ItemArmor implements IDeconstructable
 				};
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static final ModelBiped armor = new ModelBiped(0.51F);
-	
-	@SideOnly(Side.CLIENT)
-	private static final ModelBiped trench = new ModelTrenchcoat(0.51F);
+
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, net.minecraft.client.model.ModelBiped _default)
 	{
-		trench.setModelAttributes(_default);
-		armor.setModelAttributes(_default);
-		trench.bipedRightArm.isHidden = !(entityLiving instanceof EntityPlayer);
-		trench.bipedLeftArm.isHidden = !(entityLiving instanceof EntityPlayer);
+		ClientUtils.trench.setModelAttributes(_default);
+		ClientUtils.armor.setModelAttributes(_default);
+		ClientUtils.trench.bipedRightArm.isHidden = !(entityLiving instanceof EntityPlayer);
+		ClientUtils.trench.bipedLeftArm.isHidden = !(entityLiving instanceof EntityPlayer);
 
-		if (itemStack != null && itemStack.getItem() == CyberwareContent.trenchcoat) return trench;
+		if (itemStack != null && itemStack.getItem() == CyberwareContent.trenchcoat) return ClientUtils.trench;
 		
-		return armor;
+		return ClientUtils.armor;
 	}
 	
 	public boolean hasColor(ItemStack stack)
