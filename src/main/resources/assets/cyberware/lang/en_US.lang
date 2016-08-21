@@ -158,6 +158,13 @@ cyberware.gui.toDestroy=Insert Cyberware to Destroy
 cyberware.gui.paper=Insert Paper
 cyberware.gui.blueprint=Insert Cyberware Blueprint
 
+cyberware.gui.keybind.0=Mouse over and release to activate
+cyberware.gui.keybind.1=Left click to set keybind
+cyberware.gui.keybind.2=Right click to remove keybind
+cyberware.gui.keybind.3=Escape to cancel keybind
+
+
+
 cyberware.gui.toScan=Insert Cyberware to Scan
 cyberware.gui.percent=%1$s Chance
 cyberware.gui.timeLeft=%1$dm%2$ds Left

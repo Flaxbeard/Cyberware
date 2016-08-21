@@ -1,7 +1,6 @@
 package flaxbeard.cyberware.api;
 
 import java.util.List;
-import java.util.Stack;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -47,4 +46,5 @@ public interface ICyberwareUserData
 	public void removeHotkey(int i);
 	public void addHotkey(int i, ItemStack stack);
 	public ItemStack getHotkey(int i);
+	public Iterable<Integer> getHotkeys();
 }

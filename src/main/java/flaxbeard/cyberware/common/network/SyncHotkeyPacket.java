@@ -78,8 +78,17 @@ public class SyncHotkeyPacket implements IMessage
 			if (p != null && CyberwareAPI.hasCapability(p))
 			{
 				ICyberwareUserData d = CyberwareAPI.getCapability(p);
-				HotkeyHelper.removeHotkey(d, key);
-				HotkeyHelper.assignHotkey(d, d.getActiveItems().get(selectedPart), key);
+				
+				if (key == Integer.MAX_VALUE)
+				{
+					HotkeyHelper.removeHotkey(d, d.getActiveItems().get(selectedPart));
+				}
+				else
+				{
+					HotkeyHelper.removeHotkey(d, key);
+					HotkeyHelper.assignHotkey(d, d.getActiveItems().get(selectedPart), key);
+				}
+
 			}
 
 		}

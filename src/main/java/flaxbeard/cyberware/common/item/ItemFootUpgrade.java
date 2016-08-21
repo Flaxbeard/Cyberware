@@ -187,4 +187,13 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 	{
 		return EnableDisableHelper.getUnlocalizedLabel(stack);
 	}
+	
+
+	private static final float[] f = new float[] { 1F, 0F, 0F };
+	
+	@Override
+	public float[] getColor(ItemStack stack)
+	{
+		return EnableDisableHelper.isEnabled(stack) ? f : null;
+	}
 }
