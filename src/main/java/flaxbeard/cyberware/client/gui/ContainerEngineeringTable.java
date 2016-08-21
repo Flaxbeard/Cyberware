@@ -364,6 +364,7 @@ public class ContainerEngineeringTable extends Container
 					}
 				}
 				componentBox = null;
+				this.componentHandler = null;
 			}
 			else
 			{
