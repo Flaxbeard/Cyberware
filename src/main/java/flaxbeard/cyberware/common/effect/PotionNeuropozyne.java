@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import vazkii.botania.client.lib.LibResources;
 import flaxbeard.cyberware.Cyberware;
 
 public class PotionNeuropozyne extends Potion

@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -135,8 +136,8 @@ public class ItemArmorCyberware extends ItemArmor implements IDeconstructable
 	{
 		ClientUtils.trench.setModelAttributes(_default);
 		ClientUtils.armor.setModelAttributes(_default);
-		ClientUtils.trench.bipedRightArm.isHidden = !(entityLiving instanceof EntityPlayer);
-		ClientUtils.trench.bipedLeftArm.isHidden = !(entityLiving instanceof EntityPlayer);
+		ClientUtils.trench.bipedRightArm.isHidden = !(entityLiving instanceof EntityPlayer) && !(entityLiving instanceof EntityArmorStand);
+		ClientUtils.trench.bipedLeftArm.isHidden = !(entityLiving instanceof EntityPlayer) && !(entityLiving instanceof EntityArmorStand);
 
 		if (itemStack != null && itemStack.getItem() == CyberwareContent.trenchcoat) return ClientUtils.trench;
 		
