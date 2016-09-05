@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,51 +42,54 @@ public class ItemLungsUpgrade extends ItemCyberware
 	@SubscribeEvent
 	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
 	{
-		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)) && !p.isCreative())
+		if (event.getType() == ElementType.AIR)
 		{
-			GL11.glPushMatrix();
-			ItemStack stack = CyberwareAPI.getCyberware(p, new ItemStack(this, 1, 0));
-			int air = getAir(stack);
-			
-			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-	
-			ScaledResolution res = event.getResolution();
-			GlStateManager.enableBlend();
-			int left = res.getScaledWidth() / 2 + 91;
-			int top = res.getScaledHeight() - 49 - 8;//- right_height;
-			
-			float r = 1F;
-			float b = 1F;
-			float g = 1F;
-
-		
-			if (p.isInsideOfMaterial(Material.WATER))
+			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)) && !p.isCreative())
 			{
-				while (air > 0)
-				{
-					r += 1F;
-					b -= .25F;
-					g += .25F;
-					GL11.glColor3f(r, g, b);
-					int drawAir = Math.min(300, air);
-					int full = MathHelper.ceiling_double_int((double)(drawAir - 2) * 10.0D / 300.0D);
-					int partial = MathHelper.ceiling_double_int((double)drawAir * 10.0D / 300.0D) - full;
-			
-					for (int i = 0; i < full + partial; ++i)
-					{
-						ClientUtils.drawTexturedModalRect(left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
-					}
-					
-					
-					air -= 300;
-					top -= 8;
-				}
-			}
+				GL11.glPushMatrix();
+				ItemStack stack = CyberwareAPI.getCyberware(p, new ItemStack(this, 1, 0));
+				int air = getAir(stack);
+				
+				Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		
-			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			//GlStateManager.disableBlend();
-			GL11.glPopMatrix();
+				ScaledResolution res = event.getResolution();
+				GlStateManager.enableBlend();
+				int left = res.getScaledWidth() / 2 + 91;
+				int top = res.getScaledHeight() - 49 - 8;//- right_height;
+				
+				float r = 1F;
+				float b = 1F;
+				float g = 1F;
+	
+			
+				if (p.isInsideOfMaterial(Material.WATER))
+				{
+					while (air > 0)
+					{
+						r += 1F;
+						b -= .25F;
+						g += .25F;
+						GL11.glColor3f(r, g, b);
+						int drawAir = Math.min(300, air);
+						int full = MathHelper.ceiling_double_int((double)(drawAir - 2) * 10.0D / 300.0D);
+						int partial = MathHelper.ceiling_double_int((double)drawAir * 10.0D / 300.0D) - full;
+				
+						for (int i = 0; i < full + partial; ++i)
+						{
+							ClientUtils.drawTexturedModalRect(left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
+						}
+						
+						
+						air -= 300;
+						top -= 8;
+					}
+				}
+			
+				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				//GlStateManager.disableBlend();
+				GL11.glPopMatrix();
+			}
 		}
 	}
 	

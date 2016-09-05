@@ -28,6 +28,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -425,153 +426,156 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 	@SubscribeEvent
 	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
 	{
-		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 2)))
+		if (event.getType() == ElementType.POTION_ICONS)
 		{
-			float currTime = p.ticksExisted + event.getPartialTicks();
-			
-			GL11.glPushMatrix();
-			GlStateManager.enableBlend();
-			ICyberwareUserData data = CyberwareAPI.getCapability(p);
-			
-			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
-	
-			ScaledResolution res = event.getResolution();
-			int left = 5;
-			int top = 5;//- right_height;
-			
-			Iterable<ItemStack> currInv = p.getArmorInventoryList();
-			if (currInv != inv)
+			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 2)))
 			{
-				inv = currInv;
-				boolean temp = lightArmor;
-				lightArmor = updateLightArmor();
-				if (lightArmor != temp)
-				{
-					addNotification(new NotificationInstance(currTime, new NotificationArmor(lightArmor)));
-				}
-			}
-
-			FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
-			
-			if (p.ticksExisted % 20 == 0)
-			{
-				cachedPercent = data.getPercentFull();
-				cachedCap = data.getCapacity();
-				cachedTotal = data.getStoredPower();
-			}
-
-			int temp = radioRange;
-			radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
-			if (radioRange != temp)
-			{
-				addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
-			}
-			
-			float[] color = CyberwareAPI.getHUDColor();
-			int colorHex = CyberwareAPI.getHUDColorHex();
-			
-			if (cachedPercent != -1)
-			{
-				int amount = Math.round((21F * cachedPercent));
-
-				boolean danger = (cachedPercent <= .2F);
-				boolean superDanger = danger && (cachedPercent <= .05F);
-				int xOffset = (danger ? 39 : 0);
+				float currTime = p.ticksExisted + event.getPartialTicks();
 				
-				if (!superDanger || p.ticksExisted % 4 != 0)
+				GL11.glPushMatrix();
+				GlStateManager.enableBlend();
+				ICyberwareUserData data = CyberwareAPI.getCapability(p);
+				
+				Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
+		
+				ScaledResolution res = event.getResolution();
+				int left = 5;
+				int top = 5;//- right_height;
+				
+				Iterable<ItemStack> currInv = p.getArmorInventoryList();
+				if (currInv != inv)
 				{
-					GlStateManager.pushMatrix();
-					if (!danger) GlStateManager.color(color[0], color[1], color[2]);
-					ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
-					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
-					
-					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
-					GlStateManager.popMatrix();
-
-					fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
-				}
-				top += 28;
-			}
-			
-			List<NotificationInstance> nTR = new ArrayList<NotificationInstance>();
-			for (int i = 0; i < notifications.size(); i++)
-			{
-				NotificationInstance ni = notifications.get(i);
-				INotification notification = ni.getNotification();
-				if (currTime - ni.getCreatedTime() < notification.getDuration() + 25)
-				{
-					double pct = Math.max(0F, ((currTime - ni.getCreatedTime() - notification.getDuration()) / 30F));
-	
-					float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-					
-					GL11.glPushMatrix();
-					GL11.glColor3f(1.0F, 1.0F, 1.0F);
-					GL11.glTranslatef(0F, move, 0F);
-					int index = (notifications.size() - 1) - i;
-					notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);
-					GL11.glPopMatrix();
-				}
-				else
-				{
-					nTR.add(ni);
-				}
-			}
-			
-			for (NotificationInstance ni : nTR)
-			{
-				notifications.remove(ni);
-			}
-			
-			RenderItem ir = Minecraft.getMinecraft().getRenderItem();
-			List<ItemStack> stacks = data.getPowerOutages();
-			List<Integer> stackTimes = data.getPowerOutageTimes();
-			List<Integer> toRemove = new ArrayList<Integer>();
-			left -= 1;
-			float zL = ir.zLevel;
-			ir.zLevel = -300;
-			for (int i = stacks.size() - 1; i >= 0; i--)
-			{
-				ItemStack stack = stacks.get(i);
-				if (stack != null)
-				{
-					int time = stackTimes.get(i);
-					boolean keep = p.ticksExisted - time < 50;
-					double pct = Math.max(0F, ((currTime - time - 20) / 30F));
-
-					float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-					if (keep)
+					inv = currInv;
+					boolean temp = lightArmor;
+					lightArmor = updateLightArmor();
+					if (lightArmor != temp)
 					{
+						addNotification(new NotificationInstance(currTime, new NotificationArmor(lightArmor)));
+					}
+				}
+	
+				FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+				
+				if (p.ticksExisted % 20 == 0)
+				{
+					cachedPercent = data.getPercentFull();
+					cachedCap = data.getCapacity();
+					cachedTotal = data.getStoredPower();
+				}
+	
+				int temp = radioRange;
+				radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
+				if (radioRange != temp)
+				{
+					addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
+				}
+				
+				float[] color = CyberwareAPI.getHUDColor();
+				int colorHex = CyberwareAPI.getHUDColorHex();
+				
+				if (cachedPercent != -1)
+				{
+					int amount = Math.round((21F * cachedPercent));
+	
+					boolean danger = (cachedPercent <= .2F);
+					boolean superDanger = danger && (cachedPercent <= .05F);
+					int xOffset = (danger ? 39 : 0);
+					
+					if (!superDanger || p.ticksExisted % 4 != 0)
+					{
+						GlStateManager.pushMatrix();
+						if (!danger) GlStateManager.color(color[0], color[1], color[2]);
+						ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
+						ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
+						
+						ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
+						GlStateManager.popMatrix();
+	
+						fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
+					}
+					top += 28;
+				}
+				
+				List<NotificationInstance> nTR = new ArrayList<NotificationInstance>();
+				for (int i = 0; i < notifications.size(); i++)
+				{
+					NotificationInstance ni = notifications.get(i);
+					INotification notification = ni.getNotification();
+					if (currTime - ni.getCreatedTime() < notification.getDuration() + 25)
+					{
+						double pct = Math.max(0F, ((currTime - ni.getCreatedTime() - notification.getDuration()) / 30F));
+		
+						float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
+						
 						GL11.glPushMatrix();
-						GL11.glTranslatef(-move, 0F, 0F);
-						
-						fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
-						
-						RenderHelper.enableStandardItemLighting();
-						ir.renderItemAndEffectIntoGUI(stack, left, top);
-						RenderHelper.disableStandardItemLighting();
-
+						GL11.glColor3f(1.0F, 1.0F, 1.0F);
+						GL11.glTranslatef(0F, move, 0F);
+						int index = (notifications.size() - 1) - i;
+						notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);
 						GL11.glPopMatrix();
-						top += 18;
 					}
 					else
 					{
-						toRemove.add(i);
+						nTR.add(ni);
 					}
 				}
+				
+				for (NotificationInstance ni : nTR)
+				{
+					notifications.remove(ni);
+				}
+				
+				RenderItem ir = Minecraft.getMinecraft().getRenderItem();
+				List<ItemStack> stacks = data.getPowerOutages();
+				List<Integer> stackTimes = data.getPowerOutageTimes();
+				List<Integer> toRemove = new ArrayList<Integer>();
+				left -= 1;
+				float zL = ir.zLevel;
+				ir.zLevel = -300;
+				for (int i = stacks.size() - 1; i >= 0; i--)
+				{
+					ItemStack stack = stacks.get(i);
+					if (stack != null)
+					{
+						int time = stackTimes.get(i);
+						boolean keep = p.ticksExisted - time < 50;
+						double pct = Math.max(0F, ((currTime - time - 20) / 30F));
+	
+						float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
+						if (keep)
+						{
+							GL11.glPushMatrix();
+							GL11.glTranslatef(-move, 0F, 0F);
+							
+							fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
+							
+							RenderHelper.enableStandardItemLighting();
+							ir.renderItemAndEffectIntoGUI(stack, left, top);
+							RenderHelper.disableStandardItemLighting();
+	
+							GL11.glPopMatrix();
+							top += 18;
+						}
+						else
+						{
+							toRemove.add(i);
+						}
+					}
+				}
+				ir.zLevel = zL;
+				
+				for (int i : toRemove)
+				{
+					stacks.remove(i);
+					stackTimes.remove(i);
+				}
+				
+				Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+	
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GL11.glPopMatrix();
 			}
-			ir.zLevel = zL;
-			
-			for (int i : toRemove)
-			{
-				stacks.remove(i);
-				stackTimes.remove(i);
-			}
-			
-			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glPopMatrix();
 		}
 	}
 	

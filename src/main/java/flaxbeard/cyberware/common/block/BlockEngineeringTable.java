@@ -85,13 +85,13 @@ public class BlockEngineeringTable extends BlockContainer
 			switch (face)
 			{
 				case NORTH:
-					return n;
-				case SOUTH:
 					return s;
+				case SOUTH:
+					return n;
 				case EAST:
-					return e;
-				case WEST:
 					return w;
+				case WEST:
+					return e;
 			}
 		}
 
