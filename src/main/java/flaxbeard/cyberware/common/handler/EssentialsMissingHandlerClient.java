@@ -76,15 +76,19 @@ public class EssentialsMissingHandlerClient
 			{
 				boolean bigArms = ReflectionHelper.getPrivateValue(RenderPlayer.class, event.getRenderer(), 0);
 
-				
-				
+				boolean noSkin = false;
 				if (!cyberware.hasEssential(EnumSlot.SKIN))
 				{
 					event.setCanceled(true);
-									
-					renderF.doMuscles = true;
-					renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY(), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
-					renderF.doMuscles = false;
+					noSkin = true;
+					if (bigArms)
+					{
+						renderT.doMuscles = true;
+					}
+					else
+					{
+						renderF.doMuscles = true;
+					}
 				}
 				
 
@@ -98,6 +102,9 @@ public class EssentialsMissingHandlerClient
 					p.inventory.armorInventory[0] = null;
 					lower = true;
 				}
+				
+
+
 				
 				if (!hasRightLeg || !hasLeftLeg || !hasRightArm || !hasLeftArm || robotLeftArm || robotRightArm || robotLeftLeg || robotRightLeg)
 				{
@@ -180,6 +187,29 @@ public class EssentialsMissingHandlerClient
 						mp.bipedRightLeg.isHidden = false;
 					}
 				
+				}
+				else if (noSkin)
+				{
+					if (bigArms)
+					{
+						renderT.doRender((AbstractClientPlayer) p, event.getX(), event.getY(), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+					}
+					else
+					{
+						renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY(), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+					}
+				}
+				
+				if (noSkin)
+				{
+					if (bigArms)
+					{
+						renderT.doMuscles = false;
+					}
+					else
+					{
+						renderF.doMuscles = false;
+					}
 				}
 			}
 			
