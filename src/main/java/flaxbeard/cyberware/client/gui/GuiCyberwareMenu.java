@@ -33,7 +33,6 @@ public class GuiCyberwareMenu extends GuiScreen
 	int lastMousedOverPart = -1;
 	boolean editing = false;
 	
-	float[] defaultColor = new float[] { 76 / 255F, 255 / 255F, 0F };
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
@@ -57,7 +56,7 @@ public class GuiCyberwareMenu extends GuiScreen
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((width / 2F) + radiusBase, (height / 2F) - radiusBase, 0F);
 		GlStateManager.scale(2F, 2F, 2F);
-		this.fontRendererObj.drawStringWithShadow("?", 0, 0, 0x4CFF00);
+		this.fontRendererObj.drawStringWithShadow("?", 0, 0, CyberwareAPI.getHUDColorHex());
 		GlStateManager.popMatrix();
 
 		
@@ -130,7 +129,7 @@ public class GuiCyberwareMenu extends GuiScreen
 				
 				ItemStack stack = data.getActiveItems().get(piece);
 				float[] itemColor = ((IMenuItem) stack.getItem()).getColor(stack);
-				float[] color = (itemColor == null) ? defaultColor : itemColor;
+				float[] color = (itemColor == null) ? CyberwareAPI.getHUDColor() : itemColor;
 				GL11.glColor4f(color[0], color[1], color[2], alpha);
 				
 				double radians = ((rotation + deg) / 180F) * Math.PI;
@@ -238,9 +237,19 @@ public class GuiCyberwareMenu extends GuiScreen
 
 		}
 		
+		
+		
 		this.fontRendererObj.setUnicodeFlag(unicode);
 
-		
+		if (this.selectedPart >= 0)
+		{
+			GlStateManager.pushMatrix();
+			String str = data.getActiveItems().get(selectedPart).getDisplayName();
+			GlStateManager.translate(((width - fontRendererObj.getStringWidth(str)) / 2F), (height / 2F) - 30 - radiusBase, 0F);
+			this.fontRendererObj.drawStringWithShadow(str, 0, 0, 0xFFFFFF);
+			GlStateManager.popMatrix();
+		}
+
 		
 		GlStateManager.pushMatrix();
 

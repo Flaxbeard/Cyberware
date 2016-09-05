@@ -1,5 +1,6 @@
 package flaxbeard.cyberware.common.network;
 
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade;
 import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade.NotificationInstance;
@@ -9,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -101,7 +103,12 @@ public class DodgePacket implements IMessage
 		public void render(int x, int y)
 		{
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ItemCybereyeUpgrade.HUD_TEXTURE);
+			
+			GlStateManager.pushMatrix();
+			float[] color = CyberwareAPI.getHUDColor();
+			GlStateManager.color(color[0], color[1], color[2]);
 			ClientUtils.drawTexturedModalRect(x + 1, y + 1, 0, 39, 15, 14);
+			GlStateManager.popMatrix();
 		}
 
 		@Override

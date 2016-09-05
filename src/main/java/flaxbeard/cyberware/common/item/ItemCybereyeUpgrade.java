@@ -341,7 +341,13 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 		public void render(int x, int y)
 		{
 			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
+			GL11.glPushMatrix();
+			float[] color = CyberwareAPI.getHUDColor();
+			GL11.glColor3f(color[0], color[1], color[2]);
 			ClientUtils.drawTexturedModalRect(x, y + 1, 0, 25, 15, 14);
+			GL11.glPopMatrix();
+			GL11.glColor3f(1F, 1F, 1F);
+
 			if (light)
 			{
 				ClientUtils.drawTexturedModalRect(x + 9, y + 1 + 7, 15, 25, 7, 9);
@@ -375,15 +381,22 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
 			if (tier > 0)
 			{
+				GlStateManager.pushMatrix();
+				float[] color = CyberwareAPI.getHUDColor();
+				GL11.glColor3f(color[0], color[1], color[2]);
 				ClientUtils.drawTexturedModalRect(x, y + 1, 13, 39, 15, 14);
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GlStateManager.popMatrix();
+				
 				String v = tier == 1 ? I18n.format("cyberware.gui.radioInternal") : Integer.toString(tier - 1);
 				FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 				fr.drawStringWithShadow(v, x + 15 - fr.getStringWidth(v), y + 9, 0xFFFFFF);
 			}
 			else
 			{
+				float[] color = CyberwareAPI.getHUDColor();
+				GL11.glColor3f(color[0], color[1], color[2]);
 				ClientUtils.drawTexturedModalRect(x, y + 1, 28, 39, 15, 14);
+
 			}
 		}
 
@@ -455,6 +468,9 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 				addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
 			}
 			
+			float[] color = CyberwareAPI.getHUDColor();
+			int colorHex = CyberwareAPI.getHUDColorHex();
+			
 			if (cachedPercent != -1)
 			{
 				int amount = Math.round((21F * cachedPercent));
@@ -465,12 +481,15 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 				
 				if (!superDanger || p.ticksExisted % 4 != 0)
 				{
+					GlStateManager.pushMatrix();
+					if (!danger) GlStateManager.color(color[0], color[1], color[2]);
 					ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
 					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
 					
 					ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
-					
-					fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : 0x4CFF00);
+					GlStateManager.popMatrix();
+
+					fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
 				}
 				top += 28;
 			}

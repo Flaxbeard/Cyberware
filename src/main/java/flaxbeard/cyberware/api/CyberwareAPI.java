@@ -52,6 +52,57 @@ public final class CyberwareAPI
 	
 	public static Map<ItemStack, ICyberware> linkedWare = new HashMap<ItemStack, ICyberware>();
 	
+	
+	private static float[] mainColor = new float[] { 76 / 255F, 1F, 0F };
+	private static int mainColorHex = 0x4CFF00;
+	
+	/**
+	 * Sets the HUD color for the Hudjack, radial menu, and other AR HUD elements
+	 * 
+	 * @param color	A float representation of the desired color
+	 */
+	public static void setHUDColor(float[] color)
+	{
+		mainColor = color;
+		int ri = Math.round(color[0] * 255);
+		int gi = Math.round(color[1] * 255);
+		int bi = Math.round(color[2] * 255);
+		
+		int rp = (ri << 16) & 0xFF0000;
+		int gp = (gi << 8) & 0x00FF00;
+		int bp = (bi) & 0x0000FF;
+		
+		mainColorHex = rp | gp | bp;
+	}
+	
+	/**
+	 * Sets the HUD color for the Hudjack, radial menu, and other AR HUD elements
+	 * 
+	 * @param color	A hexadecimal representation of the desired color
+	 */
+	public static void setHUDColor(int hexVal)
+	{
+		float r = ((hexVal >> 16) & 0x0000FF) / 255F;
+		float g = ((hexVal >> 8) & 0x0000FF) / 255F;
+		float b = ((hexVal) & 0x0000FF) / 255F;
+		setHUDColor(r, g, b);
+	}
+	
+	public static void setHUDColor(float r, float g, float b)
+	{
+		setHUDColor(new float[] { r, g, b });
+	}
+	
+	public static int getHUDColorHex()
+	{
+		return mainColorHex;
+	}
+	
+	public static float[] getHUDColor()
+	{
+		return mainColor;
+	}
+	
 	/**
 	 * Can be used by your ICyberware implementation's setQuality function. Helper method that
 	 * writes a quality to an easily accessible NBT tag. See the partner function, readQualityTag

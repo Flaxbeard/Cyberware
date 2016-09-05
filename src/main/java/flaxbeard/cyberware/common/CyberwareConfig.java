@@ -6,7 +6,9 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
@@ -29,6 +31,10 @@ public class CyberwareConfig
 	public static int ZOMBIE_MAX_PACK = 1;
 	public static boolean NO_ZOMBIES = false;
 	
+	public static int HUDR = 76;
+	public static int HUDG = 255;
+	public static int HUDB = 0;
+	
 	public static boolean SURGERY_CRAFTING = false;
 	
 	private static String[][] defaultStartingItems;
@@ -42,6 +48,8 @@ public class CyberwareConfig
 	public static boolean CLOTHES = true;
 	
 	public static int TESLA_PER_POWER = 1;
+	
+	public static Configuration config;
 
 	public static void loadConfig(FMLPreInitializationEvent event)
 	{
@@ -69,7 +77,7 @@ public class CyberwareConfig
 				defaultStartingItems[i] = new String[0];
 			}
 		}
-		Configuration config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
+		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		config.load();
 		
 		for (int index = 0; index < EnumSlot.values().length; index++)
@@ -103,8 +111,34 @@ public class CyberwareConfig
 		KATANA = config.getBoolean("Enable Katana", "Other", KATANA, "");
 		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", "Other", CLOTHES, "");
 
+		HUDR = config.getInt(REDKEY, "HUD Color", HUDR, 0, 255, "");
+		HUDG = config.getInt(GREENKEY, "HUD Color", HUDG, 0, 255, "");
+		HUDB = config.getInt(BLUEKEY, "HUD Color", HUDB, 0, 255, "");
+		CyberwareAPI.setHUDColor(HUDR / 255F, HUDG / 255F, HUDB / 255F);
 		config.save();
 		
+		CyberwareAPI.setHUDColor(0xFFFFFF);
+		updateColors();
+	}
+	
+	private static final String REDKEY = "Hudjack Color Red";
+	private static final String GREENKEY = "Hudjack Color Green";
+	private static final String BLUEKEY = "Hudjack Color Blue";
+
+	public static void updateColors()
+	{
+		config.load();
+		ConfigCategory category = config.getCategory("HUD Color");
+		Property red = category.get(REDKEY);
+		Property green = category.get(GREENKEY);
+		Property blue = category.get(BLUEKEY);
+
+		float[] color = CyberwareAPI.getHUDColor();
+		red.set((int) (color[0] * 255F));
+		green.set((int) (color[1] * 255F));
+		blue.set((int) (color[2] * 255F));
+
+		config.save();
 	}
 	
 	public static void postInit()
