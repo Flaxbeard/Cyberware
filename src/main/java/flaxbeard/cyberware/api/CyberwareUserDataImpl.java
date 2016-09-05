@@ -75,7 +75,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		{
 			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]).clone();
 		}
-		this.updateEssential();
+		this.missingEssentials =  new boolean[EnumSlot.values().length * 2];
 		this.updateCapacity();
 	}
 	
@@ -103,7 +103,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		return powerCap + specialCap;
 	}
 	
-	public void updateEssential()
+	/*public void updateEssential()
 	{
 		missingEssentials = new boolean[EnumSlot.values().length * 2];
 		for (int slotNum = 0; slotNum < EnumSlot.values().length; slotNum++)
@@ -138,7 +138,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 				}
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public int getStoredPower()
@@ -633,8 +633,6 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		}
 
 		updateCapacity();
-		updateEssential();
-
 	}
 	
 	private static class CyberwareUserDataStorage implements IStorage<ICyberwareUserData>
