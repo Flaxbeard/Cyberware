@@ -93,7 +93,7 @@ public class ItemLungsUpgrade extends ItemCyberware
 		}
 	}
 	
-	private Map<EntityLivingBase, Boolean> lastOxygen = new HashMap<EntityLivingBase, Boolean>();
+	private Map<Integer, Boolean> lastOxygen = new HashMap<Integer, Boolean>();
 	
 	@SubscribeEvent
 	public void handleLivingUpdate(LivingUpdateEvent event)
@@ -132,17 +132,19 @@ public class ItemLungsUpgrade extends ItemCyberware
 				{
 					e.moveRelative(0F, .2F * ranks, 0.075F);
 				}
+				
+				lastOxygen.put(e.getEntityId(), powerUsed);
 			}
 		}
 	}
 	
 	private boolean getLastOxygen(EntityLivingBase e)
 	{
-		if (!lastOxygen.containsKey(e))
+		if (!lastOxygen.containsKey(e.getEntityId()))
 		{
-			lastOxygen.put(e, true);
+			lastOxygen.put(e.getEntityId(), true);
 		}
-		return lastOxygen.get(e);
+		return lastOxygen.get(e.getEntityId());
 	}
 	
 	@Override

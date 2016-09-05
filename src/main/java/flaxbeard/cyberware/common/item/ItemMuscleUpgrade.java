@@ -174,8 +174,8 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 		}
 	}
 	
-	private Map<EntityLivingBase, Boolean> lastBoostSpeed = new HashMap<EntityLivingBase, Boolean>();
-	private Map<EntityLivingBase, Boolean> lastBoostStrength = new HashMap<EntityLivingBase, Boolean>();
+	private Map<Integer, Boolean> lastBoostSpeed = new HashMap<Integer, Boolean>();
+	private Map<Integer, Boolean> lastBoostStrength = new HashMap<Integer, Boolean>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
 	public void handleLivingUpdate(LivingUpdateEvent event)
@@ -205,11 +205,11 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 				this.onRemoved(e, test);
 			}
 			
-			lastBoostStrength.put(e, powerUsed);
+			lastBoostStrength.put(e.getEntityId(), powerUsed);
 		}
 		else
 		{
-			lastBoostStrength.put(e, true);
+			lastBoostStrength.put(e.getEntityId(), true);
 		}
 		
 		test = new ItemStack(this, 1, 0);
@@ -226,33 +226,33 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 				this.onRemoved(e, test);
 			}
 			
-			lastBoostSpeed.put(e, powerUsed);
+			lastBoostSpeed.put(e.getEntityId(), powerUsed);
 		}
 		else 
 		{
 
 			this.onRemoved(e, test);
 			
-			lastBoostSpeed.remove(e);
+			lastBoostSpeed.remove(e.getEntityId());
 		}
 	}
 	
 	private boolean getLastBoostStrength(EntityLivingBase e)
 	{
-		if (!lastBoostStrength.containsKey(e))
+		if (!lastBoostStrength.containsKey(e.getEntityId()))
 		{
-			lastBoostStrength.put(e, true);
+			lastBoostStrength.put(e.getEntityId(), true);
 		}
-		return lastBoostStrength.get(e);
+		return lastBoostStrength.get(e.getEntityId());
 	}
 	
 	private boolean getLastBoostSpeed(EntityLivingBase e)
 	{
-		if (!lastBoostSpeed.containsKey(e))
+		if (!lastBoostSpeed.containsKey(e.getEntityId()))
 		{
-			lastBoostSpeed.put(e, true);
+			lastBoostSpeed.put(e.getEntityId(), true);
 		}
-		return lastBoostSpeed.get(e);
+		return lastBoostSpeed.get(e.getEntityId());
 	}
 	
 	@Override

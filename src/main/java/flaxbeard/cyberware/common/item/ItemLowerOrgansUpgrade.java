@@ -30,7 +30,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 
 	}
 	
-	private static Map<EntityLivingBase, Collection<PotionEffect>> potions = new HashMap<EntityLivingBase, Collection<PotionEffect>>();
+	private static Map<Integer, Collection<PotionEffect>> potions = new HashMap<Integer, Collection<PotionEffect>>();
 
 	@SubscribeEvent
 	public void handleEatFoodTick(LivingEntityUseItemEvent.Tick event)
@@ -45,7 +45,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 			
 			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)))
 			{
-				potions.put(p, new ArrayList<PotionEffect>(p.getActivePotionEffects()));
+				potions.put(p.getEntityId(), new ArrayList<PotionEffect>(p.getActivePotionEffects()));
 
 			}
 		}
@@ -77,7 +77,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 					}
 				}
 				
-				Collection<PotionEffect> toAdd = potions.keySet().contains(p) ? potions.get(p) : new ArrayList<PotionEffect>();
+				Collection<PotionEffect> toAdd = potions.keySet().contains(p.getEntityId()) ? potions.get(p.getEntityId()) : new ArrayList<PotionEffect>();
 
 				for (PotionEffect add : toAdd)
 				{

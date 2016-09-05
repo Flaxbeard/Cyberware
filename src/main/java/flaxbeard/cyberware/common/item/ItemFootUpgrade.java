@@ -57,8 +57,8 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 	}
 
 	
-	private Map<EntityLivingBase, Boolean> lastAqua = new HashMap<EntityLivingBase, Boolean>();
-	private Map<EntityLivingBase, Integer> lastWheels = new HashMap<EntityLivingBase, Integer>();
+	private Map<Integer, Boolean> lastAqua = new HashMap<Integer, Boolean>();
+	private Map<Integer, Integer> lastWheels = new HashMap<Integer, Integer>();
 	private Map<Integer, Float> stepAssist = new HashMap<Integer, Float>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
@@ -89,11 +89,11 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 				}
 			}
 			
-			lastAqua.put(e, powerUsed);
+			lastAqua.put(e.getEntityId(), powerUsed);
 		}
 		else
 		{
-			lastAqua.put(e, true);
+			lastAqua.put(e.getEntityId(), true);
 		}
 		
 		test = new ItemStack(this, 1, 2);
@@ -110,7 +110,7 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 				}
 				e.stepHeight = 1F;
 				
-				lastWheels.put(e, 10);
+				lastWheels.put(e.getEntityId(), 10);
 
 
 			}
@@ -119,11 +119,11 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 
 				e.stepHeight = stepAssist.get(e.getEntityId());
 				
-				lastWheels.put(e, getLastWheels(e) - 1);
+				lastWheels.put(e.getEntityId(), getLastWheels(e) - 1);
 			}
 			else
 			{
-				lastWheels.put(e, 0);
+				lastWheels.put(e.getEntityId(), 0);
 			}
 		
 			
@@ -140,27 +140,27 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 				stepAssist.remove(e.getEntityId());
 			}
 
-			lastWheels.put(e, glw);
+			lastWheels.put(e.getEntityId(), glw);
 
 		}
 	}
 	
 	private boolean getLastAqua(EntityLivingBase e)
 	{
-		if (!lastAqua.containsKey(e))
+		if (!lastAqua.containsKey(e.getEntityId()))
 		{
-			lastAqua.put(e, true);
+			lastAqua.put(e.getEntityId(), true);
 		}
-		return lastAqua.get(e);
+		return lastAqua.get(e.getEntityId());
 	}
 	
 	private int getLastWheels(EntityLivingBase e)
 	{
-		if (!lastWheels.containsKey(e))
+		if (!lastWheels.containsKey(e.getEntityId()))
 		{
-			lastWheels.put(e, 10);
+			lastWheels.put(e.getEntityId(), 10);
 		}
-		return lastWheels.get(e);
+		return lastWheels.get(e.getEntityId());
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 		return other.getItem() == this;
 	}
 	
-	private Map<EntityLivingBase, Boolean> lastClaws = new HashMap<EntityLivingBase, Boolean>();
+	private Map<Integer, Boolean> lastClaws = new HashMap<Integer, Boolean>();
 	public static float clawsTime;
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
@@ -93,7 +93,7 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 			if (isEquipped && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 			{
 				this.addUnarmedDamage(e, test);
-				lastClaws.put(e, true);
+				lastClaws.put(e.getEntityId(), true);
 
 				if (!last)
 				{
@@ -106,14 +106,14 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 			else
 			{
 				this.removeUnarmedDamage(e, test);
-				lastClaws.put(e, false);
+				lastClaws.put(e.getEntityId(), false);
 			}
 			
 		}
 		else
 		{
 			
-			lastClaws.put(e, false);
+			lastClaws.put(e.getEntityId(), false);
 		}
 	}
 	
@@ -130,11 +130,11 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 	
 	private boolean getLastClaws(EntityLivingBase e)
 	{
-		if (!lastClaws.containsKey(e))
+		if (!lastClaws.containsKey(e.getEntityId()))
 		{
-			lastClaws.put(e, false);
+			lastClaws.put(e.getEntityId(), false);
 		}
-		return lastClaws.get(e);
+		return lastClaws.get(e.getEntityId());
 	}
 	
 	

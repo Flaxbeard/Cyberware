@@ -92,9 +92,9 @@ public class EssentialsMissingHandlerClient
 				if (!hasRightLeg && !hasLeftLeg)
 				{
 					// Hide pants + shoes
-					pants.put(p, p.inventory.armorInventory[1]);
+					pants.put(p.getEntityId(), p.inventory.armorInventory[1]);
 					p.inventory.armorInventory[1] = null;
-					shoes.put(p, p.inventory.armorInventory[0]);
+					shoes.put(p.getEntityId(), p.inventory.armorInventory[0]);
 					p.inventory.armorInventory[0] = null;
 					lower = true;
 				}
@@ -204,10 +204,10 @@ public class EssentialsMissingHandlerClient
 				renderer.getMainModel().bipedLeftArm.isHidden = true;
 				
 				// Hide the main or offhand item if no arm there
-				if (!mainHand.containsKey(p))
+				if (!mainHand.containsKey(p.getEntityId()))
 				{
-					mainHand.put(p, p.getHeldItemMainhand());
-					offHand.put(p, p.getHeldItemOffhand());
+					mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
+					offHand.put(p.getEntityId(), p.getHeldItemOffhand());
 				}
 				if (mc.gameSettings.mainHand == EnumHandSide.LEFT)
 				{
@@ -224,10 +224,10 @@ public class EssentialsMissingHandlerClient
 				renderer.getMainModel().bipedRightArm.isHidden = true;
 				
 				// Hide the main or offhand item if no arm there
-				if (!mainHand.containsKey(p))
+				if (!mainHand.containsKey(p.getEntityId()))
 				{
-					mainHand.put(p, p.getHeldItemMainhand());
-					offHand.put(p, p.getHeldItemOffhand());
+					mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
+					offHand.put(p.getEntityId(), p.getHeldItemOffhand());
 				}
 				if (mc.gameSettings.mainHand == EnumHandSide.RIGHT)
 				{
@@ -246,11 +246,11 @@ public class EssentialsMissingHandlerClient
 		}
 	}
 	
-	private static Map<EntityPlayer, ItemStack> mainHand = new HashMap<EntityPlayer, ItemStack>();
-	private static Map<EntityPlayer, ItemStack> offHand = new HashMap<EntityPlayer, ItemStack>();
+	private static Map<Integer, ItemStack> mainHand = new HashMap<Integer, ItemStack>();
+	private static Map<Integer, ItemStack> offHand = new HashMap<Integer, ItemStack>();
 	
-	private static Map<EntityPlayer, ItemStack> pants = new HashMap<EntityPlayer, ItemStack>();
-	private static Map<EntityPlayer, ItemStack> shoes = new HashMap<EntityPlayer, ItemStack>();
+	private static Map<Integer, ItemStack> pants = new HashMap<Integer, ItemStack>();
+	private static Map<Integer, ItemStack> shoes = new HashMap<Integer, ItemStack>();
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
@@ -266,27 +266,27 @@ public class EssentialsMissingHandlerClient
 		{
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
 			
-			if (pants.containsKey(p))
+			if (pants.containsKey(p.getEntityId()))
 			{
-				p.inventory.armorInventory[1] = pants.get(p);
-				pants.remove(p);
+				p.inventory.armorInventory[1] = pants.get(p.getEntityId());
+				pants.remove(p.getEntityId());
 			}
 			
-			if (shoes.containsKey(p))
+			if (shoes.containsKey(p.getEntityId()))
 			{
-				p.inventory.armorInventory[0] = shoes.get(p);
-				shoes.remove(p);
+				p.inventory.armorInventory[0] = shoes.get(p.getEntityId());
+				shoes.remove(p.getEntityId());
 			}
 
 			if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.LEFT))
 			{
 				event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
-				if (mainHand.containsKey(p))
+				if (mainHand.containsKey(p.getEntityId()))
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p);
-					p.inventory.offHandInventory[0] = offHand.get(p);
-					mainHand.remove(p);
-					offHand.remove(p);
+					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+					p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+					mainHand.remove(p.getEntityId());
+					offHand.remove(p.getEntityId());
 				}
 			}
 			
@@ -294,12 +294,12 @@ public class EssentialsMissingHandlerClient
 			if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.RIGHT))
 			{
 				event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
-				if (mainHand.containsKey(p))
+				if (mainHand.containsKey(p.getEntityId()))
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p);
-					p.inventory.offHandInventory[0] = offHand.get(p);
-					mainHand.remove(p);
-					offHand.remove(p);
+					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+					p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+					mainHand.remove(p.getEntityId());
+					offHand.remove(p.getEntityId());
 				}
 			}
 

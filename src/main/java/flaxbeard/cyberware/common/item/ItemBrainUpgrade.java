@@ -150,8 +150,8 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 		}
 	}
 	
-	private static Map<EntityLivingBase, Boolean> isContextWorking = new HashMap<EntityLivingBase, Boolean>();
-	private static Map<EntityLivingBase, Boolean> isMatrixWorking = new HashMap<EntityLivingBase, Boolean>();
+	private static Map<Integer, Boolean> isContextWorking = new HashMap<Integer, Boolean>();
+	private static Map<Integer, Boolean> isMatrixWorking = new HashMap<Integer, Boolean>();
 	private static Map<Integer, Boolean> isRadioWorking = new HashMap<Integer, Boolean>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
@@ -162,13 +162,13 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 		ItemStack test = new ItemStack(this, 1, 3);
 		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 		{
-			isContextWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
+			isContextWorking.put(e.getEntityId(), CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
 		
 		test = new ItemStack(this, 1, 4);
 		if (e.ticksExisted % 20 == 0 && CyberwareAPI.isCyberwareInstalled(e, test))
 		{
-			isMatrixWorking.put(e, CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
+			isMatrixWorking.put(e.getEntityId(), CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
 		
 		test = new ItemStack(this, 1, 5);
@@ -191,22 +191,22 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 	
 	private boolean isContextWorking(EntityLivingBase e)
 	{
-		if (!isContextWorking.containsKey(e))
+		if (!isContextWorking.containsKey(e.getEntityId()))
 		{
-			isContextWorking.put(e, false);
+			isContextWorking.put(e.getEntityId(), false);
 		}
 		
-		return isContextWorking.get(e);
+		return isContextWorking.get(e.getEntityId());
 	}
 	
 	private boolean isMatrixWorking(EntityLivingBase e)
 	{
-		if (!isMatrixWorking.containsKey(e))
+		if (!isMatrixWorking.containsKey(e.getEntityId()))
 		{
-			isMatrixWorking.put(e, false);
+			isMatrixWorking.put(e.getEntityId(), false);
 		}
 		
-		return isMatrixWorking.get(e);
+		return isMatrixWorking.get(e.getEntityId());
 	}
 	
 	public boolean isToolEffective(ItemStack tool, IBlockState state)
