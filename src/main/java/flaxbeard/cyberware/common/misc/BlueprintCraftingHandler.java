@@ -114,7 +114,6 @@ public class BlueprintCraftingHandler implements IRecipe
 					
 				}
 			}
-			System.out.println(hasBlankBlueprint + " " +  ware != null);
 			return ware != null && hasBlankBlueprint;
 		}
 	}
