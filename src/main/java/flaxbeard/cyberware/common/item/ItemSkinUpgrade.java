@@ -53,8 +53,8 @@ public class ItemSkinUpgrade extends ItemCyberware
 		}
 	}
 	
-	private Map<EntityLivingBase, Boolean> lastImmuno = new HashMap<EntityLivingBase, Boolean>();
-	private static Map<EntityLivingBase, Collection<PotionEffect>> potions = new HashMap<EntityLivingBase, Collection<PotionEffect>>();
+	private Map<Integer, Boolean> lastImmuno = new HashMap<Integer, Boolean>();
+	private static Map<Integer, Collection<PotionEffect>> potions = new HashMap<Integer, Collection<PotionEffect>>();
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void handleMissingEssentials(LivingUpdateEvent event)
@@ -72,9 +72,9 @@ public class ItemSkinUpgrade extends ItemCyberware
 				e.attackEntityFrom(EssentialsMissingHandler.lowessence, 2F);
 			}
 			
-			if (potions.containsKey(e))
+			if (potions.containsKey(e.getEntityId()))
 			{
-				Collection<PotionEffect> potionsLastActive = potions.get(e);
+				Collection<PotionEffect> potionsLastActive = potions.get(e.getEntityId());
 				Collection<PotionEffect> currentEffects = e.getActivePotionEffects();
 				for (PotionEffect cE : currentEffects)
 				{
@@ -97,22 +97,22 @@ public class ItemSkinUpgrade extends ItemCyberware
 					}
 				}
 			}
-			potions.put(e, e.getActivePotionEffects());
+			potions.put(e.getEntityId(), e.getActivePotionEffects());
 		}
 		else
 		{
-			lastImmuno.remove(e);
-			potions.remove(e);
+			lastImmuno.remove(e.getEntityId());
+			potions.remove(e.getEntityId());
 		}
 	}
 	
 	private boolean lastImmuno(EntityLivingBase e)
 	{
-		if (!lastImmuno.containsKey(e))
+		if (!lastImmuno.containsKey(e.getEntityId()))
 		{
-			lastImmuno.put(e, true);
+			lastImmuno.put(e.getEntityId(), true);
 		}
-		return lastImmuno.get(e);
+		return lastImmuno.get(e.getEntityId());
 	}
 	
 	@Override

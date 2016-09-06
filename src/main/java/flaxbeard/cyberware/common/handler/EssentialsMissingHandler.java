@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,12 +60,12 @@ public class EssentialsMissingHandler
 
 	public static final EssentialsMissingHandler INSTANCE = new EssentialsMissingHandler();
 
-	private static Map<EntityLivingBase, Integer> timesLungs = new HashMap<EntityLivingBase, Integer>();
+	private static Map<Integer, Integer> timesLungs = new HashMap<Integer, Integer>();
 	
 	private static final UUID speedId = UUID.fromString("fe00fdea-5044-11e6-beb8-9e71128cae77");
 
-	private Map<EntityLivingBase, Boolean> last = new HashMap<EntityLivingBase, Boolean>();
-	private Map<EntityLivingBase, Boolean> lastClient = new HashMap<EntityLivingBase, Boolean>();
+	private Map<Integer, Boolean> last = new HashMap<Integer, Boolean>();
+	private Map<Integer, Boolean> lastClient = new HashMap<Integer, Boolean>();
 
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void handleMissingEssentials(LivingUpdateEvent event)
@@ -136,11 +137,11 @@ public class EssentialsMissingHandler
 					
 					if (e.worldObj.isRemote)
 					{
-						lastClient.put(e, true);
+						lastClient.put(e.getEntityId(), true);
 					}
 					else
 					{
-						last.put(e, true);
+						last.put(e.getEntityId(), true);
 					}
 	
 				}
@@ -153,11 +154,11 @@ public class EssentialsMissingHandler
 					
 					if (e.worldObj.isRemote)
 					{
-						lastClient.put(e, false);
+						lastClient.put(e.getEntityId(), false);
 					}
 					else
 					{
-						last.put(e, false);
+						last.put(e.getEntityId(), false);
 					}
 				}
 			}
@@ -203,13 +204,13 @@ public class EssentialsMissingHandler
 			{
 				if (getLungsTime(e) >= 20)
 				{
-					timesLungs.put(e, e.ticksExisted);
+					timesLungs.put(e.getEntityId(), e.ticksExisted);
 					e.attackEntityFrom(DamageSource.drown, 2F);
 				}
 			}
 			else
 			{
-				timesLungs.remove(e);
+				timesLungs.remove(e.getEntityId());
 			}
 
 			
@@ -221,19 +222,19 @@ public class EssentialsMissingHandler
 	{
 		if (remote)
 		{
-			if (!lastClient.containsKey(e))
+			if (!lastClient.containsKey(e.getEntityId()))
 			{
-				lastClient.put(e, false);
+				lastClient.put(e.getEntityId(), false);
 			}
-			return lastClient.get(e);
+			return lastClient.get(e.getEntityId());
 		}
 		else
 		{
-			if (!last.containsKey(e))
+			if (!last.containsKey(e.getEntityId()))
 			{
-				last.put(e, false);
+				last.put(e.getEntityId(), false);
 			}
-			return last.get(e);
+			return last.get(e.getEntityId());
 		}
 	}
 	
@@ -279,15 +280,15 @@ public class EssentialsMissingHandler
 		
 	private int getLungsTime(EntityLivingBase e)
 	{
-		if (!timesLungs.containsKey(e))
+		if (!timesLungs.containsKey(e.getEntityId()))
 		{
-			timesLungs.put(e, e.ticksExisted);
+			timesLungs.put(e.getEntityId(), e.ticksExisted);
 		}
-		return e.ticksExisted - timesLungs.get(e);
+		return e.ticksExisted - timesLungs.get(e.getEntityId());
 	}
 	
-	private static Map<EntityLivingBase, Integer> hunger = new HashMap<EntityLivingBase, Integer>();
-	private static Map<EntityLivingBase, Float> saturation = new HashMap<EntityLivingBase, Float>();
+	private static Map<Integer, Integer> hunger = new HashMap<Integer, Integer>();
+	private static Map<Integer, Float> saturation = new HashMap<Integer, Float>();
 
 	@SubscribeEvent
 	public void handleEatFoodTick(LivingEntityUseItemEvent.Tick event)
@@ -302,14 +303,14 @@ public class EssentialsMissingHandler
 			
 			if (!cyberware.hasEssential(EnumSlot.LOWER_ORGANS))
 			{
-				hunger.put(p, p.getFoodStats().getFoodLevel());
-				saturation.put(p, p.getFoodStats().getSaturationLevel());
+				hunger.put(p.getEntityId(), p.getFoodStats().getFoodLevel());
+				saturation.put(p.getEntityId(), p.getFoodStats().getSaturationLevel());
 			}
 		}
 		else
 		{
-			hunger.remove(e);
-			saturation.remove(e);
+			hunger.remove(e.getEntityId());
+			saturation.remove(e.getEntityId());
 		}
 	}
 	
