@@ -140,12 +140,12 @@ public class ItemHeartUpgrade extends ItemCyberware
 			if (isStemWorking(e))
 			{
 				int t = getMedkitTime(e);
-				if (t >= 100 && damageMedkit.get(e) > 0F)
+				if (t >= 100 && damageMedkit.get(e.getEntityId()) > 0F)
 				{
 					CyberwarePacketHandler.INSTANCE.sendToAllAround(new ParticlePacket(0, (float) e.posX, (float) e.posY + e.height / 2F, (float) e.posZ), 
 							new TargetPoint(e.worldObj.provider.getDimension(), e.posX, e.posY, e.posZ, 20));
 
-					e.heal(damageMedkit.get(e));
+					e.heal(damageMedkit.get(e.getEntityId()));
 					timesMedkit.put(e.getEntityId(), 0);
 					damageMedkit.put(e.getEntityId(), 0F);
 				}
