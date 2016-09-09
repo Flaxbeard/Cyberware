@@ -163,6 +163,13 @@ cyberware.gui.keybind.1=Left click to set keybind
 cyberware.gui.keybind.2=Right click to remove keybind
 cyberware.gui.keybind.3=Escape to cancel keybind
 
+cyberware.gui.stickLeft=Align left
+cyberware.gui.stickRight=Align right
+cyberware.gui.stickUp=Align top
+cyberware.gui.stickDown=Align bottom
+cyberware.gui.show=Show element
+cyberware.gui.hide=Hide element
+cyberware.gui.resetHud=Reset position
 
 
 cyberware.gui.toScan=Insert Cyberware to Scan

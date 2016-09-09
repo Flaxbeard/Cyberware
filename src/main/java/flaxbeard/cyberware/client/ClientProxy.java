@@ -33,6 +33,7 @@ import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.CyberwareMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
+import flaxbeard.cyberware.common.handler.HudHandler;
 import flaxbeard.cyberware.common.item.ItemArmorCyberware;
 import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemCyberware;
@@ -73,6 +74,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandlerClient.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(CreativeMenuHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(CyberwareMenuHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(HudHandler.INSTANCE);
 
 		if (CyberwareConfig.CLOTHES)
 		{

@@ -50,6 +50,8 @@ public class CyberwareConfig
 	public static int TESLA_PER_POWER = 1;
 	
 	public static Configuration config;
+	
+	public static File configDirectory;
 
 	public static void loadConfig(FMLPreInitializationEvent event)
 	{
@@ -77,6 +79,8 @@ public class CyberwareConfig
 				defaultStartingItems[i] = new String[0];
 			}
 		}
+		
+		configDirectory = event.getModConfigurationDirectory();
 		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		config.load();
 		
@@ -116,9 +120,6 @@ public class CyberwareConfig
 		HUDB = config.getInt(BLUEKEY, "HUD Color", HUDB, 0, 255, "");
 		CyberwareAPI.setHUDColor(HUDR / 255F, HUDG / 255F, HUDB / 255F);
 		config.save();
-		
-		CyberwareAPI.setHUDColor(0xFFFFFF);
-		updateColors();
 	}
 	
 	private static final String REDKEY = "Hudjack Color Red";

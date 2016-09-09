@@ -46,14 +46,17 @@ import org.lwjgl.opengl.GL11;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.hud.INotification;
+import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 
-public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
+public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHudjack
 {
 
 	public ItemCybereyeUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -278,330 +281,6 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 		}
 	}
 	
-	// http://stackoverflow.com/a/16206356/1754640
-	private static class NotificationStack<T> extends Stack<T>
-	{
-		private int maxSize;
-
-		public NotificationStack(int size)
-		{
-			super();
-			this.maxSize = size;
-		}
-
-		@Override
-		public Object push(Object object)
-		{
-			while (this.size() >= maxSize)
-			{
-				this.remove(0);
-			}
-			return super.push((T) object);
-		}
-	}
-	
-	public static class NotificationInstance
-	{
-		private float time;
-		private INotification notification;
-		
-		public NotificationInstance(float time, INotification notification)
-		{
-			this.time = time;
-			this.notification = notification;
-		}
-		
-		public float getCreatedTime()
-		{
-			return time;
-		}
-		
-		public INotification getNotification()
-		{
-			return notification;
-		}
-	}
-	
-	public static interface INotification
-	{
-		public void render(int x, int y);
-		public int getDuration();
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static class NotificationArmor implements INotification
-	{
-		private boolean light;
-		
-		private NotificationArmor(boolean light)
-		{
-			this.light = light;
-		}
-
-		@Override
-		public void render(int x, int y)
-		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
-			GL11.glPushMatrix();
-			float[] color = CyberwareAPI.getHUDColor();
-			GL11.glColor3f(color[0], color[1], color[2]);
-			ClientUtils.drawTexturedModalRect(x, y + 1, 0, 25, 15, 14);
-			GL11.glPopMatrix();
-			GL11.glColor3f(1F, 1F, 1F);
-
-			if (light)
-			{
-				ClientUtils.drawTexturedModalRect(x + 9, y + 1 + 7, 15, 25, 7, 9);
-			}
-			else
-			{
-				ClientUtils.drawTexturedModalRect(x + 8, y + 1 + 7, 22, 25, 8, 9);
-			}
-		}
-
-		@Override
-		public int getDuration()
-		{
-			return 20;
-		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static class NotificationRadio implements INotification
-	{
-		private int tier;
-		
-		private NotificationRadio(int tier)
-		{
-			this.tier = tier;
-		}
-
-		@Override
-		public void render(int x, int y)
-		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
-			if (tier > 0)
-			{
-				GlStateManager.pushMatrix();
-				float[] color = CyberwareAPI.getHUDColor();
-				GL11.glColor3f(color[0], color[1], color[2]);
-				ClientUtils.drawTexturedModalRect(x, y + 1, 13, 39, 15, 14);
-				GlStateManager.popMatrix();
-				
-				String v = tier == 1 ? I18n.format("cyberware.gui.radioInternal") : Integer.toString(tier - 1);
-				FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
-				fr.drawStringWithShadow(v, x + 15 - fr.getStringWidth(v), y + 9, 0xFFFFFF);
-			}
-			else
-			{
-				float[] color = CyberwareAPI.getHUDColor();
-				GL11.glColor3f(color[0], color[1], color[2]);
-				ClientUtils.drawTexturedModalRect(x, y + 1, 28, 39, 15, 14);
-
-			}
-		}
-
-		@Override
-		public int getDuration()
-		{
-			return 40;
-		}
-	}
-	
-	public static void addNotification(NotificationInstance not)
-	{
-		notifications.push(not);
-	}
-	
-	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(Cyberware.MODID + ":textures/gui/hud.png");
-	private static Iterable<ItemStack> inv;
-	private static boolean lightArmor = false;
-	private static Stack<NotificationInstance> notifications = new NotificationStack(5);
-	private static int cachedCap = 0;
-	private static int cachedTotal = 0;
-	private static float cachedPercent = 0;
-	private static int radioRange = -1;
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
-	{
-		if (event.getType() == ElementType.POTION_ICONS)
-		{
-			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 2)))
-			{
-				float currTime = p.ticksExisted + event.getPartialTicks();
-				
-				GL11.glPushMatrix();
-				GlStateManager.enableBlend();
-				ICyberwareUserData data = CyberwareAPI.getCapability(p);
-				
-				Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
-		
-				ScaledResolution res = event.getResolution();
-				int left = 5;
-				int top = 5;//- right_height;
-				
-				Iterable<ItemStack> currInv = p.getArmorInventoryList();
-				if (currInv != inv)
-				{
-					inv = currInv;
-					boolean temp = lightArmor;
-					lightArmor = updateLightArmor();
-					if (lightArmor != temp)
-					{
-						addNotification(new NotificationInstance(currTime, new NotificationArmor(lightArmor)));
-					}
-				}
-	
-				FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
-				
-				if (p.ticksExisted % 20 == 0)
-				{
-					cachedPercent = data.getPercentFull();
-					cachedCap = data.getCapacity();
-					cachedTotal = data.getStoredPower();
-				}
-	
-				int temp = radioRange;
-				radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
-				if (radioRange != temp)
-				{
-					addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
-				}
-				
-				float[] color = CyberwareAPI.getHUDColor();
-				int colorHex = CyberwareAPI.getHUDColorHex();
-				
-				if (cachedPercent != -1)
-				{
-					int amount = Math.round((21F * cachedPercent));
-	
-					boolean danger = (cachedPercent <= .2F);
-					boolean superDanger = danger && (cachedPercent <= .05F);
-					int xOffset = (danger ? 39 : 0);
-					
-					if (!superDanger || p.ticksExisted % 4 != 0)
-					{
-						GlStateManager.pushMatrix();
-						if (!danger) GlStateManager.color(color[0], color[1], color[2]);
-						ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
-						ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
-						
-						ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
-						GlStateManager.popMatrix();
-	
-						fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
-					}
-					top += 28;
-				}
-				
-				List<NotificationInstance> nTR = new ArrayList<NotificationInstance>();
-				for (int i = 0; i < notifications.size(); i++)
-				{
-					NotificationInstance ni = notifications.get(i);
-					INotification notification = ni.getNotification();
-					if (currTime - ni.getCreatedTime() < notification.getDuration() + 25)
-					{
-						double pct = Math.max(0F, ((currTime - ni.getCreatedTime() - notification.getDuration()) / 30F));
-		
-						float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-						
-						GL11.glPushMatrix();
-						GL11.glColor3f(1.0F, 1.0F, 1.0F);
-						GL11.glTranslatef(0F, move, 0F);
-						int index = (notifications.size() - 1) - i;
-						notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);
-						GL11.glPopMatrix();
-					}
-					else
-					{
-						nTR.add(ni);
-					}
-				}
-				
-				for (NotificationInstance ni : nTR)
-				{
-					notifications.remove(ni);
-				}
-				
-				RenderItem ir = Minecraft.getMinecraft().getRenderItem();
-				List<ItemStack> stacks = data.getPowerOutages();
-				List<Integer> stackTimes = data.getPowerOutageTimes();
-				List<Integer> toRemove = new ArrayList<Integer>();
-				left -= 1;
-				float zL = ir.zLevel;
-				ir.zLevel = -300;
-				for (int i = stacks.size() - 1; i >= 0; i--)
-				{
-					ItemStack stack = stacks.get(i);
-					if (stack != null)
-					{
-						int time = stackTimes.get(i);
-						boolean keep = p.ticksExisted - time < 50;
-						double pct = Math.max(0F, ((currTime - time - 20) / 30F));
-	
-						float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-						if (keep)
-						{
-							GL11.glPushMatrix();
-							GL11.glTranslatef(-move, 0F, 0F);
-							
-							fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
-							
-							RenderHelper.enableStandardItemLighting();
-							ir.renderItemAndEffectIntoGUI(stack, left, top);
-							RenderHelper.disableStandardItemLighting();
-	
-							GL11.glPopMatrix();
-							top += 18;
-						}
-						else
-						{
-							toRemove.add(i);
-						}
-					}
-				}
-				ir.zLevel = zL;
-				
-				for (int i : toRemove)
-				{
-					stacks.remove(i);
-					stackTimes.remove(i);
-				}
-				
-				Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-	
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				GL11.glPopMatrix();
-			}
-		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private boolean updateLightArmor()
-	{
-		for (ItemStack stack : inv)
-		{
-			if (stack != null && stack.getItem() instanceof ItemArmor)
-			{
-				if (((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(EntityEquipmentSlot.CHEST) > 4)
-				{
-					return false;
-				}
-			}
-			else if (stack != null && stack.getItem() instanceof ISpecialArmor)
-			{
-				if (((ISpecialArmor) stack.getItem()).getProperties(Minecraft.getMinecraft().thePlayer, stack, DamageSource.cactus, 1, 1).AbsorbRatio * 25D > 4)
-				{
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
 	@Override
 	public List<String> getStackDesc(ItemStack stack)
 	{
@@ -638,5 +317,11 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem
 	public float[] getColor(ItemStack stack)
 	{
 		return EnableDisableHelper.isEnabled(stack) ? f : null;
+	}
+
+	@Override
+	public boolean isActive(ItemStack stack)
+	{
+		return stack.getItemDamage() == 2;
 	}
 }

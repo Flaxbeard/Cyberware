@@ -17,6 +17,7 @@ import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiCyberwareMenu;
+import flaxbeard.cyberware.client.gui.GuiHudConfiguration;
 
 public class CyberwareMenuHandler
 {
@@ -78,7 +79,7 @@ public class CyberwareMenuHandler
 				
 			}
 			
-			if (mc.thePlayer != null && CyberwareAPI.getCapability(mc.thePlayer).getNumActiveItems() > 0 && mc.gameSettings.isKeyDown(KeyBinds.menu) && mc.currentScreen == null)
+			if (mc.thePlayer != null /*&& CyberwareAPI.getCapability(mc.thePlayer).getNumActiveItems() > 0*/ && mc.gameSettings.isKeyDown(KeyBinds.menu) && mc.currentScreen == null)
 			{
 
 				KeyConflictContext gui = KeyConflictContext.GUI;
@@ -90,7 +91,7 @@ public class CyberwareMenuHandler
 				mc.gameSettings.keyBindSneak.setKeyConflictContext(gui);
 				mc.gameSettings.keyBindSprint.setKeyConflictContext(gui);
 				
-				mc.displayGuiScreen(new GuiCyberwareMenu());
+				mc.displayGuiScreen(new GuiHudConfiguration());
 				wasInScreen = 5;
 			}
 			else if (wasInScreen > 0 && mc.currentScreen instanceof GuiCyberwareMenu)

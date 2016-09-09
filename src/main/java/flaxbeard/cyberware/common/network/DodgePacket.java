@@ -1,9 +1,10 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.hud.INotification;
+import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.client.ClientUtils;
-import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade;
-import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade.NotificationInstance;
+import flaxbeard.cyberware.common.handler.HudHandler;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Random;
@@ -85,7 +86,7 @@ public class DodgePacket implements IMessage
 				
 				if (targetEntity == Minecraft.getMinecraft().thePlayer)
 				{
-					ItemCybereyeUpgrade.addNotification(new NotificationInstance(targetEntity.ticksExisted, new DodgeNotification()));
+					HudHandler.addNotification(new NotificationInstance(targetEntity.ticksExisted, new DodgeNotification()));
 				}
 
 			}
@@ -96,13 +97,13 @@ public class DodgePacket implements IMessage
 
 	}
 	
-	private static class DodgeNotification implements ItemCybereyeUpgrade.INotification
+	private static class DodgeNotification implements INotification
 	{
 
 		@Override
 		public void render(int x, int y)
 		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(ItemCybereyeUpgrade.HUD_TEXTURE);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(HudHandler.HUD_TEXTURE);
 			
 			GlStateManager.pushMatrix();
 			float[] color = CyberwareAPI.getHUDColor();

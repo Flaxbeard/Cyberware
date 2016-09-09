@@ -33,6 +33,7 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(EngineeringSwitchArchivePacketHandler.class, EngineeringSwitchArchivePacket.class, 8, Side.SERVER);
 		INSTANCE.registerMessage(SyncHotkeyPacketHandler.class, SyncHotkeyPacket.class, 9, Side.SERVER);
 		INSTANCE.registerMessage(TriggerActiveAbilityPacketHandler.class, TriggerActiveAbilityPacket.class, 10, Side.SERVER);
+		INSTANCE.registerMessage(SyncHotkeyPacketHandler.class, SyncHotkeyPacket.class, 11, Side.SERVER);
 
 	}
 }

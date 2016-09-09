@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,8 +26,8 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.item.HotkeyHelper;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -50,7 +49,9 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private int essence = 0;
 	private int maxEssence = 0;
 	private List<ItemStack> activeItems = new ArrayList<ItemStack>();
+	private List<ItemStack> hudjackItems = new ArrayList<ItemStack>();
 	private Map<Integer, ItemStack> hotkeys = new HashMap<Integer, ItemStack>();
+	private NBTTagCompound hudData = new NBTTagCompound();
 	
 	public CyberwareUserDataImpl()
 	{
@@ -344,6 +345,11 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			}
 			outOfPower.add(stack);
 			outOfPowerTimes.add(p.ticksExisted);
+			if (outOfPower.size() >= 8)
+			{
+				outOfPower.remove(0);
+				outOfPowerTimes.remove(0);
+			}
 		}
 	}
 	
@@ -392,6 +398,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		powerCap = 0;
 		specialBatteries = new ArrayList<ItemStack>();
 		activeItems = new ArrayList<ItemStack>();
+		hudjackItems = new ArrayList<ItemStack>();
 		hotkeys = new HashMap<Integer, ItemStack>();
 		
 		for (EnumSlot slot : EnumSlot.values())
@@ -411,6 +418,11 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 						{
 							hotkeys.put(hotkey, wareStack);
 						}
+					}
+					
+					if (ware instanceof IHudjack)
+					{
+						this.hudjackItems.add(wareStack);
 					}
 					
 					if (ware instanceof ISpecialBattery)
@@ -555,6 +567,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		compound.setInteger("powerCap", this.powerCap);
 		compound.setInteger("storedPower", this.storedPower);
 		compound.setInteger("essence", essence);
+		compound.setTag("hud", hudData);
 		return compound;
 	}
 	
@@ -608,6 +621,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 
 		storedPower = tag.getInteger("storedPower");
 		essence = tag.getInteger("essence");
+		hudData = tag.getCompoundTag("hud");
 		
 		NBTTagList essentialList = (NBTTagList) tag.getTag("discard");
 		for (int i = 0; i < essentialList.tagCount(); i++)
@@ -758,6 +772,12 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	{
 		return activeItems;
 	}
+	
+	@Override
+	public List<ItemStack> getHudjackItems()
+	{
+		return hudjackItems;
+	}
 
 	@Override
 	public void removeHotkey(int i)
@@ -788,6 +808,18 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	public Iterable<Integer> getHotkeys()
 	{
 		return hotkeys.keySet();
+	}
+
+	@Override
+	public void setHudData(NBTTagCompound comp)
+	{
+		hudData = comp;
+	}
+
+	@Override
+	public NBTTagCompound getHudData()
+	{
+		return hudData;
 	}
 
 }

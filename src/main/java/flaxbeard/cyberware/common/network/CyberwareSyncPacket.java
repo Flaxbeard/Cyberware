@@ -1,15 +1,20 @@
 package flaxbeard.cyberware.common.network;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.hud.CyberwareHudDataEvent;
+import flaxbeard.cyberware.api.hud.IHudElement;
+import flaxbeard.cyberware.api.hud.IHudSaveData;
+import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import io.netty.buffer.ByteBuf;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -72,25 +77,24 @@ public class CyberwareSyncPacket implements IMessage
 			Entity targetEntity = Minecraft.getMinecraft().theWorld.getEntityByID(entityId);
 			if (targetEntity != null && CyberwareAPI.hasCapability(targetEntity))
 			{
-				CyberwareAPI.getCapability(targetEntity).deserializeNBT(data);
-				if (targetEntity instanceof EntityPlayer)
+				ICyberwareUserData userData = CyberwareAPI.getCapability(targetEntity);
+				userData.deserializeNBT(data);
+				
+				if (targetEntity == Minecraft.getMinecraft().thePlayer)
 				{
-					//System.out.println("Got data for player " + ((EntityPlayer) targetEntity).getName());
-					/*if (targetEntity != Minecraft.getMinecraft().thePlayer)
+					NBTTagCompound comp = userData.getHudData();
+					
+					CyberwareHudDataEvent hudEvent = new CyberwareHudDataEvent();
+					MinecraftForge.EVENT_BUS.post(hudEvent);
+					List<IHudElement> elements = hudEvent.getElements();
+					
+					for (IHudElement element : elements)
 					{
-						ItemStack[] oldWares = CyberwareAPI.getCapability(targetEntity).getInstalledCyberware(EnumSlot.EYES);
-						for (ItemStack i : oldWares)
+						if (comp.hasKey(element.getUniqueName()))
 						{
-							if (i == null)
-							{
-								System.out.print("null ");
-							}
-							else
-							{
-								System.out.print(i.getItem().getRegistryName() + "[" + i.stackSize + "] ");
-							}
+							element.load(new HudNBTData((NBTTagCompound) comp.getTag(element.getUniqueName())));
 						}
-					}*/
+					}
 				}
 			}
 			
