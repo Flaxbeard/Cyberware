@@ -138,6 +138,8 @@ public class ItemArmorCyberware extends ItemArmor implements IDeconstructable
 		ClientUtils.armor.setModelAttributes(_default);
 		ClientUtils.trench.bipedRightArm.isHidden = !(entityLiving instanceof EntityPlayer) && !(entityLiving instanceof EntityArmorStand);
 		ClientUtils.trench.bipedLeftArm.isHidden = !(entityLiving instanceof EntityPlayer) && !(entityLiving instanceof EntityArmorStand);
+		ClientUtils.armor.bipedRightArm.isHidden = ClientUtils.trench.bipedRightArm.isHidden;
+		ClientUtils.armor.bipedLeftArm.isHidden = ClientUtils.trench.bipedLeftArm.isHidden;
 
 		if (itemStack != null && itemStack.getItem() == CyberwareContent.trenchcoat) return ClientUtils.trench;
 		
