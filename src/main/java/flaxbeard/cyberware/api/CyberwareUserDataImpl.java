@@ -54,8 +54,8 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private NBTTagCompound hudData = new NBTTagCompound();
 	private boolean hasOpenedRadialMenu = false;
 	
-	private int hudColor = 0x000000;
-	private float[] hudColorFloat = new float[] { 0F, 0F, 0F };
+	private int hudColor = 0x00FFFF;
+	private float[] hudColorFloat = new float[] { 0F, 1F, 1F };
 	
 	public CyberwareUserDataImpl()
 	{
@@ -653,7 +653,12 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			setInstalledCyberware(null, slot, cyberware);
 		}
 		
-		int color = tag.getInteger("color");
+		int color = 0x00FFFF;
+
+		if (tag.hasKey("color"))
+		{
+			color = tag.getInteger("color");
+		}
 		this.setHudColor(color);
 
 
