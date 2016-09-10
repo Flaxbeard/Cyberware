@@ -1,2 +1,2 @@
-brainUpgrades_radio
-brainUpgrades_radio_scavenged
+eyeUpgrades_hudlens
+eyeUpgrades_hudlens_scavenged

@@ -59,6 +59,7 @@ import flaxbeard.cyberware.common.item.ItemCyberware;
 import flaxbeard.cyberware.common.item.ItemCyberwareBase;
 import flaxbeard.cyberware.common.item.ItemDenseBattery;
 import flaxbeard.cyberware.common.item.ItemExpCapsule;
+import flaxbeard.cyberware.common.item.ItemEyeUpgrade;
 import flaxbeard.cyberware.common.item.ItemFootUpgrade;
 import flaxbeard.cyberware.common.item.ItemHandUpgrade;
 import flaxbeard.cyberware.common.item.ItemHeartUpgrade;
@@ -108,6 +109,8 @@ public class CyberwareContent
 	public static Item bodyPart;
 	public static ItemCyberware cybereyes;
 	public static ItemCyberware cybereyeUpgrades;
+	public static ItemCyberware eyeUpgrades;
+
 	public static ItemCyberware brainUpgrades;
 	public static Item expCapsule;
 	public static ItemCyberware heartUpgrades;
@@ -225,13 +228,21 @@ public class CyberwareContent
 		cybereyeUpgrades = new ItemCybereyeUpgrade("cybereyeUpgrades", EnumSlot.EYES,
 				new String[] { "nightVision", "underwaterVision", "hudjack", "targeting", "zoom" });
 		cybereyeUpgrades.setEssenceCost(2, 2, 1, 1, 1);
-		cybereyeUpgrades.setWeights(UNCOMMON, UNCOMMON, VERY_COMMON, UNCOMMON, UNCOMMON);
+		cybereyeUpgrades.setWeights(UNCOMMON, UNCOMMON, UNCOMMON, UNCOMMON, UNCOMMON);
 		cybereyeUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 1, 7) },
 				new ItemStack[] { new ItemStack(component, 2, 5), new ItemStack(component, 1, 7) },
 				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 6), new ItemStack(component, 2, 7) },
 				new ItemStack[] { new ItemStack(component, 2, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 6), new ItemStack(component, 1, 7) },
 				new ItemStack[] { new ItemStack(component, 2, 5), new ItemStack(component, 4, 7) }
+				);
+		
+		eyeUpgrades = new ItemEyeUpgrade("eyeUpgrades", EnumSlot.EYES,
+				new String[] { "hudlens" });
+		eyeUpgrades.setEssenceCost(1);
+		eyeUpgrades.setWeights(VERY_COMMON);
+		eyeUpgrades.setComponents(
+				new ItemStack[] { new ItemStack(component, 1, 3), new ItemStack(component, 1, 5), new ItemStack(component, 1, 6), new ItemStack(component, 2, 7) }
 				);
 
 		CyberwareAPI.linkCyberware(Items.SPIDER_EYE, new SpiderEyeWare());
