@@ -52,9 +52,14 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private List<ItemStack> hudjackItems = new ArrayList<ItemStack>();
 	private Map<Integer, ItemStack> hotkeys = new HashMap<Integer, ItemStack>();
 	private NBTTagCompound hudData = new NBTTagCompound();
+	private boolean hasOpenedRadialMenu = false;
+	
+	private int hudColor = 0x000000;
+	private float[] hudColorFloat = new float[] { 0F, 0F, 0F };
 	
 	public CyberwareUserDataImpl()
 	{
+		hudData = new NBTTagCompound();
 		resetWare(null);
 	}
 	
@@ -568,6 +573,8 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		compound.setInteger("storedPower", this.storedPower);
 		compound.setInteger("essence", essence);
 		compound.setTag("hud", hudData);
+		compound.setInteger("color", hudColor);
+		compound.setBoolean("hasOpenedRadialMenu", hasOpenedRadialMenu);
 		return compound;
 	}
 	
@@ -622,7 +629,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		storedPower = tag.getInteger("storedPower");
 		essence = tag.getInteger("essence");
 		hudData = tag.getCompoundTag("hud");
-		
+		hasOpenedRadialMenu = tag.getBoolean("hasOpenedRadialMenu");
 		NBTTagList essentialList = (NBTTagList) tag.getTag("discard");
 		for (int i = 0; i < essentialList.tagCount(); i++)
 		{
@@ -645,6 +652,10 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 			
 			setInstalledCyberware(null, slot, cyberware);
 		}
+		
+		int color = tag.getInteger("color");
+		this.setHudColor(color);
+
 
 		updateCapacity();
 	}
@@ -821,5 +832,51 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	{
 		return hudData;
 	}
+	
+	@Override
+	public boolean hasOpenedRadialMenu()
+	{
+		return hasOpenedRadialMenu;
+	}
+	
+	@Override
+	public void setOpenedRadialMenu(boolean hasOpenedRadialMenu)
+	{
+		this.hasOpenedRadialMenu = hasOpenedRadialMenu;
+	}
 
+	@Override
+	public void setHudColor(int hexVal)
+	{
+		float r = ((hexVal >> 16) & 0x0000FF) / 255F;
+		float g = ((hexVal >> 8) & 0x0000FF) / 255F;
+		float b = ((hexVal) & 0x0000FF) / 255F;
+		setHudColor(new float[] { r, g, b });
+	}
+
+	@Override
+	public int getHudColorHex()
+	{
+		return hudColor;
+	}
+
+	@Override
+	public void setHudColor(float[] color)
+	{
+		hudColorFloat = color;
+		int ri = Math.round(color[0] * 255);
+		int gi = Math.round(color[1] * 255);
+		int bi = Math.round(color[2] * 255);
+		
+		int rp = (ri << 16) & 0xFF0000;
+		int gp = (gi << 8) & 0x00FF00;
+		int bp = (bi) & 0x0000FF;
+		hudColor = rp | gp | bp;
+	}
+
+	@Override
+	public float[] getHudColor()
+	{
+		return hudColorFloat;
+	}
 }

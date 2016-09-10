@@ -1,7 +1,6 @@
 package flaxbeard.cyberware.common.integration.botania;
 
 import net.minecraft.item.Item;
-import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 
 public class BotaniaIntegration
 {

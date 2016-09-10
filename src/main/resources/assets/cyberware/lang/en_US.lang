@@ -158,10 +158,14 @@ cyberware.gui.toDestroy=Insert Cyberware to Destroy
 cyberware.gui.paper=Insert Paper
 cyberware.gui.blueprint=Insert Cyberware Blueprint
 
-cyberware.gui.keybind.0=Mouse over and release to activate
-cyberware.gui.keybind.1=Left click to set keybind
-cyberware.gui.keybind.2=Right click to remove keybind
-cyberware.gui.keybind.3=Escape to cancel keybind
+cyberware.gui.keybind.0=Activation Menu Help:
+cyberware.gui.keybind.1=Mouse over and release segment to activate
+cyberware.gui.keybind.2=Left click segment to set keybind
+cyberware.gui.keybind.3=Right click segment to remove keybind
+cyberware.gui.keybind.4=Escape to cancel keybind
+
+cyberware.gui.openHudConfig=Click to configure HUD
+cyberware.gui.openColorChange=Click to change HUD color
 
 cyberware.gui.stickLeft=Align left
 cyberware.gui.stickRight=Align right
@@ -170,6 +174,8 @@ cyberware.gui.stickDown=Align bottom
 cyberware.gui.show=Show element
 cyberware.gui.hide=Hide element
 cyberware.gui.resetHud=Reset position
+
+cyberware.gui.openMenu=Hold %s to open the Cyberware menu
 
 
 cyberware.gui.toScan=Insert Cyberware to Scan
@@ -214,11 +220,10 @@ cyberware.tooltip.canDeconstruct=Can deconstruct or scan
 
 cyberware.gui.active.enable=Enable
 cyberware.gui.active.disable=Disable
-
+cyberware.gui.active.zoom=Zoom
 
 # KEYBINDS
 cyberware.keybinds.category=Cyberware
-cyberware.keybinds.zoom=Zoom
 cyberware.keybinds.menu=Cyberware Menu
 
 # ITEM TOOLTIPS
@@ -244,8 +249,7 @@ cyberware.tooltip.cybereyeUpgrades.0=See in the dark
 cyberware.tooltip.cybereyeUpgrades.1=See underwater
 cyberware.tooltip.cybereyeUpgrades.2=Displays internal power info\nAllows upgrades to overlay a HUD
 cyberware.tooltip.cybereyeUpgrades.3=Highlights nearby creatures
-cyberware.tooltip.cybereyeUpgrades.4.before=Zoom using the
-cyberware.tooltip.cybereyeUpgrades.4.after=key
+cyberware.tooltip.cybereyeUpgrades.4=Zoom in on distant objects
 cyberware.tooltip.manaseerLens.0=Reveals functional radius of flowers\nDisplays additional redstone information
 cyberware.tooltip.manaseerLens.1=Reveals functional radius of flowers\nDisplays additional redstone information
 cyberware.tooltip.expCapsule.before=

@@ -179,10 +179,10 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 	private static boolean inUse = false;
 	private static boolean wasInUse = false;
 
-	private static boolean wasKeyDown = false;
 	private static int zoomSettingOn = 0;
 	private static float fov = 0F;
 	private static float sensitivity = 0F;
+	private static EntityPlayer player = null;
 
 	
 	@SubscribeEvent
@@ -204,24 +204,10 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 			
 			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 4)))
 			{
+				player = p;
+
 				if (mc.gameSettings.thirdPersonView == 0)
 				{
-					if (KeyBinds.zoom.isPressed() && !wasKeyDown)
-					{
-						if (p.isSneaking())
-						{
-							zoomSettingOn = (zoomSettingOn + 4 - 1) % 4;
-						}
-						else
-						{
-							zoomSettingOn = (zoomSettingOn + 1) % 4;
-						}
-						wasKeyDown = true;
-					}
-					if (!KeyBinds.zoom.isPressed())
-					{
-						wasKeyDown = false;
-					}
 					
 					switch (zoomSettingOn)
 					{
@@ -282,32 +268,39 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 	}
 	
 	@Override
-	public List<String> getStackDesc(ItemStack stack)
-	{
-		if (stack.getItemDamage() != 4) return super.getStackDesc(stack);
-		
-		String before = I18n.format("cyberware.tooltip.cybereyeUpgrades.4.before");
-		if (before.length() > 0) before = before + " ";
-		String after = I18n.format("cyberware.tooltip.cybereyeUpgrades.4.after");
-		if (after.length() > 0) after = " " + after;
-		return new ArrayList(Arrays.asList(new String[] { before + Keyboard.getKeyName(KeyBinds.zoom.getKeyCode()) + after }));
-	}
-	
-	@Override
 	public boolean hasMenu(ItemStack stack)
 	{
-		return stack.getItemDamage() == 3;
+		return stack.getItemDamage() == 3 || stack.getItemDamage() == 2 || stack.getItemDamage() == 4;
 	}
 
 	@Override
 	public void use(Entity e, ItemStack stack)
 	{
+		if (stack.getItemDamage() == 4)
+		{
+			if (e == this.player)
+			{
+				if (e.isSneaking())
+				{
+					zoomSettingOn = (zoomSettingOn + 4 - 1) % 4;
+				}
+				else
+				{
+					zoomSettingOn = (zoomSettingOn + 1) % 4;
+				}
+			}
+			return;
+		}
 		EnableDisableHelper.toggle(stack);
 	}
 
 	@Override
 	public String getUnlocalizedLabel(ItemStack stack)
 	{
+		if (stack.getItemDamage() == 4)
+		{
+			return "cyberware.gui.active.zoom";
+		}
 		return EnableDisableHelper.getUnlocalizedLabel(stack);
 	}
 
@@ -316,12 +309,16 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 	@Override
 	public float[] getColor(ItemStack stack)
 	{
+		if (stack.getItemDamage() == 4)
+		{
+			return null;
+		}
 		return EnableDisableHelper.isEnabled(stack) ? f : null;
 	}
 
 	@Override
 	public boolean isActive(ItemStack stack)
 	{
-		return stack.getItemDamage() == 2;
+		return stack.getItemDamage() == 2 && EnableDisableHelper.isEnabled(stack);
 	}
 }

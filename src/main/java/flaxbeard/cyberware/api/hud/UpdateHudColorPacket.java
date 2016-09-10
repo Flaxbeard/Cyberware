@@ -1,48 +1,46 @@
-package flaxbeard.cyberware.common.network;
+package flaxbeard.cyberware.api.hud;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class SyncHudDataPacket implements IMessage
+public class UpdateHudColorPacket implements IMessage
 {
-	public SyncHudDataPacket() {}
-	
-	private NBTTagCompound comp;
+	public UpdateHudColorPacket() {}
 
-	public SyncHudDataPacket(NBTTagCompound comp)
+	private int color;
+
+	public UpdateHudColorPacket(int color)
 	{
-		this.comp = comp;
+		this.color = color;
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeTag(buf, comp);
+		buf.writeInt(color);
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		comp = ByteBufUtils.readTag(buf);
+		color = buf.readInt();
 	}
 	
-	public static class SyncHudDataPacketHandler implements IMessageHandler<SyncHudDataPacket, IMessage>
+	public static class UpdateHudColorPacketHandler implements IMessageHandler<UpdateHudColorPacket, IMessage>
 	{
 
 		@Override
-		public IMessage onMessage(SyncHudDataPacket message, MessageContext ctx)
+		public IMessage onMessage(UpdateHudColorPacket message, MessageContext ctx)
 		{
 			EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-			DimensionManager.getWorld(player.worldObj.provider.getDimension()).addScheduledTask(new DoSync(message.comp, player));
+			DimensionManager.getWorld(player.worldObj.provider.getDimension()).addScheduledTask(new DoSync(message.color, player));
 
 			return null;
 		}
@@ -51,12 +49,12 @@ public class SyncHudDataPacket implements IMessage
 	
 	private static class DoSync implements Runnable
 	{
-		private NBTTagCompound comp;
+		private int color;
 		private EntityPlayer p;
 
-		public DoSync(NBTTagCompound comp, EntityPlayer p)
+		public DoSync(int color, EntityPlayer p)
 		{
-			this.comp = comp;
+			this.color = color;
 			this.p = p;
 		}
 
@@ -67,13 +65,12 @@ public class SyncHudDataPacket implements IMessage
 			if (p != null && CyberwareAPI.hasCapability(p))
 			{
 				ICyberwareUserData d = CyberwareAPI.getCapability(p);
-				
-				d.setHudData(comp);
+				d.setHudColor(color);
 			}
-
 		}
 		
 
 	}
-	
+
+
 }

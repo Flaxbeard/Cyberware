@@ -22,7 +22,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
-import toughasnails.init.ModItems;
+import vazkii.botania.api.subtile.ISubTileContainer;
+import vazkii.botania.api.subtile.RadiusDescriptor;
+import vazkii.botania.api.subtile.SubTileEntity;
+import vazkii.botania.client.core.handler.SubTileRadiusRenderHandler;
+import vazkii.botania.common.Botania;
+import vazkii.botania.common.core.helper.PlayerHelper;
+import vazkii.botania.common.item.ItemTwigWand;
+import vazkii.botania.common.item.ModItems;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemCyberware;

@@ -114,33 +114,9 @@ public class CyberwareConfig
 		
 		KATANA = config.getBoolean("Enable Katana", "Other", KATANA, "");
 		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", "Other", CLOTHES, "");
-
-		HUDR = config.getInt(REDKEY, "HUD Color", HUDR, 0, 255, "");
-		HUDG = config.getInt(GREENKEY, "HUD Color", HUDG, 0, 255, "");
-		HUDB = config.getInt(BLUEKEY, "HUD Color", HUDB, 0, 255, "");
-		CyberwareAPI.setHUDColor(HUDR / 255F, HUDG / 255F, HUDB / 255F);
 		config.save();
 	}
 	
-	private static final String REDKEY = "Hudjack Color Red";
-	private static final String GREENKEY = "Hudjack Color Green";
-	private static final String BLUEKEY = "Hudjack Color Blue";
-
-	public static void updateColors()
-	{
-		config.load();
-		ConfigCategory category = config.getCategory("HUD Color");
-		Property red = category.get(REDKEY);
-		Property green = category.get(GREENKEY);
-		Property blue = category.get(BLUEKEY);
-
-		float[] color = CyberwareAPI.getHUDColor();
-		red.set((int) (color[0] * 255F));
-		green.set((int) (color[1] * 255F));
-		blue.set((int) (color[2] * 255F));
-
-		config.save();
-	}
 	
 	public static void postInit()
 	{

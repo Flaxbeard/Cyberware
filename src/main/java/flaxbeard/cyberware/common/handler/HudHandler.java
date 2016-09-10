@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Stack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +31,7 @@ import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorHorizontal;
 import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorVertical;
 import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.api.item.IHudjack;
+import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiHudConfiguration;
 import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.client.gui.hud.MissingPowerDisplay;
@@ -114,7 +117,8 @@ public class HudHandler
 	{
 		if (event.getType() == ElementType.POTION_ICONS)
 		{
-			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			Minecraft mc = Minecraft.getMinecraft();
+			EntityPlayer p = mc.thePlayer;
 			
 			boolean active = false;
 			if (CyberwareAPI.hasCapability(p))
@@ -159,10 +163,26 @@ public class HudHandler
 				}
 				
 				GL11.glPushMatrix();
-				element.render(p, sr, active2, Minecraft.getMinecraft().currentScreen instanceof GuiHudConfiguration, event.getPartialTicks());
+				element.render(p, sr, active2, mc.currentScreen instanceof GuiHudConfiguration, event.getPartialTicks());
 				GL11.glPopMatrix();
 			}
-				
+			
+			// Display a prompt to the user to open the radial menu if they haven't yet
+			if (CyberwareAPI.hasCapability(mc.thePlayer))
+			{
+				ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+				if (data.getActiveItems().size() > 0)
+				{
+					boolean done = CyberwareAPI.getCapability(mc.thePlayer).hasOpenedRadialMenu();
+					if (!done)
+					{
+						String s = I18n.format("cyberware.gui.openMenu", KeyBinds.menu.getDisplayName());
+						FontRenderer fr = mc.fontRendererObj;
+						fr.drawStringWithShadow(s, sr.getScaledWidth() - fr.getStringWidth(s) - 5, 5, CyberwareAPI.getHUDColorHex());
+					}
+				}
+			}
+					
 				/*if (active)
 				{
 					float currTime = p.ticksExisted + event.getPartialTicks();
@@ -171,7 +191,7 @@ public class HudHandler
 					GlStateManager.enableBlend();
 					ICyberwareUserData data = CyberwareAPI.getCapability(p);
 					
-					Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_TEXTURE);
+					mc.getTextureManager().bindTexture(HUD_TEXTURE);
 			
 					ScaledResolution res = event.getResolution();
 					int left = 5;
@@ -189,7 +209,7 @@ public class HudHandler
 						}
 					}
 		
-					FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+					FontRenderer fr = mc.fontRendererObj;
 					
 					if (p.ticksExisted % 20 == 0)
 					{
@@ -260,7 +280,7 @@ public class HudHandler
 						notifications.remove(ni);
 					}
 					
-					RenderItem ir = Minecraft.getMinecraft().getRenderItem();
+					RenderItem ir = mc.getRenderItem();
 					List<ItemStack> stacks = data.getPowerOutages();
 					List<Integer> stackTimes = data.getPowerOutageTimes();
 					List<Integer> toRemove = new ArrayList<Integer>();
@@ -305,7 +325,7 @@ public class HudHandler
 						stackTimes.remove(i);
 					}
 					
-					Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+					mc.getTextureManager().bindTexture(Gui.ICONS);
 		
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glPopMatrix();

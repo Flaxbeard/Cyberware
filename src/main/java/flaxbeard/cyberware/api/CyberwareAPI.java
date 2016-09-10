@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,15 +17,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
-
+import flaxbeard.cyberware.api.hud.UpdateHudColorPacket;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.api.item.IMenuItem;
-import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
 public final class CyberwareAPI
@@ -53,26 +54,28 @@ public final class CyberwareAPI
 	public static Map<ItemStack, ICyberware> linkedWare = new HashMap<ItemStack, ICyberware>();
 	
 	
-	private static float[] mainColor = new float[] { 76 / 255F, 1F, 0F };
-	private static int mainColorHex = 0x4CFF00;
+	private static float[] mainColor = new float[] { 0F, 1F, 1F };
+	
+	public static SimpleNetworkWrapper PACKET_HANDLER;
 	
 	/**
 	 * Sets the HUD color for the Hudjack, radial menu, and other AR HUD elements
 	 * 
 	 * @param color	A float representation of the desired color
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void setHUDColor(float[] color)
 	{
-		mainColor = color;
-		int ri = Math.round(color[0] * 255);
-		int gi = Math.round(color[1] * 255);
-		int bi = Math.round(color[2] * 255);
-		
-		int rp = (ri << 16) & 0xFF0000;
-		int gp = (gi << 8) & 0x00FF00;
-		int bp = (bi) & 0x0000FF;
-		
-		mainColorHex = rp | gp | bp;
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if (CyberwareAPI.hasCapability(p))
+		{
+			CyberwareAPI.getCapability(p).setHudColor(color);
+		}
+	}
+	
+	public static void syncHUDColor()
+	{
+		PACKET_HANDLER.sendToServer(new UpdateHudColorPacket(getHUDColorHex()));
 	}
 	
 	/**
@@ -80,27 +83,42 @@ public final class CyberwareAPI
 	 * 
 	 * @param color	A hexadecimal representation of the desired color
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void setHUDColor(int hexVal)
 	{
-		float r = ((hexVal >> 16) & 0x0000FF) / 255F;
-		float g = ((hexVal >> 8) & 0x0000FF) / 255F;
-		float b = ((hexVal) & 0x0000FF) / 255F;
-		setHUDColor(r, g, b);
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if (CyberwareAPI.hasCapability(p))
+		{
+			CyberwareAPI.getCapability(p).setHudColor(hexVal);
+		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static void setHUDColor(float r, float g, float b)
 	{
 		setHUDColor(new float[] { r, g, b });
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static int getHUDColorHex()
 	{
-		return mainColorHex;
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if (CyberwareAPI.hasCapability(p))
+		{
+			return CyberwareAPI.getCapability(p).getHudColorHex();
+		}
+		return 0;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static float[] getHUDColor()
 	{
-		return mainColor;
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if (CyberwareAPI.hasCapability(p))
+		{
+			return CyberwareAPI.getCapability(p).getHudColor();
+		}
+		return new float[] { 0F, 0F, 0F };
 	}
 	
 	/**
@@ -408,13 +426,13 @@ public final class CyberwareAPI
 			
 			if (targetEntity instanceof EntityPlayer)
 			{
-				CyberwarePacketHandler.INSTANCE.sendTo(new CyberwareSyncPacket(nbt, targetEntity.getEntityId()), (EntityPlayerMP) targetEntity);
+				PACKET_HANDLER.sendTo(new CyberwareSyncPacket(nbt, targetEntity.getEntityId()), (EntityPlayerMP) targetEntity);
 				//System.out.println("Sent data for player " + ((EntityPlayer) targetEntity).getName() + " to that player's client");
 			}
 
 			for (EntityPlayer trackingPlayer : world.getEntityTracker().getTrackingPlayers(targetEntity))
 			{
-				CyberwarePacketHandler.INSTANCE.sendTo(new CyberwareSyncPacket(nbt, targetEntity.getEntityId()), (EntityPlayerMP) trackingPlayer);
+				PACKET_HANDLER.sendTo(new CyberwareSyncPacket(nbt, targetEntity.getEntityId()), (EntityPlayerMP) trackingPlayer);
 				
 				if (targetEntity instanceof EntityPlayer)
 				{

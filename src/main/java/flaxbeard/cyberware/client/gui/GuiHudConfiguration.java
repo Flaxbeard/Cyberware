@@ -24,6 +24,7 @@ import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorHorizontal;
 import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorVertical;
 import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.client.ClientUtils;
+import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.common.handler.HudHandler;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
@@ -427,6 +428,13 @@ public class GuiHudConfiguration extends GuiScreen
 	@Override
 	public void updateScreen()
 	{
+		if (mc != null && mc.gameSettings != null)
+		{
+			if (mc.gameSettings.isKeyDown(mc.gameSettings.keyBindInventory))
+			{
+				mc.displayGuiScreen(null);
+			}
+		}
 		super.updateScreen();
 	
 
@@ -455,8 +463,12 @@ public class GuiHudConfiguration extends GuiScreen
 			comp.setTag(element.getUniqueName(), elementData.getTag());
 		}
 		
-		ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
-		data.setHudData(comp);
+		if (mc.thePlayer != null)
+		{
+			ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+			NBTTagCompound oldComp = data.getHudData();
+			data.setHudData(comp);
+		}
 		
 		CyberwarePacketHandler.INSTANCE.sendToServer(new SyncHudDataPacket(comp));
 	}

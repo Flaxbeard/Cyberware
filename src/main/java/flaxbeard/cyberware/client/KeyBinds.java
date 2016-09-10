@@ -13,13 +13,10 @@ import flaxbeard.cyberware.client.gui.GuiCyberwareMenu;
 
 public class KeyBinds
 {
-	public static KeyBinding zoom;
 	public static KeyBinding menu;
 
 	public static void init()
 	{
-		zoom = new KeyBinding("cyberware.keybinds.zoom", Keyboard.KEY_Z, "cyberware.keybinds.category");
-		ClientRegistry.registerKeyBinding(zoom);
 		menu = new KeyBinding("cyberware.keybinds.menu", Keyboard.KEY_R, "cyberware.keybinds.category");
 		ClientRegistry.registerKeyBinding(menu);
 	}

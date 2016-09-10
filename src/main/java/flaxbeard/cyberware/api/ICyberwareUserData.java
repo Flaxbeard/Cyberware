@@ -50,4 +50,10 @@ public interface ICyberwareUserData
 	public List<ItemStack> getHudjackItems();
 	public void setHudData(NBTTagCompound comp);
 	public NBTTagCompound getHudData();
+	public boolean hasOpenedRadialMenu();
+	public void setOpenedRadialMenu(boolean hasOpenedRadialMenu);
+	public void setHudColor(int color);
+	public void setHudColor(float[] color);
+	public int getHudColorHex();
+	public float[] getHudColor();
 }
