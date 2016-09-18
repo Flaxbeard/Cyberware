@@ -111,7 +111,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		{
 			isPlateletWorking.put(e.getEntityId(), CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
-		if (isPlateletWorking(e) && CyberwareAPI.isCyberwareInstalled(e, test))
+		if (e != null && isPlateletWorking(e) && CyberwareAPI.isCyberwareInstalled(e, test))
 		{
 			if (e.getHealth() >= e.getMaxHealth() * .8F && e.getHealth() != e.getMaxHealth())
 			{
@@ -169,6 +169,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		if (!isPlateletWorking.containsKey(e.getEntityId()))
 		{
 			isPlateletWorking.put(e.getEntityId(), false);
+			return false;
 		}
 		
 		return isPlateletWorking.get(e.getEntityId());
@@ -181,6 +182,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		if (!isStemWorking.containsKey(e.getEntityId()))
 		{
 			isStemWorking.put(e.getEntityId(), false);
+			return false;
 		}
 		
 		return isStemWorking.get(e.getEntityId());
