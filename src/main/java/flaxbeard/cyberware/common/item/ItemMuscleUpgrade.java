@@ -18,7 +18,6 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,6 +27,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
 import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -178,7 +178,7 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 	private Map<Integer, Boolean> lastBoostStrength = new HashMap<Integer, Boolean>();
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		

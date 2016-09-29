@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -29,6 +28,7 @@ import com.google.common.collect.HashMultimap;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
 import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareContent;
@@ -78,7 +78,7 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 	public static float clawsTime;
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		

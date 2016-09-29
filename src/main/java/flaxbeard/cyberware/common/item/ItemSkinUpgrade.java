@@ -20,11 +20,11 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandler;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -40,7 +40,7 @@ public class ItemSkinUpgrade extends ItemCyberware
 	}
 	
 	@SubscribeEvent
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		ItemStack test = new ItemStack(this, 1, 0);
@@ -57,7 +57,7 @@ public class ItemSkinUpgrade extends ItemCyberware
 	private static Map<Integer, Collection<PotionEffect>> potions = new HashMap<Integer, Collection<PotionEffect>>();
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void handleMissingEssentials(LivingUpdateEvent event)
+	public void handleMissingEssentials(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		

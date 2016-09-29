@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -26,7 +27,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,15 +38,15 @@ import com.google.common.collect.HashMultimap;
 
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
+import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
-import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.item.ItemCyberlimb;
-import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class EssentialsMissingHandler
 {
@@ -66,155 +66,162 @@ public class EssentialsMissingHandler
 
 	private Map<Integer, Boolean> last = new HashMap<Integer, Boolean>();
 	private Map<Integer, Boolean> lastClient = new HashMap<Integer, Boolean>();
-
-	@SubscribeEvent(priority=EventPriority.LOWEST)
-	public void handleMissingEssentials(LivingUpdateEvent event)
+	
+	@SubscribeEvent
+	public void triggerCyberwareEvent(LivingUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		
 		if (CyberwareAPI.hasCapability(e))
 		{
-			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
-			
-			if (e.ticksExisted % 20 == 0)
-			{
-				cyberware.resetBuffer();
-			}
-			
-			if (!cyberware.hasEssential(EnumSlot.CRANIUM))
-			{
-				e.attackEntityFrom(brainless, Integer.MAX_VALUE);
-			}
-			
-			if (cyberware.getEssence() < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
-			{
-				e.attackEntityFrom(lowessence, 2F);
-			}
-						
-			int numMissingLegs = 0;
-			int numMissingLegsVisible = 0;
-			
-			if (cyberware.getEssence() <= 0)
-			{
-				e.attackEntityFrom(noessence, Integer.MAX_VALUE);
-			}
-			
-			if (!cyberware.hasEssential(EnumSlot.LEG, EnumSide.LEFT))
-			{
-				numMissingLegs++;
-				numMissingLegsVisible++;
-			}
-			if (!cyberware.hasEssential(EnumSlot.LEG, EnumSide.RIGHT))
-			{
-				numMissingLegs++;
-				numMissingLegsVisible++;
+			CyberwareUpdateEvent event2 = new CyberwareUpdateEvent(e);
+			MinecraftForge.EVENT_BUS.post(event2);
+		}
+	}
 
-			}
-			
-			ItemStack legLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 2));
-			if (legLeft != null && !ItemCyberlimb.isPowered(legLeft))
-			{
-				numMissingLegs++;
-			}
-			
-			ItemStack legRight = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 3));
-			if (legRight != null && !ItemCyberlimb.isPowered(legRight))
-			{
-				numMissingLegs++;
-			}
-			
-
-			if (e instanceof EntityPlayer)
-			{
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void handleMissingEssentials(CyberwareUpdateEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
 		
-				
-				if (numMissingLegsVisible == 2)
-				{
-					e.height = 1.8F - (10F / 16F);
-					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
-					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
-					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+
+		ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
+		
+		if (e.ticksExisted % 20 == 0)
+		{
+			cyberware.resetBuffer();
+		}
+		
+		if (!cyberware.hasEssential(EnumSlot.CRANIUM))
+		{
+			e.attackEntityFrom(brainless, Integer.MAX_VALUE);
+		}
+		
+		if (cyberware.getEssence() < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
+		{
+			e.attackEntityFrom(lowessence, 2F);
+		}
 					
-					if (e.worldObj.isRemote)
-					{
-						lastClient.put(e.getEntityId(), true);
-					}
-					else
-					{
-						last.put(e.getEntityId(), true);
-					}
+		int numMissingLegs = 0;
+		int numMissingLegsVisible = 0;
+		
+		if (cyberware.getEssence() <= 0)
+		{
+			e.attackEntityFrom(noessence, Integer.MAX_VALUE);
+		}
+		
+		if (!cyberware.hasEssential(EnumSlot.LEG, EnumSide.LEFT))
+		{
+			numMissingLegs++;
+			numMissingLegsVisible++;
+		}
+		if (!cyberware.hasEssential(EnumSlot.LEG, EnumSide.RIGHT))
+		{
+			numMissingLegs++;
+			numMissingLegsVisible++;
+
+		}
+		
+		ItemStack legLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 2));
+		if (legLeft != null && !ItemCyberlimb.isPowered(legLeft))
+		{
+			numMissingLegs++;
+		}
+		
+		ItemStack legRight = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 3));
+		if (legRight != null && !ItemCyberlimb.isPowered(legRight))
+		{
+			numMissingLegs++;
+		}
+		
+
+		if (e instanceof EntityPlayer)
+		{
 	
-				}
-				else if (last(e.worldObj.isRemote, e))
+			
+			if (numMissingLegsVisible == 2)
+			{
+				e.height = 1.8F - (10F / 16F);
+				((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight() - (10F / 16F);
+				AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
+				e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+				
+				if (e.worldObj.isRemote)
 				{
-					e.height = 1.8F;
-					((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
-					AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
-					e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
-					
-					if (e.worldObj.isRemote)
-					{
-						lastClient.put(e.getEntityId(), false);
-					}
-					else
-					{
-						last.put(e.getEntityId(), false);
-					}
+					lastClient.put(e.getEntityId(), true);
 				}
-			}
-			
-			if (numMissingLegs >= 1 && e.onGround)
-			{
-
-				HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
-				
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Missing leg speed", -100F, 0));
-				e.getAttributeMap().applyAttributeModifiers(multimap);
-
-				//e.moveEntity(e.lastTickPosX - e.posX, 0, e.lastTickPosZ - e.posZ);
-			}
-			else
-			{
-				HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
-				
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Missing leg speed", -100F, 0));
-				e.getAttributeMap().removeAttributeModifiers(multimap);
-			}
-			
-			
-
-			if (!cyberware.hasEssential(EnumSlot.HEART))
-			{
-				e.attackEntityFrom(heartless, Integer.MAX_VALUE);
-			}
-			
-			if (!cyberware.hasEssential(EnumSlot.BONE))
-			{
-				
-				e.attackEntityFrom(spineless, Integer.MAX_VALUE);
-			}
-			
-			if (!cyberware.hasEssential(EnumSlot.MUSCLE))
-			{
-				e.attackEntityFrom(nomuscles, Integer.MAX_VALUE);
-			}
-			
-			
-			if (!cyberware.hasEssential(EnumSlot.LUNGS))
-			{
-				if (getLungsTime(e) >= 20)
+				else
 				{
-					timesLungs.put(e.getEntityId(), e.ticksExisted);
-					e.attackEntityFrom(DamageSource.drown, 2F);
+					last.put(e.getEntityId(), true);
+				}
+
+			}
+			else if (last(e.worldObj.isRemote, e))
+			{
+				e.height = 1.8F;
+				((EntityPlayer) e).eyeHeight = ((EntityPlayer) e).getDefaultEyeHeight();
+				AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
+				e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double)e.width, axisalignedbb.minY + (double)e.height, axisalignedbb.minZ + (double)e.width));
+				
+				if (e.worldObj.isRemote)
+				{
+					lastClient.put(e.getEntityId(), false);
+				}
+				else
+				{
+					last.put(e.getEntityId(), false);
 				}
 			}
-			else
-			{
-				timesLungs.remove(e.getEntityId());
-			}
+		}
+		
+		if (numMissingLegs >= 1 && e.onGround)
+		{
 
+			HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
 			
+			multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Missing leg speed", -100F, 0));
+			e.getAttributeMap().applyAttributeModifiers(multimap);
+
+			//e.moveEntity(e.lastTickPosX - e.posX, 0, e.lastTickPosZ - e.posZ);
+		}
+		else
+		{
+			HashMultimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
 			
+			multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(speedId, "Missing leg speed", -100F, 0));
+			e.getAttributeMap().removeAttributeModifiers(multimap);
+		}
+		
+		
+
+		if (!cyberware.hasEssential(EnumSlot.HEART))
+		{
+			e.attackEntityFrom(heartless, Integer.MAX_VALUE);
+		}
+		
+		if (!cyberware.hasEssential(EnumSlot.BONE))
+		{
+			
+			e.attackEntityFrom(spineless, Integer.MAX_VALUE);
+		}
+		
+		if (!cyberware.hasEssential(EnumSlot.MUSCLE))
+		{
+			e.attackEntityFrom(nomuscles, Integer.MAX_VALUE);
+		}
+		
+		
+		if (!cyberware.hasEssential(EnumSlot.LUNGS))
+		{
+			if (getLungsTime(e) >= 20)
+			{
+				timesLungs.put(e.getEntityId(), e.ticksExisted);
+				e.attackEntityFrom(DamageSource.drown, 2F);
+			}
+		}
+		else
+		{
+			timesLungs.remove(e.getEntityId());
 		}
 	}
 	

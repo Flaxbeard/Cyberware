@@ -14,9 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -95,7 +95,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 	}
 	
 	@SubscribeEvent
-	public void power(LivingUpdateEvent event)
+	public void power(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		ItemStack test = new ItemStack(this, 1, 1);

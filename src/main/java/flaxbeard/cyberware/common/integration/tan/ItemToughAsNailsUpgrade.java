@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import toughasnails.api.stat.capability.ITemperature;
@@ -15,6 +14,7 @@ import toughasnails.config.GameplayOption;
 import toughasnails.config.SyncedConfigHandler;
 import toughasnails.temperature.TemperatureHandler;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -29,7 +29,7 @@ public class ItemToughAsNailsUpgrade extends ItemCyberware
 	}
 
 	@SubscribeEvent(priority=EventPriority.NORMAL)
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		

@@ -15,13 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.ICyberware;
 
 public class VanillaWares
@@ -65,7 +65,7 @@ public class VanillaWares
 		}
 		
 		@SubscribeEvent
-		public void handleSpiderNightVision(LivingUpdateEvent event)
+		public void handleSpiderNightVision(CyberwareUpdateEvent event)
 		{
 			EntityLivingBase e = event.getEntityLiving();
 			

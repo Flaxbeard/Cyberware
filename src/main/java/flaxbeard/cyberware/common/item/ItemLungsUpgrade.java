@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
@@ -96,7 +97,7 @@ public class ItemLungsUpgrade extends ItemCyberware
 	private Map<Integer, Boolean> lastOxygen = new HashMap<Integer, Boolean>();
 	
 	@SubscribeEvent
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 0)))
@@ -118,9 +119,9 @@ public class ItemLungsUpgrade extends ItemCyberware
 
 
 		ItemStack test = new ItemStack(this, 1, 1);
-		if ((e.isSprinting() || e instanceof EntityMob) && !e.isInWater() && e.onGround)
+		if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 1)))
 		{
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 1)))
+			if ((e.isSprinting() || e instanceof EntityMob) && !e.isInWater() && e.onGround)
 			{
 				boolean last = getLastOxygen(e);
 
