@@ -106,7 +106,14 @@ public class MiscHandler
 		}
 		else if (stack.getItem() instanceof IDeconstructable)
 		{
-			event.getToolTip().add(1, ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.canDeconstruct"));
+			if (event.getToolTip().size() > 1)
+			{
+				event.getToolTip().add(1, ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.canDeconstruct"));
+			}
+			else
+			{
+				event.getToolTip().add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.canDeconstruct"));
+			}
 		}
 	}
 	

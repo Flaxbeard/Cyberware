@@ -88,6 +88,10 @@ public class ItemBlueprint extends Item implements IBlueprint
 			
 
 			toBlue.stackSize = 1;
+			if (toBlue.isItemStackDamageable())
+			{
+				toBlue.setItemDamage(0);
+			}
 			toBlue.setTagCompound(null);
 			
 			ItemStack ret = new ItemStack(CyberwareContent.blueprint);

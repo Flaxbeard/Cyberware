@@ -14,12 +14,12 @@ import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -94,7 +94,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 	private static Map<Integer, Integer> timesPlatelets = new HashMap<Integer, Integer>();
 
 	@SubscribeEvent
-	public void handleLivingUpdate(LivingUpdateEvent event)
+	public void handleLivingUpdate(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		
@@ -111,7 +111,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		{
 			isPlateletWorking.put(e.getEntityId(), CyberwareAPI.getCapability(e).usePower(test, getPowerConsumption(test)));
 		}
-		if (isPlateletWorking(e) && CyberwareAPI.isCyberwareInstalled(e, test))
+		if (e != null && isPlateletWorking(e) && CyberwareAPI.isCyberwareInstalled(e, test))
 		{
 			if (e.getHealth() >= e.getMaxHealth() * .8F && e.getHealth() != e.getMaxHealth())
 			{
@@ -169,6 +169,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		if (!isPlateletWorking.containsKey(e.getEntityId()))
 		{
 			isPlateletWorking.put(e.getEntityId(), false);
+			return false;
 		}
 		
 		return isPlateletWorking.get(e.getEntityId());
@@ -181,6 +182,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 		if (!isStemWorking.containsKey(e.getEntityId()))
 		{
 			isStemWorking.put(e.getEntityId(), false);
+			return false;
 		}
 		
 		return isStemWorking.get(e.getEntityId());
@@ -284,7 +286,7 @@ public class ItemHeartUpgrade extends ItemCyberware
 	}
 	
 	@SubscribeEvent
-	public void power(LivingUpdateEvent event)
+	public void power(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		ItemStack test = new ItemStack(this, 1, 3);
