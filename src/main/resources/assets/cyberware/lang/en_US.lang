@@ -12,7 +12,7 @@ item.cyberware.componentBox.name=Component Box
 tile.cyberware.beacon.name=Radio Kit
 tile.cyberware.beaconLarge.name=Radio Beacon
 tile.cyberware.radioPost.name=Radio Tower Component
-
+tile.cyberware.radioPost.name=Radio Tower Component
 
 # ITEMS
 item.cyberware.bodyPart.brain.name=Human Brain

@@ -17,7 +17,6 @@ import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiCyberwareMenu;
-import flaxbeard.cyberware.client.gui.GuiTablet;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.OpenRadialMenuPacket;
 
@@ -93,7 +92,7 @@ public class CyberwareMenuHandler
 				mc.gameSettings.keyBindSneak.setKeyConflictContext(gui);
 				mc.gameSettings.keyBindSprint.setKeyConflictContext(gui);
 				
-				mc.displayGuiScreen(new GuiTablet());
+				mc.displayGuiScreen(new GuiCyberwareMenu());
 				CyberwareAPI.getCapability(mc.thePlayer).setOpenedRadialMenu(true);
 				CyberwarePacketHandler.INSTANCE.sendToServer(new OpenRadialMenuPacket());
 

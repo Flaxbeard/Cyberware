@@ -24,6 +24,7 @@ import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeaconPost.TileEntityBeaconPostMaster;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
 import flaxbeard.cyberware.common.block.tile.TileEntityScanner;
@@ -101,6 +102,19 @@ public class ClientProxy extends CommonProxy
 	private void registerRenders(Block block)
 	{
 		Item item = Item.getItemFromBlock(block);
+		
+		if (item instanceof ItemBlockCyberware)
+		{
+			ItemBlockCyberware ibc = (ItemBlockCyberware) item;
+			if (ibc.metaMap.length > 1 || ibc.metaMap[0] != 0)
+			{
+				for (int i = 0; i < ibc.metaMap.length; i++)
+				{
+					ModelLoader.setCustomModelResourceLocation(item, 
+							i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+				}
+			}
+		}
 		ModelLoader.setCustomModelResourceLocation(item, 
 				0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}

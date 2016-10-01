@@ -1,0 +1,28 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "minecraft:cube_column",
+        "textures": {
+            "particle": "cyberware:blocks/surgeryChamberTop",
+            "end": "cyberware:blocks/surgeryChamberTop",
+            "side": "cyberware:blocks/robosurgeonScreen"
+        }
+    },
+    "variants": {
+        "facing": {
+            "east": {"y" : 90},
+            "west": {"y" : 270},
+            "north": {},
+            "south": {"y" : 180}
+        },
+        "enabled": {
+            "true": {
+                "textures": {
+                    "side": "cyberware:blocks/surgeryChamberTop"
+                }
+            },
+            "false": {}
+        },
+        "inventory": [{}]
+    }
+}

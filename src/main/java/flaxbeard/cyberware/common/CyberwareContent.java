@@ -37,6 +37,7 @@ import flaxbeard.cyberware.common.block.BlockBlueprintArchive;
 import flaxbeard.cyberware.common.block.BlockCharger;
 import flaxbeard.cyberware.common.block.BlockComponentBox;
 import flaxbeard.cyberware.common.block.BlockEngineeringTable;
+import flaxbeard.cyberware.common.block.BlockRFIDContainer;
 import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
@@ -91,6 +92,7 @@ public class CyberwareContent
 	public static BlockBeacon radio;
 	public static BlockBeaconLarge radioLarge;
 	public static Block radioPost;
+	public static Block rfidContainer;
 
 	private static ArmorMaterial shadesMat1;
 	private static ArmorMaterial shadesMat2;
@@ -179,6 +181,7 @@ public class CyberwareContent
 		radio = new BlockBeacon();
 		radioLarge = new BlockBeaconLarge();
 		radioPost = new BlockBeaconPost();
+		rfidContainer = new BlockRFIDContainer();
 
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");

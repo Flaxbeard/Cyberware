@@ -17,12 +17,14 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -36,6 +38,7 @@ import com.google.common.base.Objects;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.RFIDRegistry;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.client.render.RenderCyberlimbHand;
@@ -53,6 +56,9 @@ public class EssentialsMissingHandlerClient
 	@SideOnly(Side.CLIENT)
 	public static final RenderPlayerCyberware renderF = new RenderPlayerCyberware(Minecraft.getMinecraft().getRenderManager(), false);
 	
+	private static float lastPingTime = 0F;
+	private static float totalPing = 0F;
+	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void handleMissingSkin(RenderPlayerEvent.Pre event)
@@ -61,6 +67,8 @@ public class EssentialsMissingHandlerClient
 		EntityPlayer p = event.getEntityPlayer();
 		if (CyberwareAPI.hasCapability(p))
 		{	
+			
+			
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
 			boolean hasLeftLeg = cyberware.hasEssential(EnumSlot.LEG, EnumSide.LEFT);
 			boolean hasRightLeg = cyberware.hasEssential(EnumSlot.LEG, EnumSide.RIGHT);
@@ -343,6 +351,7 @@ public class EssentialsMissingHandlerClient
 	private static boolean hasRoboRight = false;
 	private static EnumHandSide oldHand;
 	
+	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void handleMissingEssentials(LivingUpdateEvent event)
 	{
@@ -350,6 +359,51 @@ public class EssentialsMissingHandlerClient
 		
 		if (e != null && e == Minecraft.getMinecraft().thePlayer)
 		{
+			EntityPlayer p = (EntityPlayer) e;
+			BlockPos ping = RFIDRegistry.getSignal(p.worldObj, p.posX, p.posY, p.posZ);
+			if (ping != null)
+			{
+				float pingTime = p.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks();
+				
+				double dist = RFIDRegistry.getDist(p.worldObj, p.posX, p.posY, p.posZ, ping);
+				
+				int extraTimes = 0;
+				if (dist < 10F)
+				{
+				//extraTimes = (int) ((10F - dist) / 3F);
+				}
+				
+				for (int ll = 1; ll < 5; ll++)
+				{
+					double dist2 = RFIDRegistry.getDist(p.worldObj, p.posX - .5F + ll * p.getLookVec().xCoord, p.posY - .5F + ll * p.getLookVec().yCoord, p.posZ - .5F + ll * p.getLookVec().zCoord, ping);
+					if (dist2 < dist)
+					{
+						dist = dist2;
+					}
+				}
+				
+				double squarePlus = Math.min(5, dist) * Math.min(5, dist);
+				dist -= Math.min(5, dist);
+				dist += squarePlus;
+				System.out.println(dist);
+				
+				float percentDist = 1F - (float) (dist / 320F);
+				float ticksPerPing = 102F - (int) ((percentDist / 2F) * 200F);
+				
+				totalPing += pingTime - lastPingTime;
+				if (totalPing >= ticksPerPing)
+				{
+					totalPing -= ticksPerPing;
+					
+				
+					p.playSound(SoundEvents.BLOCK_NOTE_PLING, .5F + (percentDist * .8F), 0F + (percentDist * 2F));
+					
+					
+				}
+				
+				lastPingTime = pingTime;
+			}
+
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
 			GameSettings settings = Minecraft.getMinecraft().gameSettings;
 			boolean stillMissingArm = false;
