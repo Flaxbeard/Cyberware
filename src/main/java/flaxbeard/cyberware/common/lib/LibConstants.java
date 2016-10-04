@@ -1,5 +1,7 @@
 package flaxbeard.cyberware.common.lib;
 
+import vazkii.botania.common.item.equipment.bauble.ItemManaRing;
+
 
 public class LibConstants
 {
@@ -49,5 +51,8 @@ public class LibConstants
 	public static final float ZOMBIE_SHADES_CHANCE = 4;
 	public static final float ZOMBIE_TRENCH_CHANCE = 4;
 	public static final float ZOMBIE_BIKER_CHANCE = 4;
+	
+	// Botania
+	public static final int MANA_BONES_MAX_MANA = 500000 * 6;
 
 }
