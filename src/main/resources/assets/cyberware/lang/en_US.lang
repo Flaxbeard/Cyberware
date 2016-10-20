@@ -88,6 +88,13 @@ item.cyberware.legUpgrades.fallDamage.name=Fall Bracers
 item.cyberware.toughAsNailsUpgrades.sweat.name=Supercooled Sweat Glands
 item.cyberware.toughAsNailsUpgrades.blubber.name=Blubber
 
+item.cyberware.botaniaUpgrades.manaBones.name=Manasteel Matrix
+item.cyberware.botaniaUpgrades.blaster.name=Blaster Heatsink
+item.cyberware.botaniaUpgrades.fluxfield.name=Internal Fluxfield
+
+item.cyberware.rootsUpgrades.extractor.name=Terra Extractor
+item.cyberware.rootsUpgrades.overclock.name=Terra Overclocker
+
 item.cyberware.neuropozyne.name=Neuropozyne
 item.cyberware.blueprint.name=Blank Blueprint
 item.cyberware.blueprint.notBlank.name=%1$s Blueprint
@@ -102,6 +109,8 @@ item.cyberware.component.fullerene.name=Fullerene Microstructures
 item.cyberware.component.synthnerves.name=Synthetic Nerves
 item.cyberware.component.storage.name=Storage Cell
 item.cyberware.component.microelectric.name=Microelectric Cells
+item.cyberware.component.mana_conduit.name=Mana Transistors
+item.cyberware.component.wildwood_lattice.name=Wildwood Lattice
 
 item.cyberware.shades.name=Mirrorshades
 item.cyberware.shades2.name=Round Mirrorshades
@@ -298,8 +307,13 @@ cyberware.tooltip.footUpgrades.1=Swim faster\nMore powerful with two Cyberlegs
 cyberware.tooltip.footUpgrades.2=Walk up full blocks
 cyberware.tooltip.legUpgrades.0=Jump higher\nShift jump to launch yourself\nMore powerful with two Cyberlegs
 cyberware.tooltip.legUpgrades.1=Absorb small impacts
+
 cyberware.tooltip.toughAsNailsUpgrades.0=Cool off when hot\nusing thirst
 cyberware.tooltip.toughAsNailsUpgrades.1=Keeps you warm
+
+cyberware.tooltip.botaniaUpgrades.0=Internal mana storage
+cyberware.tooltip.botaniaUpgrades.1=Rapidly cools down held Mana Blasters
+cyberware.tooltip.botaniaUpgrades.1=Generate power with mana
 
 # DAMAGE TYPE
 death.attack.cyberware.brainless=If only %1$s had a brain

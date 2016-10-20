@@ -43,6 +43,7 @@ import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
+import flaxbeard.cyberware.common.integration.roots.RootsIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
 import flaxbeard.cyberware.common.item.ItemArmUpgrade;
 import flaxbeard.cyberware.common.item.ItemArmorCyberware;
@@ -50,13 +51,13 @@ import flaxbeard.cyberware.common.item.ItemBlueprint;
 import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
 import flaxbeard.cyberware.common.item.ItemBrainUpgrade;
+import flaxbeard.cyberware.common.item.ItemComponent;
 import flaxbeard.cyberware.common.item.ItemCreativeBattery;
 import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade;
 import flaxbeard.cyberware.common.item.ItemCybereyes;
 import flaxbeard.cyberware.common.item.ItemCyberheart;
 import flaxbeard.cyberware.common.item.ItemCyberlimb;
 import flaxbeard.cyberware.common.item.ItemCyberware;
-import flaxbeard.cyberware.common.item.ItemCyberwareBase;
 import flaxbeard.cyberware.common.item.ItemDenseBattery;
 import flaxbeard.cyberware.common.item.ItemExpCapsule;
 import flaxbeard.cyberware.common.item.ItemEyeUpgrade;
@@ -182,7 +183,7 @@ public class CyberwareContent
 
 		neuropozyne = new ItemNeuropozyne("neuropozyne");
 		blueprint = new ItemBlueprint("blueprint");
-		component = new ItemCyberwareBase("component", "actuator", "reactor", "titanium", "ssc", "plating", "fiberoptics", "fullerene", "synthnerves", "storage", "microelectric");
+		component = new ItemComponent("component", "actuator", "reactor", "titanium", "ssc", "plating", "fiberoptics", "fullerene", "synthnerves", "storage", "microelectric", "mana_conduit", "wildwood_lattice");
 		
 		if (CyberwareConfig.CLOTHES)
 		{
@@ -487,9 +488,14 @@ public class CyberwareContent
 					));
 		}
 		
-		if (Loader.isModLoaded("Botania"))
+		if (Loader.isModLoaded("botania") || Loader.isModLoaded("Botania"))
 		{
 			BotaniaIntegration.preInit();
+		}
+		
+		if (Loader.isModLoaded("roots"))
+		{
+			RootsIntegration.preInit();
 		}
 		
 		if (Loader.isModLoaded("ToughAsNails"))

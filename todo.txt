@@ -1,2 +1,2 @@
-eyeUpgrades_hudlens
-eyeUpgrades_hudlens_scavenged
+rootsUpgrades_overclock
+rootsUpgrades_overclock_scavenged

@@ -27,8 +27,8 @@ public class LibConstants
 	public static final int AQUA_CONSUMPTION = 1;
 	public static final int JUMPBOOST_CONSUMPTION = 0;
 	public static final int IMMUNO_CONSUMPTION = 10;
-	public static final float DODGE_ARMOR = .70F;
-	public static final float DODGE_NO_ARMOR = .65F;
+	public static final float DODGE_ARMOR = .65F;
+	public static final float DODGE_NO_ARMOR = .70F;
 	public static final int LIMB_CONSUMPTION = 10;
 	public static final int WARNING_ESSENCE = 25;
 	public static final int DENSE_BATTERY_CAPACITY = 60000;
@@ -54,5 +54,8 @@ public class LibConstants
 	
 	// Botania
 	public static final int MANA_BONES_MAX_MANA = 500000 * 6;
+	public static final int OVERCLOCK_BLASTER_CONSUMPTION = 1;
+	public static final int MANA_PER_POWER = 15; // Fluxfield is 10
+	public static final int FLUXFIELD_PRODUCTION = 10; // Fluxfield is 10
 
 }

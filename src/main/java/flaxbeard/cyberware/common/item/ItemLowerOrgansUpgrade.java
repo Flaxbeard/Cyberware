@@ -104,7 +104,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 			ItemStack stack = CyberwareAPI.getCyberware(e, test);
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
 			
-			if (e.ticksExisted % 20 == 0 && !cyberware.isAtCapacity(test, getPowerProduction(stack)))
+			if (e.ticksExisted % 20 == 0 && !cyberware.isAtCapacity(test, getPowerProduction(stack) - 1))
 			{
 				if (e instanceof EntityPlayer)
 				{
