@@ -30,6 +30,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.common.block.BlockBeacon;
 import flaxbeard.cyberware.common.block.BlockBeaconLarge;
 import flaxbeard.cyberware.common.block.BlockBeaconPost;
@@ -489,6 +490,8 @@ public class CyberwareContent
 					Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "blockRedstone", Character.valueOf('P'), new ItemStack(Items.DIAMOND_PICKAXE), Character.valueOf('S'), new ItemStack(Items.DIAMOND_SWORD), Character.valueOf('A'), new ItemStack(Items.DIAMOND_AXE)
 					));
 		}
+		
+		TabletContent.init();
 		
 		if (Loader.isModLoaded("Botania"))
 		{

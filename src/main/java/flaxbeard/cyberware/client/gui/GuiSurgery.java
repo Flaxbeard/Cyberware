@@ -37,6 +37,7 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.ClientUtils;
+import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.ContainerSurgery.SlotSurgery;
 import flaxbeard.cyberware.client.render.ModelBox;
 import flaxbeard.cyberware.common.CyberwareConfig;
@@ -1010,7 +1011,6 @@ public class GuiSurgery extends GuiContainer
 			
 			renderEntity(skeleton, i + (this.xSize / 2) + ease.x, j + 110 + ease.y, ease.scale, endRotate);
 	
-	
 			scissor(i + 3, j + 3 + (int) (percentageSkele * 125), 170, 125 - (int) (percentageSkele * 125));
 					
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -1153,14 +1153,29 @@ public class GuiSurgery extends GuiContainer
 		return -endValue / 2 * ((--elapsed) * (elapsed - 2) - 1) + startValue;
 	}
 	
-	public void renderEntity(Entity entity, float x, float y, float scale, float rotation)
+	public static void renderEntity(Entity entity, float x, float y, float scale, float rotation)
+	{
+		renderEntity(entity, x, y, scale, rotation, 0, 0);
+	}
+	
+	public static void renderEntity(Entity entity, float x, float y, float scale, float rotation, float rotation2, float percent)
 	{
 		GlStateManager.enableColorMaterial();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 50.0F);
 		GlStateManager.scale(-scale, scale, scale);
+		
+		
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+		
+		
+		GlStateManager.translate(0F, entity.height * percent, 0F);
+		GlStateManager.rotate(rotation2, 1.0F, 0.0F, 0.0F);
+		GlStateManager.translate(0F, -entity.height * percent, 0F);
+		
 		GlStateManager.rotate(rotation, 0.0F, 1.0F, 0.0F);
+
+
 		RenderHelper.enableStandardItemLighting();
 		Minecraft.getMinecraft().getRenderManager().playerViewY = 180.0F;
 		Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);

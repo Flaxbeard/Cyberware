@@ -1,0 +1,115 @@
+Initializing cgroup subsys cpuset
+Initializing cgroup subsys cpu
+Initializing cgroup subsys cpuacct
+CraftOS version 2.5.3-generic
+e820: BIOS-provided physical RAM map:
+BIOS-e820: [mem 0x0000000000000000-0x000000000009e7ff] usable
+BIOS-e820: [mem 0x000000000009e800-0x000000000009ffff] reserved
+BIOS-e820: [mem 0x00000000000d2000-0x00000000000d3fff] reserved
+BIOS-e820: [mem 0x00000000000dc000-0x00000000000fffff] reserved
+BIOS-e820: [mem 0x0000000000100000-0x00000000bb27bfff] usable
+BIOS-e820: [mem 0x00000000bb27c000-0x00000000bb281fff] reserved
+BIOS-e820: [mem 0x00000000bb282000-0x00000000bb35dfff] usable
+BIOS-e820: [mem 0x00000000bb35e000-0x00000000bb370fff] reserved
+BIOS-e820: [mem 0x00000000bb371000-0x00000000bb3f1fff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb3f2000-0x00000000bb40efff] reserved
+BIOS-e820: [mem 0x00000000bb40f000-0x00000000bb46efff] usable
+BIOS-e820: [mem 0x00000000bb46f000-0x00000000bb667fff] reserved
+BIOS-e820: [mem 0x00000000bb668000-0x00000000bb6e7fff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb6e8000-0x00000000bb70efff] reserved
+BIOS-e820: [mem 0x00000000bb70f000-0x00000000bb716fff] usable
+BIOS-e820: [mem 0x00000000bb717000-0x00000000bb71efff] reserved
+BIOS-e820: [mem 0x00000000bb71f000-0x00000000bb76afff] usable
+BIOS-e820: [mem 0x00000000bb76b000-0x00000000bb776fff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb777000-0x00000000bb779fff] ACPI data
+BIOS-e820: [mem 0x00000000bb77a000-0x00000000bb780fff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb781000-0x00000000bb781fff] ACPI data
+BIOS-e820: [mem 0x00000000bb782000-0x00000000bb78afff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb78b000-0x00000000bb78bfff] ACPI data
+BIOS-e820: [mem 0x00000000bb78c000-0x00000000bb79efff] ACPI NVS
+BIOS-e820: [mem 0x00000000bb79f000-0x00000000bb7fefff] ACPI data
+BIOS-e820: [mem 0x00000000bb7ff000-0x00000000bb7fffff] usable
+BIOS-e820: [mem 0x00000000bb800000-0x00000000bfffffff] reserved
+BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+BIOS-e820: [mem 0x00000000feaff000-0x00000000feafffff] reserved
+BIOS-e820: [mem 0x00000000fec00000-0x00000000fec0ffff] reserved
+BIOS-e820: [mem 0x00000000fed00000-0x00000000fed003ff] reserved
+BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed8ffff] reserved
+BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+BIOS-e820: [mem 0x0000000100000000-0x00000001fbffffff] usable
+BIOS-e820: [mem 0x0000000200000000-0x000000023bffffff] usable
+DMI: HCORP-B2, BIOS 6IEH89WA (1.45 ) 02/14/2XXX
+e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+e820: remove [mem 0x000a0000-0x000fffff] usable
+e820: last_pfn = 0x23c000 max_arch_pfn = 0x400000000
+MTRR default type: uncachable
+MTRR fixed ranges enabled:
+  00000-9FFFF write-back
+  A0000-BFFFF uncachable
+  C0000-D3FFF write-protect
+  D4000-DBFFF uncachable
+  DC000-FFFFF write-protect
+MTRR variable ranges enabled:
+  0 disabled
+  1 base 000000000 mask F80000000 write-back
+  2 base 080000000 mask FC0000000 write-back
+  3 base 100000000 mask F00000000 write-back
+  4 base 200000000 mask FC0000000 write-back
+  5 base 23C000000 mask FFC000000 uncachable
+  6 base 0BC000000 mask FFC000000 uncachable
+  7 disabled
+x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WC  UC- WT  
+original variable MTRRs
+reg 1, base: 0GB, range: 2GB, type WB
+reg 2, base: 2GB, range: 1GB, type WB
+reg 3, base: 4GB, range: 4GB, type WB
+reg 4, base: 8GB, range: 1GB, type WB
+reg 5, base: 9152MB, range: 64MB, type UC
+reg 6, base: 3008MB, range: 64MB, type UC
+total RAM covered: 8064M
+Found optimal setting for mtrr clean up
+ gran_size: 64K 	chunk_size: 128M 	num_reg: 6  	lose cover RAM: 0G
+New variable MTRRs
+reg 0, base: 0GB, range: 2GB, type WB
+reg 1, base: 2GB, range: 1GB, type WB
+reg 2, base: 3008MB, range: 64MB, type UC
+reg 3, base: 4GB, range: 4GB, type WB
+reg 4, base: 8GB, range: 1GB, type WB
+reg 5, base: 9152MB, range: 64MB, type UC
+e820: update [mem 0xbc000000-0xffffffff] usable ==> reserved
+e820: last_pfn = 0xbb800 max_arch_pfn = 0x400000000
+found SMP MP-table at [mem 0x000f6890-0x000f689f] mapped at [ffff8800000f6890]
+Scanning 1 areas for low memory corruption
+Base memory trampoline at [ffff880000098000] 98000 size 24576
+BRK [0x02201000, 0x02201fff] PGTABLE
+BRK [0x02202000, 0x02202fff] PGTABLE
+BRK [0x02203000, 0x02203fff] PGTABLE
+BRK [0x02204000, 0x02204fff] PGTABLE
+BRK [0x02205000, 0x02205fff] PGTABLE
+BRK [0x02206000, 0x02206fff] PGTABLE
+RAMDISK: [mem 0x333a4000-0x359c9fff]
+ACPI: Early table checksum verification disabled
+ACPI: RSDP 0x00000000000F6850 000024 (v02 LENOVO)
+ACPI: XSDT 0x00000000BB7EF0C6 00009C (v01 HCORP-B2        00001450  LTP 00000000)
+ACPI: FACP 0x00000000BB7EF200 0000F4 (v04 HCORP-B2        00001450 LNVO 00000001)
+ACPI BIOS Warning (bug): 32/64X length mismatch in FADT/Pm1aControlBlock: 16/32 (20150930/tbfadt-623)
+ACPI BIOS Warning (bug): Invalid length for FADT/Pm1aControlBlock: 32, using default 16 (20150930/tbfadt-704)
+ACPI: DSDT 0x00000000BB7EF5D1 00F56A (v01 HCORP-B2        00001450 MSFT 03000001)
+ACPI: FACS 0x00000000BB6E7000 000040
+ACPI: FACS 0x00000000BB6E7000 000040
+ACPI: SSDT 0x00000000BB7EF3B4 00021D (v01 HCORP-B2        00001450 MSFT 03000001)
+ACPI: ECDT 0x00000000BB7FEB3B 000052 (v01 HCORP-B2        00001450 LNVO 00000001)
+ACPI: APIC 0x00000000BB7FEB8D 000084 (v01 HCORP-B2        00001450 LNVO 00000001)
+ACPI: MCFG 0x00000000BB7FEC49 00003C (v01 HCORP-B2        00001450 LNVO 00000001)
+ACPI: HPET 0x00000000BB7FEC85 000038 (v01 HCORP-B2        00001450 LNVO 00000001)
+ACPI: ASF! 0x00000000BB7FEDBE 0000A4 (v16 HCORP-B2        00001450 PTL  00000001)
+ACPI: SLIC 0x00000000BB7FEE62 000176 (v01 HCORP-B2        00001450  LTP 00000000)
+ACPI: BOOT 0x00000000BB7FEFD8 000028 (v01 HCORP-B2        00001450  LTP 00000001)
+ACPI: SSDT 0x00000000BB6E591A 00084B (v01 HCORP-B2        00001450 INTL 20050513)
+ACPI: TCPA 0x00000000BB78B000 000032 (v02 PTL     CRESTLN 06040000      00005A52)
+ACPI: DMAR 0x00000000BB781000 0000B8 (v01 CTELC   CP_DALE  00000001 INTL 00000001)
+ACPI: SSDT 0x00000000BB779000 0009F1 (v01 PmRef  CpuPm    00003000 INTL 20061109)
+ACPI: SSDT 0x00000000BB778000 000259 (v01 PmRef  Cpu0Tst  00003000 INTL 20061109)
+ACPI: SSDT 0x00000000BB777000 00049F (v01 PmRef  ApTst    00003000 INTL 20061109)
+ACPI: Local APIC address 0xfee00000
