@@ -46,6 +46,7 @@ public class CyberwareConfig
 
 	public static boolean KATANA = true;
 	public static boolean CLOTHES = true;
+	public static boolean RENDER = true;
 	
 	public static int TESLA_PER_POWER = 1;
 	
@@ -114,6 +115,9 @@ public class CyberwareConfig
 		
 		KATANA = config.getBoolean("Enable Katana", "Other", KATANA, "");
 		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", "Other", CLOTHES, "");
+		
+		RENDER = config.getBoolean("Enable changes to player model (missing skin, missing limbs, Cybernetic limbs)", "Other", RENDER, "");
+
 		config.save();
 	}
 	
