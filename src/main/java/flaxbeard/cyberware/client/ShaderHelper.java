@@ -16,12 +16,12 @@ public class ShaderHelper
 	private static final int FRAG = ARBFragmentShader.GL_FRAGMENT_SHADER_ARB;
 	
 	public static int greyscale = 0;
-	public static int flip = 0;
+	public static int alpha = 0;
 	
 	public static void init()
 	{
 		greyscale = createShader(null, "/assets/cyberware/shaders/greyscale.frag");
-		flip = createShader("/assets/cyberware/shaders/flip.vert", "/assets/cyberware/shaders/greyscale.frag");
+		alpha = createShader(null, "/assets/cyberware/shaders/greyscale.frag");
 	}
 	
 	public static void greyscale(float alpha)
@@ -32,12 +32,12 @@ public class ShaderHelper
 		ARBShaderObjects.glUniform1fARB(a, alpha);
 	}
 	
-	public static void flip(float alpha)
+	public static void alpha(float av)
 	{
-		ARBShaderObjects.glUseProgramObjectARB(flip);
+		ARBShaderObjects.glUseProgramObjectARB(alpha);
 		
-		int a = ARBShaderObjects.glGetUniformLocationARB(flip, "alpha");
-		ARBShaderObjects.glUniform1fARB(a, alpha);
+		int a = ARBShaderObjects.glGetUniformLocationARB(alpha, "alpha");
+		ARBShaderObjects.glUniform1fARB(a, av);
 	}
 	
 	public static void releaseShader()

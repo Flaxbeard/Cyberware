@@ -385,7 +385,7 @@ public class EssentialsMissingHandlerClient
 				double squarePlus = Math.min(5, dist) * Math.min(5, dist);
 				dist -= Math.min(5, dist);
 				dist += squarePlus;
-				System.out.println(dist);
+				//System.out.println(dist);
 				
 				float percentDist = 1F - (float) (dist / 320F);
 				float ticksPerPing = 102F - (int) ((percentDist / 2F) * 200F);
@@ -396,7 +396,7 @@ public class EssentialsMissingHandlerClient
 					totalPing -= ticksPerPing;
 					
 				
-					p.playSound(SoundEvents.BLOCK_NOTE_PLING, .5F + (percentDist * .8F), 0F + (percentDist * 2F));
+					p.playSound(SoundEvents.BLOCK_NOTE_BASS, .5F + (percentDist * .8F), 0F + (percentDist * 2F));
 					
 					
 				}

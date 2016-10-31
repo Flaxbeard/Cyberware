@@ -172,13 +172,14 @@ public class BlockRFIDContainer extends BlockContainer
 	
 	private void spawnNewChest(World world, BlockPos pos, int t)
 	{
-		float direction = world.rand.nextFloat();
+		float direction = (float) (world.rand.nextFloat() * Math.PI * 2F);
 		double xComp = Math.sin(direction);
 		double zComp = Math.cos(direction);
-		int x = (int) (200 * xComp) + pos.getX();
-		int z = (int) (200 * zComp) + pos.getZ();
+		int x = (int) (100 * xComp) + pos.getX();
+		int z = (int) (100 * zComp) + pos.getZ();
 		int y = 254;
 		
+
 		while (world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.SAND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.GROUND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.ROCK && y > 5)
 		{
 			y--;
