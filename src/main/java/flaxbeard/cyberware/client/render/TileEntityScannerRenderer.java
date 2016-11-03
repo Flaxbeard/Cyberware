@@ -27,9 +27,9 @@ public class TileEntityScannerRenderer extends TileEntitySpecialRenderer<TileEnt
 		{
 			float ticks = Minecraft.getMinecraft().thePlayer.ticksExisted + partialTicks;
 			
-			GL11.glPushMatrix();
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glTranslated(x+.5, y+.5, z+.5);
+			GlStateManager.pushMatrix();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.translate(x+.5, y+.5, z+.5);
 			
 			IBlockState state = te.getWorld().getBlockState(te.getPos());
 			if (state.getBlock() == CyberwareContent.scanner)
@@ -38,13 +38,13 @@ public class TileEntityScannerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if (stack != null)
 				{
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-					GL11.glPushMatrix();
+					GlStateManager.pushMatrix();
 					GlStateManager.color(1F, 1F, 1F, 1F);
-					GL11.glTranslatef(0F, -1.6F / 16F, 0F);
-					GL11.glScalef(.8F, .8F, .8F);
-					GL11.glRotatef(90F, 1F, 0F, 0F);
+					GlStateManager.translate(0F, -1.6F / 16F, 0F);
+					GlStateManager.scale(.8F, .8F, .8F);
+					GlStateManager.rotate(90F, 1F, 0F, 0F);
 					Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
-					GL11.glPopMatrix();
+					GlStateManager.popMatrix();
 				}
 				ClientUtils.bindTexture(texture);
 
@@ -56,7 +56,7 @@ public class TileEntityScannerRenderer extends TileEntitySpecialRenderer<TileEnt
 				{
 					progress = 1.0F;
 				}
-				GL11.glTranslatef(0F, 0F, ((te.lastX + (te.x - te.lastX) * progress) + 1.5F) * 1F / 16F);
+				GlStateManager.translate(0F, 0F, ((te.lastX + (te.x - te.lastX) * progress) + 1.5F) * 1F / 16F);
 				
 				model.render(null, 0, 0, 0, 0, 0, .0625f);
 				
@@ -68,19 +68,19 @@ public class TileEntityScannerRenderer extends TileEntitySpecialRenderer<TileEnt
 				{
 					progress2 = 1.0F;
 				}
-				GL11.glTranslatef(((te.lastZ + (te.z - te.lastZ) * progress2) + .5F) * 1F / 16F, 0F, 0F);
+				GlStateManager.translate(((te.lastZ + (te.z - te.lastZ) * progress2) + .5F) * 1F / 16F, 0F, 0F);
 				
 				model.renderScanner(null, 0, 0, 0, 0, 0, .0625f);
 
 				if (te.ticks > 0 && (progress2 >= 1F && progress >= 1F) && (((int) (te.ticks + partialTicks)) % 2F == 0))
 				{
-					GL11.glEnable(GL11.GL_BLEND);
+					GlStateManager.enableBlend();
 					model.renderBeam(null, 0, 0, 0, 0, 0, 0.0625F);
-					GL11.glDisable(GL11.GL_BLEND);
+					GlStateManager.disableBlend();
 				}
 				
 				
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 		}
 	}

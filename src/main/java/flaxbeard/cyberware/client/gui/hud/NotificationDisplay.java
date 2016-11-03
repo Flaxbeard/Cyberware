@@ -16,13 +16,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.hud.HudElementBase;
-import flaxbeard.cyberware.api.hud.IHudElement;
 import flaxbeard.cyberware.api.hud.INotification;
 import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.client.ClientUtils;
@@ -61,7 +57,7 @@ public class NotificationDisplay extends HudElementBase
 
 			float currTime = p.ticksExisted + partialTicks;
 			
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			ICyberwareUserData data = CyberwareAPI.getCapability(p);
 			
@@ -100,13 +96,13 @@ public class NotificationDisplay extends HudElementBase
 	
 					float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
 					
-					GL11.glPushMatrix();
-					GL11.glColor3f(1.0F, 1.0F, 1.0F);
-					GL11.glTranslatef(0F, flipVert ? -move : move, 0F);
+					GlStateManager.pushMatrix();
+					GlStateManager.color(1.0F, 1.0F, 1.0F);
+					GlStateManager.translate(0F, flipVert ? -move : move, 0F);
 					int index = (examples.length - 1) - i;
 					int xPos = flipHoriz ? (x + getWidth() - ((index + 1) * 18)) : (x + index * 18);
 					notification.render(xPos, y + (flipVert ? 20 : 0));
-					GL11.glPopMatrix();
+					GlStateManager.popMatrix();
 					
 				}
 			}
@@ -123,13 +119,13 @@ public class NotificationDisplay extends HudElementBase
 		
 						float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
 						
-						GL11.glPushMatrix();
-						GL11.glColor3f(1.0F, 1.0F, 1.0F);
-						GL11.glTranslatef(0F, flipVert ? -move : move, 0F);
+						GlStateManager.pushMatrix();
+						GlStateManager.color(1.0F, 1.0F, 1.0F);
+						GlStateManager.translate(0F, flipVert ? -move : move, 0F);
 						int index = (HudHandler.notifications.size() - 1) - i;
 						int xPos = flipHoriz ? (x + getWidth() - ((index + 1) * 18)) : (x + index * 18);
 						notification.render(xPos, y + (flipVert ? 20 : 0));
-						GL11.glPopMatrix();
+						GlStateManager.popMatrix();
 					}
 					else
 					{
@@ -143,7 +139,7 @@ public class NotificationDisplay extends HudElementBase
 				}
 			}
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 	
@@ -185,12 +181,12 @@ public class NotificationDisplay extends HudElementBase
 		public void render(int x, int y)
 		{
 			Minecraft.getMinecraft().getTextureManager().bindTexture(HudHandler.HUD_TEXTURE);
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float[] color = CyberwareAPI.getHUDColor();
-			GL11.glColor3f(color[0], color[1], color[2]);
+			GlStateManager.color(color[0], color[1], color[2]);
 			ClientUtils.drawTexturedModalRect(x, y + 1, 0, 25, 15, 14);
-			GL11.glPopMatrix();
-			GL11.glColor3f(1F, 1F, 1F);
+			GlStateManager.popMatrix();
+			GlStateManager.color(1F, 1F, 1F);
 
 			if (light)
 			{
@@ -227,7 +223,7 @@ public class NotificationDisplay extends HudElementBase
 			{
 				GlStateManager.pushMatrix();
 				float[] color = CyberwareAPI.getHUDColor();
-				GL11.glColor3f(color[0], color[1], color[2]);
+				GlStateManager.color(color[0], color[1], color[2]);
 				ClientUtils.drawTexturedModalRect(x, y + 1, 13, 39, 15, 14);
 				GlStateManager.popMatrix();
 				
@@ -238,7 +234,7 @@ public class NotificationDisplay extends HudElementBase
 			else
 			{
 				float[] color = CyberwareAPI.getHUDColor();
-				GL11.glColor3f(color[0], color[1], color[2]);
+				GlStateManager.color(color[0], color[1], color[2]);
 				ClientUtils.drawTexturedModalRect(x, y + 1, 28, 39, 15, 14);
 
 			}

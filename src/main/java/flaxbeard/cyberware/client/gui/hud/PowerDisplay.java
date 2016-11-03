@@ -5,13 +5,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.hud.HudElementBase;
-import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorHorizontal;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.handler.HudHandler;
 
@@ -39,7 +35,7 @@ public class PowerDisplay extends HudElementBase
 
 			float currTime = p.ticksExisted + partialTicks;
 			
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			ICyberwareUserData data = CyberwareAPI.getCapability(p);
 			
@@ -83,7 +79,7 @@ public class PowerDisplay extends HudElementBase
 				}
 			}
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 }

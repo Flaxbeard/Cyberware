@@ -1,4 +1,4 @@
-package flaxbeard.cyberware.common.integration.botania;
+/*package flaxbeard.cyberware.common.integration.botania;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,7 +25,6 @@ import org.lwjgl.opengl.GL11;
 import vazkii.botania.api.subtile.ISubTileContainer;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileEntity;
-import vazkii.botania.client.core.handler.SubTileRadiusRenderHandler;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.core.helper.PlayerHelper;
 import vazkii.botania.common.item.ItemTwigWand;
@@ -146,3 +145,4 @@ public class ItemManaLens extends ItemCyberware
 		GlStateManager.popMatrix();
 	}
 }
+*/

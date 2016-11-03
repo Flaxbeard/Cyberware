@@ -17,13 +17,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.client.ClientUtils;
@@ -48,7 +44,7 @@ public class ItemLungsUpgrade extends ItemCyberware
 			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 			if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(this, 1, 0)) && !p.isCreative())
 			{
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				ItemStack stack = CyberwareAPI.getCyberware(p, new ItemStack(this, 1, 0));
 				int air = getAir(stack);
 				
@@ -71,7 +67,7 @@ public class ItemLungsUpgrade extends ItemCyberware
 						r += 1F;
 						b -= .25F;
 						g += .25F;
-						GL11.glColor3f(r, g, b);
+						GlStateManager.color(r, g, b);
 						int drawAir = Math.min(300, air);
 						int full = MathHelper.ceiling_double_int((double)(drawAir - 2) * 10.0D / 300.0D);
 						int partial = MathHelper.ceiling_double_int((double)drawAir * 10.0D / 300.0D) - full;
@@ -87,9 +83,9 @@ public class ItemLungsUpgrade extends ItemCyberware
 					}
 				}
 			
-				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				GlStateManager.color(1.0F, 1.0F, 1.0F);
 				//GlStateManager.disableBlend();
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 		}
 	}

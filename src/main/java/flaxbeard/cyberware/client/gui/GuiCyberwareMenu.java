@@ -97,13 +97,13 @@ public class GuiCyberwareMenu extends GuiScreen
 		GlStateManager.translate((width / 2F) + radiusBase, (height / 2F) - radiusBase, 0F);
 		GlStateManager.scale(2F, 2F, 2F);
 		float[] mainColor = CyberwareAPI.getHUDColor();
-		GL11.glColor3f(mainColor[0], mainColor[1], mainColor[2]);
+		GlStateManager.color(mainColor[0], mainColor[1], mainColor[2]);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(HudHandler.HUD_TEXTURE);
 		ClientUtils.drawTexturedModalRect(1, 0, 81, 10, 7, 8);
 		ClientUtils.drawTexturedModalRect(0, 9, 88, 10, 8, 8);
 		ClientUtils.drawTexturedModalRect(0, 18, 97, 10, 8, 8);
 
-		GL11.glColor3f(1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F);
 		GlStateManager.popMatrix();
 		
 		if (color)
@@ -112,7 +112,7 @@ public class GuiCyberwareMenu extends GuiScreen
 			for (int n = 0; n < colorOptions.length; n++)
 			{
 				float[] colorOption = colorOptions[n];
-				GL11.glColor3f(colorOption[0], colorOption[1], colorOption[2]);
+				GlStateManager.color(colorOption[0], colorOption[1], colorOption[2]);
 
 				int row = n / ROW_SIZE;
 				int col = n % ROW_SIZE;
@@ -122,7 +122,7 @@ public class GuiCyberwareMenu extends GuiScreen
 				Minecraft.getMinecraft().getTextureManager().bindTexture(HudHandler.HUD_TEXTURE);
 				ClientUtils.drawTexturedModalRect(this.width / 2 + xOffset, this.height / 2 + yOffset, 0, 236, 20, 20);
 			}
-			GL11.glColor3f(1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F);
 		}
 		else
 		{
@@ -196,7 +196,7 @@ public class GuiCyberwareMenu extends GuiScreen
 					ItemStack stack = data.getActiveItems().get(piece);
 					float[] itemColor = ((IMenuItem) stack.getItem()).getColor(stack);
 					float[] color = (itemColor == null) ? mainColor : itemColor;
-					GL11.glColor4f(color[0], color[1], color[2], alpha);
+					GlStateManager.color(color[0], color[1], color[2], alpha);
 					
 					double radians = ((rotation + deg) / 180F) * Math.PI;
 	

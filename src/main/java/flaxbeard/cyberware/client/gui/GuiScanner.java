@@ -4,11 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -44,8 +41,8 @@ public class GuiScanner extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		//GL11.glEnable(GL11.GL_BLEND);
-		//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F);
+		//GlStateManager.enableBlend();
+		//GlStateManager.color(1.0F, 1.0F, 1.0F, 1F);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
@@ -98,14 +95,14 @@ public class GuiScanner extends GuiContainer
 		
 		this.mc.getTextureManager().bindTexture(SCANNER_TEXTURES);
 
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.enableBlend();
 		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.6F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.6F);
 		this.drawTexturedModalRect(5, 32, 0, 175, progress, 9);
 
 		this.drawTexturedModalRect(5 + progress, 32, 0 + progress, 166, 162 - progress, 9);
 		
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.disableBlend();
 
 		if (this.isPointInRegion(35, 53, 16, 16, mouseX, mouseY) && scanner.slots.getStackInSlot(0) == null)
 		{

@@ -11,14 +11,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.hud.HudElementBase;
-import flaxbeard.cyberware.api.hud.IHudElement;
-import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorHorizontal;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.handler.HudHandler;
 
@@ -54,7 +49,7 @@ public class MissingPowerDisplay extends HudElementBase
 			boolean flipHoriz = getHorizontalAnchor() == EnumAnchorHorizontal.RIGHT;
 			float currTime = p.ticksExisted + partialTicks;
 			
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			ICyberwareUserData data = CyberwareAPI.getCapability(p);
 			
@@ -95,8 +90,8 @@ public class MissingPowerDisplay extends HudElementBase
 					if (keep)
 					{
 						
-						GL11.glPushMatrix();
-						GL11.glTranslatef(flipHoriz ? move : -move, 0F, 0F);
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(flipHoriz ? move : -move, 0F, 0F);
 						
 						fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
 						
@@ -104,7 +99,7 @@ public class MissingPowerDisplay extends HudElementBase
 						ir.renderItemAndEffectIntoGUI(stack, left, top);
 						RenderHelper.disableStandardItemLighting();
 
-						GL11.glPopMatrix();
+						GlStateManager.popMatrix();
 						top += 18;
 					}
 					else if (!isConfigOpen)
@@ -121,7 +116,7 @@ public class MissingPowerDisplay extends HudElementBase
 				stackTimes.remove(i);
 			}
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 }

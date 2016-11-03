@@ -12,9 +12,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.hud.CyberwareHudDataEvent;
@@ -24,7 +21,6 @@ import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorHorizontal;
 import flaxbeard.cyberware.api.hud.IHudElement.EnumAnchorVertical;
 import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.client.ClientUtils;
-import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.common.handler.HudHandler;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
@@ -136,9 +132,9 @@ public class GuiHudConfiguration extends GuiScreen
 		int elemX = getAbsoluteX(sr, element) - 1;
 		int elemY = getAbsoluteY(sr, element) - 1;
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		float[] color = CyberwareAPI.getHUDColor();
-		GL11.glColor3f(color[0], color[1], color[2]);
+		GlStateManager.color(color[0], color[1], color[2]);
 		
 		if (element == dragging || element == hoveredElement)
 		{
@@ -216,8 +212,8 @@ public class GuiHudConfiguration extends GuiScreen
 		ClientUtils.drawTexturedModalRect(elemX + element.getWidth() + 1, elemY + pos, two, 0, 1, height);
 
 
-		GL11.glPopMatrix();
-		GL11.glColor3f(1F, 1F, 1F);
+		GlStateManager.popMatrix();
+		GlStateManager.color(1F, 1F, 1F);
 		
 
 	}

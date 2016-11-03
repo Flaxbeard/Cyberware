@@ -1,7 +1,5 @@
 package flaxbeard.cyberware.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -22,7 +20,6 @@ import net.minecraft.util.math.MathHelper;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
-import flaxbeard.cyberware.client.gui.GuiSurgery;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemHandUpgrade;
 
@@ -65,7 +62,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 1)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT && clientPlayer.getHeldItemMainhand() == null
 				&& EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))))
 		{
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 
 			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - ItemHandUpgrade.clawsTime) / 4F);
 			percent = Math.min(1.0F, percent);
@@ -76,7 +73,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 			claws.claw1.rotateAngleX = 0.00F;
 			claws.claw1.setRotationPoint(-5.0F, -5.0F + (7F * percent), 0.0F);
 			claws.claw1.render(0.0625F);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -91,7 +88,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 			&& Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.LEFT && clientPlayer.getHeldItemMainhand() == null
 			&& EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))))
 		{
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 
 			float percent = ((Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks() - ItemHandUpgrade.clawsTime) / 4F);
 			percent = Math.min(1.0F, percent);
@@ -102,7 +99,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 			claws.claw1.rotateAngleX = 0.00F;
 			claws.claw1.setRotationPoint(-5.0F, -5.0F + (7F * percent), 0.0F);
 			claws.claw1.render(0.0625F);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 

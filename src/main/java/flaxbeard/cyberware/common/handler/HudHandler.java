@@ -9,20 +9,14 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.opengl.GL11;
-
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
@@ -35,7 +29,6 @@ import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiHudConfiguration;
-import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.client.gui.hud.MissingPowerDisplay;
 import flaxbeard.cyberware.client.gui.hud.NotificationDisplay;
 import flaxbeard.cyberware.client.gui.hud.PowerDisplay;
@@ -206,9 +199,9 @@ public class HudHandler
 					GuiHudConfiguration.setXFromAbsolute(sr, element, sr.getScaledWidth() - 4);
 				}
 				
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				element.render(p, sr, active2, mc.currentScreen instanceof GuiHudConfiguration, event.getPartialTicks());
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 			
 			// Display a prompt to the user to open the radial menu if they haven't yet
