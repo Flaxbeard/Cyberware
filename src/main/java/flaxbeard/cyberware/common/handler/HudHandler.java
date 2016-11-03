@@ -143,7 +143,6 @@ public class HudHandler
 						}
 						else
 						{
-							CyberwareConfig.HUDJACK_FLOAT = .05F;
 							floatAmt = CyberwareConfig.HUDJACK_FLOAT;
 						}
 						break;

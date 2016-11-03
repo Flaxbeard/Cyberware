@@ -29,7 +29,7 @@ public class Cyberware
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		CyberwareConfig.loadConfig(event);
+		CyberwareConfig.preInit(event);
 		proxy.preInit();
 	}
 	

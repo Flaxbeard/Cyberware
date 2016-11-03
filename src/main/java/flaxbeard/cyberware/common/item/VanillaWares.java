@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +15,8 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -79,6 +82,35 @@ public class VanillaWares
 				if (effect != null && effect.getAmplifier() == -53)
 				{
 					e.removePotionEffect(MobEffects.NIGHT_VISION);
+				}
+			}
+		}
+		
+		@SideOnly(Side.CLIENT)
+		@SubscribeEvent
+		public void onDrawScreenPost(RenderGameOverlayEvent.Pre event)
+		{
+			if (event.getType() == ElementType.CROSSHAIRS)
+			{
+				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+				if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(Items.SPIDER_EYE)))
+				{
+					GlStateManager.translate(0, event.getResolution().getScaledHeight() / 5, 0);
+				}
+			}
+		}
+		
+		
+		@SideOnly(Side.CLIENT)
+		@SubscribeEvent
+		public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
+		{
+			if (event.getType() == ElementType.CROSSHAIRS)
+			{
+				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+				if (CyberwareAPI.isCyberwareInstalled(p, new ItemStack(Items.SPIDER_EYE)))
+				{
+					GlStateManager.translate(0, -event.getResolution().getScaledHeight() / 5, 0);
 				}
 			}
 		}
