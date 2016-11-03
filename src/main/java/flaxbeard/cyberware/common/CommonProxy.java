@@ -28,6 +28,7 @@ public class CommonProxy
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(Cyberware.INSTANCE, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(CyberwareDataHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(CyberwareConfig.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(MiscHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(EssentialsMissingHandler.INSTANCE);
 		FMLCommonHandler.instance().bus().register(EssentialsMissingHandler.INSTANCE);

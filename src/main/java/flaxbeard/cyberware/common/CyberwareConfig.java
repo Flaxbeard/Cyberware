@@ -2,21 +2,33 @@ package flaxbeard.cyberware.common;
 
 import java.io.File;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.NumberInvalidException;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
+import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
+import flaxbeard.cyberware.common.network.UpdateConfigPacket;
 
 public class CyberwareConfig
 {
+	public static CyberwareConfig INSTANCE = new CyberwareConfig();
+	
 	public static float ENGINEERING_CHANCE = 15F;
 	public static float SCANNER_CHANCE = 10F;
 	public static float SCANNER_CHANCE_ADDL = 10F;
@@ -64,7 +76,14 @@ public class CyberwareConfig
 	private static final String C_ESSENCE = "Essence";
 	private static final String C_GAMERULES = "Gamerules";
 
-	public static void loadConfig(FMLPreInitializationEvent event)
+	public static void preInit(FMLPreInitializationEvent event)
+	{
+		configDirectory = event.getModConfigurationDirectory();
+		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
+		loadConfig();
+	}
+	
+	public static void loadConfig()
 	{
 		startingItems = defaultStartingItems = new String[EnumSlot.values().length][0];
 		startingStacks = new ItemStack[EnumSlot.values().length][LibConstants.WARE_PER_SLOT];
@@ -91,8 +110,6 @@ public class CyberwareConfig
 			}
 		}
 		
-		configDirectory = event.getModConfigurationDirectory();
-		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		config.load();
 		
 		for (int index = 0; index < EnumSlot.values().length; index++)
@@ -222,4 +239,35 @@ public class CyberwareConfig
 		return startingStacks[slot.ordinal()];
 	}
 	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onWorldUnload(WorldEvent.Unload event)
+	{
+		if (event.getWorld().isRemote && !Minecraft.getMinecraft().getConnection().getNetworkManager().isChannelOpen())
+		{
+			loadConfig();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLogin(PlayerLoggedInEvent event)
+	{
+		EntityPlayer player = event.player;
+		World world = player.worldObj;
+		
+		if (!world.isRemote)
+		{
+			CyberwarePacketHandler.INSTANCE.sendTo(new UpdateConfigPacket(), (EntityPlayerMP) player);  
+		}
+	}
+	
+	@SubscribeEvent
+	public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if (event.getModID().equalsIgnoreCase(Cyberware.MODID))
+		{
+			loadConfig();
+		}
+	}
+
 }
