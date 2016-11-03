@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Stack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,8 @@ import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.client.gui.hud.MissingPowerDisplay;
 import flaxbeard.cyberware.client.gui.hud.NotificationDisplay;
 import flaxbeard.cyberware.client.gui.hud.PowerDisplay;
+import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.CyberwareContent;
 
 public class HudHandler
 {
@@ -111,15 +115,26 @@ public class HudHandler
 		event.addElement(nd);
 	}
 	
+	private int lastTick = 0;
+	private double lastVelX = 0;
+	private double lastVelY = 0;
+	private double lastVelZ = 0;
+	private double lastLastVelX = 0;
+	private double lastLastVelY = 0;
+	private double lastLastVelZ = 0;
+
+	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
 	{
 		if (event.getType() == ElementType.POTION_ICONS)
 		{
+			GlStateManager.pushMatrix();
 			Minecraft mc = Minecraft.getMinecraft();
-			EntityPlayer p = mc.thePlayer;
+			EntityPlayerSP p = mc.thePlayer;
 			
+			float floatAmt = 0F;
 			boolean active = false;
 			if (CyberwareAPI.hasCapability(p))
 			{
@@ -129,9 +144,38 @@ public class HudHandler
 					if (((IHudjack) CyberwareAPI.getCyberware(stack)).isActive(stack))
 					{
 						active = true;
+						if (CyberwareAPI.getCyberware(stack) == CyberwareContent.eyeUpgrades)
+						{
+							floatAmt = CyberwareConfig.HUDLENS_FLOAT;
+						}
+						else
+						{
+							CyberwareConfig.HUDJACK_FLOAT = .05F;
+							floatAmt = CyberwareConfig.HUDJACK_FLOAT;
+						}
 						break;
 					}
 				}
+			}
+			
+			double accelLastY = lastVelY - lastLastVelY;
+			double accelY = p.motionY - lastVelY;
+			double accelPitch = accelLastY + (accelY - accelLastY) * (event.getPartialTicks() + p.ticksExisted - lastTick) / 2F;
+						
+			double pitchCameraMove = floatAmt * ((p.prevRenderArmPitch + (p.renderArmPitch - p.prevRenderArmPitch) * event.getPartialTicks()) - p.rotationPitch);
+			double yawCameraMove = floatAmt * ((p.prevRenderArmYaw + (p.renderArmYaw - p.prevRenderArmYaw) * event.getPartialTicks()) - p.rotationYaw);
+
+			GlStateManager.translate(yawCameraMove, pitchCameraMove + accelPitch * 50F * floatAmt, 0);
+			
+			if (p.ticksExisted > lastTick + 1)
+			{
+				lastTick = p.ticksExisted;
+				lastLastVelX = lastVelX;
+				lastLastVelY = lastVelY;
+				lastLastVelZ = lastVelZ;
+				lastVelX = p.motionX;
+				lastVelY = p.motionY;
+				lastVelZ = p.motionZ;
 			}
 			
 			CyberwareHudEvent hudEvent = new CyberwareHudEvent(event.getResolution(), active);
@@ -330,7 +374,7 @@ public class HudHandler
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glPopMatrix();
 				}*/
-			
+			GlStateManager.popMatrix();	
 		}
 	}
 
