@@ -30,7 +30,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 		{
 			String s = I18n.format(unlocalizedName);
 			
-			tablet.drawStringSmall(s, 10, 2, hovered ? 0x34B1C7 : 0x188EA2);
+			tablet.drawStringSmall(s, x + 11, y + 4, hovered ? 0x34B1C7 : 0x188EA2);
 
 			
 		}
@@ -44,7 +44,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, hovered ? 0.8F : 0.6F);
-			tablet.drawTexturedModalRect(x, y, 128, 180 + iconIndex * 8, 8, 8);
+			tablet.drawTexturedModalRect(x, y + 2, 128, 180 + iconIndex * 8, 8, 8);
 			
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
@@ -61,7 +61,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 	}
 	
 	@Override
-	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
 		
 		String version = Cyberware.VERSION.equals("@VERSION@") ? "Developer Build" : Cyberware.VERSION;
@@ -72,7 +72,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 		{
 			GlStateManager.pushMatrix();
 			IListMenuItem item = items.get(i);
-			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 14 * i && mouseY < 31 + 14 * (i + 1);
+			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 143 * i && mouseY < 31 + 13 * (i + 1);
 			item.renderText(tablet, 20, 31 + 13 * i, hovered);
 			GlStateManager.popMatrix();
 		}
@@ -81,7 +81,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 		{
 			GlStateManager.pushMatrix();
 			IListMenuItem item = items.get(i);
-			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 14 * i && mouseY < 31 + 14 * (i + 1);
+			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 13 * i && mouseY < 31 + 13 * (i + 1);
 			item.render(tablet, 20, 31 + 13 * i, hovered);
 			GlStateManager.popMatrix();
 		}

@@ -740,14 +740,14 @@ public class GuiSurgery extends GuiContainer
 					{
 						if (surgery.isEssentialMissing[k])
 						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".left"));
+							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".left"));
 						}
 					}
 					else
 					{
 						if (surgery.isEssentialMissing[k])
 						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".right"));
+							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".right"));
 						}
 					}
 				}
@@ -755,7 +755,7 @@ public class GuiSurgery extends GuiContainer
 				{
 					if (surgery.isEssentialMissing[k])
 					{
-						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName()));
+						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName()));
 					}
 				}
 	
@@ -1390,14 +1390,14 @@ public class GuiSurgery extends GuiContainer
 					{
 						if (surgery.isEssentialMissing[k])
 						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".left"));
+							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".left"));
 						}
 					}
 					else
 					{
 						if (surgery.isEssentialMissing[k])
 						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName() + ".right"));
+							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".right"));
 						}
 					}
 				}
@@ -1405,7 +1405,7 @@ public class GuiSurgery extends GuiContainer
 				{
 					if (surgery.isEssentialMissing[k])
 					{
-						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getName()));
+						missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName()));
 					}
 				}
 	

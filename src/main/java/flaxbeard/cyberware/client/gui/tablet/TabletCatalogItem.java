@@ -2,19 +2,19 @@ package flaxbeard.cyberware.client.gui.tablet;
 
 import java.util.Random;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
 import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.GuiTablet;
-import flaxbeard.cyberware.common.CyberwareContent;
 
 public class TabletCatalogItem implements ITabletPage, IScrollWheel
 {
@@ -29,15 +29,16 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	{
 		this.item = itemStack;
 		this.unlocalizedName = unlocalizedName;
+		TabletContent.catalog.addItem(this);
 	}
 
 	@Override
-	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
 		String title = item.getDisplayName();
 		tablet.drawString(title, 20, 15, 0x34B1C7);
 		
-		String s = I18n.format("cyberware.slot." + CyberwareAPI.getCyberware(item).getSlot(item).getName());
+		String s = I18n.format(CyberwareAPI.getCyberware(item).getSlot(item).getUnlocalizedName());
 		tablet.drawStringSmall(s, 15, 9, 0x188EA2);
 		
 		s = "9,982,123";
@@ -133,7 +134,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	@Override
 	public ITabletPage getParent()
 	{
-		return null;
+		return TabletContent.catalog;
 	}
 
 	@Override
@@ -175,6 +176,11 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	public ItemStack getItem()
 	{
 		return this.item;
+	}
+
+	public String getUnlocalizedName()
+	{
+		return this.unlocalizedName;
 	}
 
 }

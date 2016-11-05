@@ -8,8 +8,6 @@ import java.util.Map;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 public interface ICyberware
 {
 	public EnumSlot getSlot(ItemStack stack);
@@ -132,7 +130,12 @@ public interface ICyberware
 			return null;
 		}
 
-		public String getName()
+		public String getUnlocalizedName()
+		{
+			return "cyberware.slot." + name;
+		}
+		
+		public String getBaseName()
 		{
 			return name;
 		}
@@ -150,6 +153,15 @@ public interface ICyberware
 
 	public void onAdded(EntityLivingBase entity, ItemStack stack);
 	public void onRemoved(EntityLivingBase entity, ItemStack stack);
+	public int getEssenceCost(ItemStack stack);
+	default List<CyberwareTag> getTags(ItemStack stack)
+	{
+		return new ArrayList<CyberwareTag>();
+	}
+	default String getUnlocalizedOrigin(ItemStack stack)
+	{
+		return "cyberware.gui.tablet.catalog.sort.other";
+	}
 
 	public interface ISidedLimb
 	{
@@ -162,5 +174,4 @@ public interface ICyberware
 		}
 	}
 
-	public int getEssenceCost(ItemStack stack);
 }

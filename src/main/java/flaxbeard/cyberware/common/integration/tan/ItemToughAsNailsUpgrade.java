@@ -97,6 +97,12 @@ public class ItemToughAsNailsUpgrade extends ItemCyberware
 			data.setExhaustion(Math.min(data.getExhaustion() + amount, 40.0F));
 		}
 	}
+	
+	@Override
+	public String getUnlocalizedOrigin(ItemStack stack)
+	{
+		return "cyberware.gui.tablet.catalog.sort.tanIntegration";
+	}
 
 
 }

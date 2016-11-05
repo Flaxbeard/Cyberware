@@ -11,7 +11,7 @@ public class TabletBootLogo implements ITabletPage
 {
 	
 	@Override
-	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
 		

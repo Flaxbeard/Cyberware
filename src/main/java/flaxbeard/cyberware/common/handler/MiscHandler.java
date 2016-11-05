@@ -91,7 +91,7 @@ public class MiscHandler
 					event.getToolTip().add(ChatFormatting.AQUA + I18n.format("cyberware.tooltip.requires") + " "
 							+ joined);
 				}
-				event.getToolTip().add(ChatFormatting.RED + I18n.format("cyberware.slot." + ware.getSlot(stack).getName()));
+				event.getToolTip().add(ChatFormatting.RED + I18n.format(ware.getSlot(stack).getUnlocalizedName()));
 				
 				
 				if (quality != null)

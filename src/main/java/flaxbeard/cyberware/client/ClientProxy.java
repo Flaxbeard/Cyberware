@@ -15,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
+import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.client.render.CyberwareMeshDefinition;
 import flaxbeard.cyberware.client.render.RenderCyberZombie;
 import flaxbeard.cyberware.client.render.TileEntityBeaconLargeRenderer;
@@ -47,6 +48,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		super.preInit();
+		TabletContent.init();
 		
 		for (Block block : CyberwareContent.blocks)
 		{

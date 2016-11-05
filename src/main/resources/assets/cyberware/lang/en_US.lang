@@ -518,6 +518,25 @@ cyberware.gui.tablet.welcome=Welcome
 cyberware.gui.tablet.test0=Robosurgeon Manual
 cyberware.gui.tablet.test1=Parts Catalog
 
+cyberware.gui.tablet.catalog.sort.slot=by Slot
+cyberware.gui.tablet.catalog.sort.alpha=Alphabetically
+cyberware.gui.tablet.catalog.sort.tag=by Tags
+cyberware.gui.tablet.catalog.sort.mod=by Mod
+
+cyberware.gui.tablet.catalog.sort.other=Other
+cyberware.gui.tablet.catalog.sort.modname=Cyberware
+cyberware.gui.tablet.catalog.sort.tanIntegration=Cyberware + Tough As Nails
+
+cyberware.tag.mobility=Mobility
+cyberware.tag.building=Building
+cyberware.tag.combat=Combat
+cyberware.tag.powergen=Power Generation
+cyberware.tag.powerstorage=Power Storage
+cyberware.tag.survivability=Survivability
+cyberware.tag.mining=Mining
+cyberware.tag.replacement=Extremity Replacement
+
+
 # MISC
 cyberware.container.engineering=Cyberware Engineering
 cyberware.container.scanner=Scanner

@@ -115,7 +115,7 @@ public class CyberwareConfig
 		for (int index = 0; index < EnumSlot.values().length; index++)
 		{
 			EnumSlot slot = EnumSlot.values()[index];
-			startingItems[index] = config.getStringList("Default augments for " + slot.getName() + " slot",
+			startingItems[index] = config.getStringList("Default augments for " + slot.getBaseName() + " slot",
 					"Defaults", defaultStartingItems[index], "Use format 'id amount metadata'");
 		}
 		
@@ -159,7 +159,7 @@ public class CyberwareConfig
 			EnumSlot slot = EnumSlot.values()[index];
 			if (itemSet.length > LibConstants.WARE_PER_SLOT)
 			{
-				throw new RuntimeException("Cyberware configuration error! Too many items for slot " + slot.getName());
+				throw new RuntimeException("Cyberware configuration error! Too many items for slot " + slot.getBaseName());
 			}
 			
 			for (int i = 0; i < itemSet.length; i++)
@@ -187,7 +187,7 @@ public class CyberwareConfig
 					catch (NumberFormatException e)
 					{
 						throw new RuntimeException("Cyberware configuration error! Item " + (i + 1) + " for "
-								+ slot.getName() + " slot has invalid metadata: '" + params[2] + "'");
+								+ slot.getBaseName() + " slot has invalid metadata: '" + params[2] + "'");
 					}
 					try
 					{
@@ -196,13 +196,13 @@ public class CyberwareConfig
 					catch (NumberFormatException e)
 					{
 						throw new RuntimeException("Cyberware configuration error! Item " + (i + 1) + " for "
-								+ slot.getName() + " slot has invalid number: '" + params[1] + "'");
+								+ slot.getBaseName() + " slot has invalid number: '" + params[1] + "'");
 					}
 				}
 				else
 				{
 					throw new RuntimeException("Cyberware configuration error! Item " + (i + 1) + " for "
-							+ slot.getName() + " slot has too many arguments!");
+							+ slot.getBaseName() + " slot has too many arguments!");
 				}
 				
 				Item item;
@@ -213,7 +213,7 @@ public class CyberwareConfig
 				catch (NumberInvalidException e)
 				{
 					throw new RuntimeException("Cyberware configuration error! Item '" + (i + 1) + "' for "
-							+ slot.getName() + " slot has a nonexistant item: " + itemName);
+							+ slot.getBaseName() + " slot has a nonexistant item: " + itemName);
 				}
 				
 				ItemStack stack = new ItemStack(item, number, meta);
@@ -224,7 +224,7 @@ public class CyberwareConfig
 				}
 				if ((CyberwareAPI.getCyberware(stack)).getSlot(stack) != slot)
 				{
-					throw new RuntimeException("Cyberware configuration error! " + itemEncoded + " will not fit in slot " + slot.getName());
+					throw new RuntimeException("Cyberware configuration error! " + itemEncoded + " will not fit in slot " + slot.getBaseName());
 				}
 				
 				startingStacks[index][i] = stack;

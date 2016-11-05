@@ -2,6 +2,7 @@ package flaxbeard.cyberware.common.integration.tan;
 
 import net.minecraft.item.ItemStack;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.client.gui.tablet.TabletCatalogItem;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import flaxbeard.cyberware.api.item.IDeconstructable;
@@ -26,6 +27,7 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 	private EnumSlot[] slots;
 	private int[] essence;
 	private ItemStack[][] components;
+	private List<CyberwareTag>[] tags;
 	
 	public ItemCyberware(String name, EnumSlot[] slots, String[] subnames)
 	{		
@@ -35,7 +37,11 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 		
 		this.essence = new int[subnames.length + 1];
 		this.components = new ItemStack[0][0];
-
+		this.tags = new List[subnames.length + 1];
+		for (int i = 0; i < tags.length; i++)
+		{
+			tags[i] = new ArrayList<CyberwareTag>();
+		}
 	}
 	
 	public ItemCyberware(String name, EnumSlot slot, String[] subnames)
@@ -379,5 +385,25 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 	public boolean canHoldQuality(ItemStack stack, Quality quality)
 	{
 		return true;
+	}
+	
+	@Override
+	public List<CyberwareTag> getTags(ItemStack stack)
+	{
+		return tags[Math.min(this.subnames.length, stack.getItemDamage())];
+	}
+	
+	@Override
+	public String getUnlocalizedOrigin(ItemStack stack)
+	{
+		return "cyberware.gui.tablet.catalog.sort.modname";
+	}
+	
+	public void addTags(int meta, CyberwareTag... tags)
+	{
+		for (CyberwareTag tag : tags)
+		{
+			this.tags[meta].add(tag);
+		}
 	}
 }

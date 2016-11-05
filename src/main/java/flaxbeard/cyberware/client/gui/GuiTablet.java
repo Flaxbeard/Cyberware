@@ -1,5 +1,7 @@
 package flaxbeard.cyberware.client.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,7 +42,7 @@ public class GuiTablet extends GuiScreen
 	{
 		openTicks = Minecraft.getMinecraft().thePlayer.ticksExisted;
 		//page = TabletContent.mainMenu;
-		page = TabletContent.eyes;
+		page = TabletContent.catalog;
 		dragging = false;
 		dragOffset = 0;
 	}
@@ -51,9 +53,16 @@ public class GuiTablet extends GuiScreen
 		return false;
 	}
 	
+	private boolean leftDown = false;
+	private boolean rightDown = false;
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
+		if (page.getParent() != null && rightDown)
+		{
+			page = page.getParent();
+		}
 		boolean init = true;
 		GlStateManager.pushMatrix();
 		
@@ -193,11 +202,12 @@ public class GuiTablet extends GuiScreen
 					GlStateManager.disableBlend();
 	
 					GlStateManager.translate(0F, -scroll, 0F);
+					modMouseY += scroll;
 				}
 				
 			}
 			
-			page.render(this, maxTabletWidth - 64, tabletHeight - 20, modMouseX, modMouseY, ticks, partialTicks);
+			page.render(this, maxTabletWidth - 64, tabletHeight - 20, modMouseX, modMouseY, ticks, partialTicks, leftDown);
 			
 		}
 		GlStateManager.popMatrix();
@@ -303,6 +313,8 @@ public class GuiTablet extends GuiScreen
 		}
 		
 		GlStateManager.popMatrix();
+		
+		leftDown = rightDown = false;
 	}
 	
 	public void setPage(ITabletPage page)
@@ -316,6 +328,12 @@ public class GuiTablet extends GuiScreen
 		return itemRender;
 	}
 	
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+	{
+		leftDown = mouseButton == 0;
+		rightDown = mouseButton == 1;
+	}
 	
 	private void scissorInternal(int x, int y, int xSize, int ySize)
 	{
@@ -344,9 +362,15 @@ public class GuiTablet extends GuiScreen
 	
 	public void drawStringSmall(String s, int x, int y, int color)
 	{
+		drawStringSmall(s, x, y, color, 0, 0);
+	}
+	
+	public void drawStringSmall(String s, int x, int y, int color, int smallXOffset, int smallYOffset)
+	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.scale(.5F, .5F, 1F);
+		GlStateManager.translate(smallXOffset, smallYOffset, 0);
 		
 		fontRendererObj.drawString(s, 0, 0, color);
 		

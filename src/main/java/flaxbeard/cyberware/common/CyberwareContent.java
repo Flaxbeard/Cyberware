@@ -29,6 +29,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
+import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.common.block.BlockBeacon;
@@ -82,6 +83,15 @@ public class CyberwareContent
 	public static final int UNCOMMON = 25;
 	public static final int COMMON = 50;
 	public static final int VERY_COMMON = 100;
+	
+	public static CyberwareTag MOBILITY = CyberwareTag.MOBILITY;
+	public static CyberwareTag BUILDING = CyberwareTag.BUILDING;
+	public static CyberwareTag COMBAT = CyberwareTag.COMBAT;
+	public static CyberwareTag POWERGEN = CyberwareTag.POWERGEN;
+	public static CyberwareTag POWERSTORAGE = CyberwareTag.POWERSTORAGE;
+	public static CyberwareTag SURVIVABILITY = CyberwareTag.SURVIVABILITY;
+	public static CyberwareTag MINING = CyberwareTag.MINING;
+	public static CyberwareTag REPLACMENT = CyberwareTag.REPLACMENT;
 
 	public static Block surgeryApparatus;
 	public static BlockSurgeryChamber surgeryChamber;
@@ -228,6 +238,7 @@ public class CyberwareContent
 		cybereyes.setEssenceCost(8); // 0.2.0 Changed from 10
 		cybereyes.setWeights(UNCOMMON);
 		cybereyes.setComponents(new ItemStack[] { new ItemStack(component, 1, 4), new ItemStack(component, 2, 5), new ItemStack(component, 2, 7) });
+		cybereyes.addTags(0, REPLACMENT, SURVIVABILITY, POWERSTORAGE);
 		
 		cybereyeUpgrades = new ItemCybereyeUpgrade("cybereyeUpgrades", EnumSlot.EYES,
 				new String[] { "nightVision", "underwaterVision", "hudjack", "targeting", "zoom" });
@@ -490,8 +501,6 @@ public class CyberwareContent
 					Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "blockRedstone", Character.valueOf('P'), new ItemStack(Items.DIAMOND_PICKAXE), Character.valueOf('S'), new ItemStack(Items.DIAMOND_SWORD), Character.valueOf('A'), new ItemStack(Items.DIAMOND_AXE)
 					));
 		}
-		
-		TabletContent.init();
 		
 		if (Loader.isModLoaded("Botania"))
 		{
