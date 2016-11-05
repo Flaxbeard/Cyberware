@@ -80,11 +80,6 @@ public class CyberwareConfig
 	{
 		configDirectory = event.getModConfigurationDirectory();
 		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
-		loadConfig();
-	}
-	
-	public static void loadConfig()
-	{
 		startingItems = defaultStartingItems = new String[EnumSlot.values().length][0];
 		startingStacks = new ItemStack[EnumSlot.values().length][LibConstants.WARE_PER_SLOT];
 		
@@ -109,16 +104,25 @@ public class CyberwareConfig
 				defaultStartingItems[i] = new String[0];
 			}
 		}
+		loadConfig();
 		
 		config.load();
-		
 		for (int index = 0; index < EnumSlot.values().length; index++)
 		{
 			EnumSlot slot = EnumSlot.values()[index];
 			startingItems[index] = config.getStringList("Default augments for " + slot.getName() + " slot",
 					"Defaults", defaultStartingItems[index], "Use format 'id amount metadata'");
 		}
+		config.save();
 		
+	}
+	
+	public static void loadConfig()
+	{
+
+		
+		config.load();
+
 		NO_ZOMBIES = config.getBoolean("Disable cyberzombies", C_MOBS, NO_ZOMBIES, "");
 		ZOMBIE_WEIGHT = config.getInt("Spawning weight of Cyberzombies", C_MOBS, ZOMBIE_WEIGHT, 0, Integer.MAX_VALUE, "Vanilla Zombie = 100, Enderman = 10, Witch = 5");
 		ZOMBIE_MIN_PACK = config.getInt("Minimum Cyberzombie pack size", C_MOBS, ZOMBIE_MIN_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 1, Witch = 1");

@@ -157,6 +157,8 @@ public class HudHandler
 				}
 			}
 			
+			floatAmt = 0F;
+			
 			double accelLastY = lastVelY - lastLastVelY;
 			double accelY = p.motionY - lastVelY;
 			double accelPitch = accelLastY + (accelY - accelLastY) * (event.getPartialTicks() + p.ticksExisted - lastTick) / 2F;
