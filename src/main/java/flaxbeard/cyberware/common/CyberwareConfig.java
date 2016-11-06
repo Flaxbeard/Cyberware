@@ -47,6 +47,7 @@ public class CyberwareConfig
 	public static int HUDG = 255;
 	public static int HUDB = 0;
 	
+	public static boolean ENABLE_FLOAT = false;
 	public static float HUDLENS_FLOAT = 0.1F;
 	public static float HUDJACK_FLOAT = 0.05F;
 	
@@ -148,6 +149,9 @@ public class CyberwareConfig
 		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", C_OTHER, CLOTHES, "");
 		
 		RENDER = config.getBoolean("Enable changes to player model (missing skin, missing limbs, Cybernetic limbs)", C_OTHER, RENDER, "");
+		
+		ENABLE_FLOAT = config.getBoolean("Enable hudlens and hudjack float.", C_HUD, ENABLE_FLOAT, "Experimental, defaults to false.");
+
 		HUDJACK_FLOAT = config.getFloat("Amount hudjack HUD will 'float' with movement. Set to 0 for no float.", C_HUD, HUDJACK_FLOAT, 0F, 100F, "");
 		HUDLENS_FLOAT = config.getFloat("Amount hudlens HUD will 'float' with movement. Set to 0 for no float.", C_HUD, HUDLENS_FLOAT, 0F, 100F, "");
 

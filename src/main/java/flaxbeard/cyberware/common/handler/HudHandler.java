@@ -144,21 +144,22 @@ public class HudHandler
 					if (((IHudjack) CyberwareAPI.getCyberware(stack)).isActive(stack))
 					{
 						active = true;
-						if (CyberwareAPI.getCyberware(stack) == CyberwareContent.eyeUpgrades)
+						if (CyberwareConfig.ENABLE_FLOAT)
 						{
-							floatAmt = CyberwareConfig.HUDLENS_FLOAT;
-						}
-						else
-						{
-							floatAmt = CyberwareConfig.HUDJACK_FLOAT;
+							if (CyberwareAPI.getCyberware(stack) == CyberwareContent.eyeUpgrades)
+							{
+								floatAmt = CyberwareConfig.HUDLENS_FLOAT;
+							}
+							else
+							{
+								floatAmt = CyberwareConfig.HUDJACK_FLOAT;
+							}
 						}
 						break;
 					}
 				}
 			}
-			
-			floatAmt = 0F;
-			
+						
 			double accelLastY = lastVelY - lastLastVelY;
 			double accelY = p.motionY - lastVelY;
 			double accelPitch = accelLastY + (accelY - accelLastY) * (event.getPartialTicks() + p.ticksExisted - lastTick) / 2F;
