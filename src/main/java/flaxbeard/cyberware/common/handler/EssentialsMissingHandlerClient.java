@@ -27,6 +27,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -507,7 +508,7 @@ public class EssentialsMissingHandlerClient
 	@SubscribeEvent
 	public void handleRenderHand(RenderHandEvent event)
 	{
-		if (CyberwareConfig.RENDER && !(Loader.isModLoaded("optifine") || Loader.isModLoaded("Optifine")) && (missingArm || missingSecondArm || hasRoboLeft || hasRoboRight))
+		if (CyberwareConfig.RENDER && !(FMLClientHandler.instance().hasOptifine()) && (missingArm || missingSecondArm || hasRoboLeft || hasRoboRight))
 		{
 			float partialTicks = event.getPartialTicks();
 			EntityRenderer er = mc.entityRenderer;
