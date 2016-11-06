@@ -3,6 +3,8 @@ package flaxbeard.cyberware.client.gui.tablet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -77,10 +79,11 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 	@Override
 	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
+
 		
-		String s = I18n.format("Catalog");
+		String s = I18n.format("Parts Catalog");
 		tablet.drawString(s, 20, 15, 0x34B1C7);
-		
+				
 		if (currentSort > sorts.size())
 		{
 			currentSort = 0;
@@ -104,11 +107,6 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 
 		s = "Sorted ";
 		tablet.drawStringSmall(s, width - tablet.getStringWidthSmall(s) - 20 - maxWidth, y, 0x188EA2);
-		
-		if (leftDown && mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1)
-		{
-			sortOpen = !sortOpen;
-		}
 
 		s = I18n.format(sort.getUnlocalizedName());
 		tablet.drawStringSmall(s, width - maxWidth - 20, y, 0x188EA2);
@@ -129,7 +127,19 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 				}
 				i++;
 			}
+			
+			if (leftDown)
+			{
+				sortOpen = false;
+			}
 		}
+		
+		
+		if (leftDown && mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1)
+		{
+			sortOpen = !sortOpen;
+		}
+
 
 		
 		
@@ -137,7 +147,7 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 		
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 0.6F);
-		tablet.drawTexturedModalRect(20, 25, 29, 254, 45, 1);
+		tablet.drawTexturedModalRect(20, 25, 29, 254, tablet.getStringWidth(I18n.format("Parts Catalog")) + 5, 1);
 
 
 
@@ -215,7 +225,7 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 	}
 
 	@Override
-	public int getHeight(int height, int ticksOpen, float partialTicks)
+	public int getHeight(GuiTablet tablet, int width, int height, int ticksOpen, float partialTicks)
 	{
 		return sorts.get(currentSort).getHeight() + 62;
 	}

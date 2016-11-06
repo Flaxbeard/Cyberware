@@ -517,6 +517,19 @@ cyberware.gui.tablet.menutitle=MedOS %s
 cyberware.gui.tablet.welcome=Welcome
 cyberware.gui.tablet.test0=Robosurgeon Manual
 cyberware.gui.tablet.test1=Parts Catalog
+cyberware.gui.tablet.catalog.item.code=Product Code:
+cyberware.gui.tablet.catalog.item.manufacturer=Manufacturer:
+cyberware.gui.tablet.catalog.item.numInstalled=Number Installed:
+cyberware.gui.tablet.catalog.item.rejection=Rejection effect:
+cyberware.gui.tablet.catalog.item.boost=Tolerance boost:
+cyberware.gui.tablet.catalog.item.storage=Power storage:
+cyberware.gui.tablet.catalog.item.produce=Power production:
+cyberware.gui.tablet.catalog.item.consume=Power consumption:
+cyberware.gui.tablet.catalog.item.onUse=IJ upon use
+cyberware.gui.tablet.catalog.item.ijs=IJ/s
+cyberware.gui.tablet.catalog.item.ij=IJ
+cyberware.gui.tablet.catalog.item.kij=kIJ
+cyberware.gui.tablet.catalog.item.tol=tol
 
 cyberware.gui.tablet.catalog.sort.slot=by Slot
 cyberware.gui.tablet.catalog.sort.alpha=Alphabetically
@@ -535,7 +548,12 @@ cyberware.tag.powerstorage=Power Storage
 cyberware.tag.survivability=Survivability
 cyberware.tag.mining=Mining
 cyberware.tag.replacement=Extremity Replacement
+cyberware.tag.info=Awareness
+cyberware.tag.utility=Utility
 
+cyberware.gui.tablet.catalog.cardioCoupler.quote=Touch Medical's Cardiovascular Coupler makes me feel like my body is my own. I can gain all the benefits of my augmentations without the hassle of a battery or a bulky generator.
+cyberware.gui.tablet.catalog.cardioCoupler.author=Neogrammy winning actress Veronica Hughes
+cyberware.gui.tablet.catalog.cardioCoupler.text=From the leader in human augmentation technology, the Cardiovascular Coupler is the forefront of minimally invasive power generation. Designed with precision and custom-ordered to fit each customer, the Cardiovascular Coupler attaches to the heart of the user and utilizes the body's natural electrical pulses to power installed augmentations.
 
 # MISC
 cyberware.container.engineering=Cyberware Engineering

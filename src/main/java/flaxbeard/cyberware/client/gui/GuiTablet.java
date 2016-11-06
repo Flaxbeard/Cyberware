@@ -21,8 +21,8 @@ import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 
 public class GuiTablet extends GuiScreen
 {
-	public static final ResourceLocation TABLET = new ResourceLocation(Cyberware.MODID + ":textures/gui/tablet.png");
 	public static final ResourceLocation TABLETHD = new ResourceLocation(Cyberware.MODID + ":textures/gui/tablethd.png");
+	public static final ResourceLocation TABLET_RESOURCES = new ResourceLocation(Cyberware.MODID + ":textures/gui/tabletResources.png");
 
 	public static final ResourceLocation TABLET_OVERLAY = new ResourceLocation(Cyberware.MODID + ":textures/gui/tabletOverlay.png");
 	public static final ResourceLocation BLUE_PX = new ResourceLocation(Cyberware.MODID + ":textures/gui/brightbluepx.png");
@@ -148,7 +148,7 @@ public class GuiTablet extends GuiScreen
 			if (page instanceof IScrollWheel)
 			{
 				IScrollWheel swpage = ((IScrollWheel) page);
-				int h = swpage.getHeight(tabletHeight, ticks, partialTicks);
+				int h = swpage.getHeight(this, maxTabletWidth - 64, tabletHeight, ticks, partialTicks);
 				h = Math.max(tabletHeight, h);
 				
 				
@@ -187,7 +187,7 @@ public class GuiTablet extends GuiScreen
 				}
 				
 				scroll = Math.max(0, scroll);
-				scroll = Math.min(scroll, swpage.getHeight(tabletHeight, ticks, partialTicks) - tabletHeight);
+				scroll = Math.min(scroll, h - tabletHeight);
 				swpage.setScrollAmount(scroll);
 				
 				if (h != tabletHeight)
@@ -387,13 +387,13 @@ public class GuiTablet extends GuiScreen
 		return fontRendererObj.getStringWidth(s) / 2;
 	}
 	
-	public int drawSplitSpring(String s, int x, int y, int width, int color)
+	public int drawSplitString(String s, int x, int y, int width, int color)
 	{
 		fontRendererObj.drawSplitString(s, x, y, width, color);
-		return fontRendererObj.listFormattedStringToWidth(s,  width).size();
+		return fontRendererObj.listFormattedStringToWidth(s, width).size();
 	}
 	
-	public int drawSplitSpringSmall(String s, int x, int y, int width, int color)
+	public int drawSplitStringSmall(String s, int x, int y, int width, int color)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
@@ -401,7 +401,17 @@ public class GuiTablet extends GuiScreen
 		fontRendererObj.drawSplitString(s, 0, 0, width * 2, color);
 		GlStateManager.popMatrix();
 
-		return fontRendererObj.listFormattedStringToWidth(s,  width * 2).size();
+		return fontRendererObj.listFormattedStringToWidth(s, width * 2).size();
+	}
+	
+	public int getSplitStringLines(String s, int width)
+	{
+		return fontRendererObj.listFormattedStringToWidth(s, width).size();
+	}
+	
+	public int getSplitStringSmallLines(String s, int width)
+	{
+		return fontRendererObj.listFormattedStringToWidth(s, width * 2).size();
 	}
 	
 	

@@ -136,7 +136,7 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 	}
 
 	@Override
-	public int getHeight(int height, int ticksOpen, float partialTicks)
+	public int getHeight(GuiTablet tablet, int width, int height, int ticksOpen, float partialTicks)
 	{
 		return 13 * items.size() + 62;
 	}

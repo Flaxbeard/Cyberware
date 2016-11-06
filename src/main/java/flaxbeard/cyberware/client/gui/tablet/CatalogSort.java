@@ -320,7 +320,7 @@ public interface CatalogSort
 		@Override
 		public void addItem(TabletCatalogItem item)
 		{
-			List<CyberwareTag> tags = CyberwareAPI.getCyberware(item.getItem()).getTags(item.getItem());
+			List<CyberwareTag> tags = item.getTags();
 			
 			for (CyberwareTag tag : tags)
 			{

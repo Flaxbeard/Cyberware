@@ -154,10 +154,6 @@ public interface ICyberware
 	public void onAdded(EntityLivingBase entity, ItemStack stack);
 	public void onRemoved(EntityLivingBase entity, ItemStack stack);
 	public int getEssenceCost(ItemStack stack);
-	default List<CyberwareTag> getTags(ItemStack stack)
-	{
-		return new ArrayList<CyberwareTag>();
-	}
 	default String getUnlocalizedOrigin(ItemStack stack)
 	{
 		return "cyberware.gui.tablet.catalog.sort.other";
