@@ -60,7 +60,7 @@ public class EssentialsMissingHandlerClient
 	{
 		
 		EntityPlayer p = event.getEntityPlayer();
-		if (CyberwareConfig.RENDER && CyberwareAPI.hasCapability(p) && (p != mc.thePlayer || !(Loader.isModLoaded("optifine") || Loader.isModLoaded("Optifine")) || mc.gameSettings.thirdPersonView != 0))
+		if (CyberwareConfig.RENDER && CyberwareAPI.hasCapability(p))
 		{	
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
 			boolean hasLeftLeg = cyberware.hasEssential(EnumSlot.LEG, EnumSide.LEFT);
