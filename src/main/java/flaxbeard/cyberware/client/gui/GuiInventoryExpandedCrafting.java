@@ -1,27 +1,20 @@
 package flaxbeard.cyberware.client.gui;
 
-import java.io.IOException;
-
-import flaxbeard.cyberware.Cyberware;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.achievement.GuiAchievements;
-import net.minecraft.client.gui.achievement.GuiStats;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import flaxbeard.cyberware.Cyberware;
 
 @SideOnly(Side.CLIENT)
-public class GuiInventoryExpandedCrafting extends InventoryEffectRenderer
+public class GuiInventoryExpandedCrafting extends GuiInventory
 {
 	private static final ResourceLocation INVENTORY_BACKGROUND = new ResourceLocation(Cyberware.MODID + ":textures/gui/inventoryCrafting.png");
 
@@ -33,62 +26,11 @@ public class GuiInventoryExpandedCrafting extends InventoryEffectRenderer
 
 	public GuiInventoryExpandedCrafting(EntityPlayer player)
 	{
-		super(new ContainerPlayerExpandedCrafting(player.inventory, !player.worldObj.isRemote, player));
-		this.allowUserInput = true;
+		super(player);
+		this.inventorySlots = new ContainerPlayerExpandedCrafting(player.inventory, !player.worldObj.isRemote, player);
 	}
 	
-	
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	public void updateScreen()
-	{
-		if (this.mc.playerController.isInCreativeMode())
-		{
-			this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
-		}
-	}
-
-	/**
-	 * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-	 * window resizes, the buttonList is cleared beforehand.
-	 */
-	public void initGui()
-	{
-		this.buttonList.clear();
-
-		if (this.mc.playerController.isInCreativeMode())
-		{
-			this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
-		}
-		else
-		{
-			super.initGui();
-		}
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 97, 8, 4210752);
-	}
-
-	/**
-	 * Draws the screen and all the components in it.
-	 */
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
-	{
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.oldMouseX = (float)mouseX;
-		this.oldMouseY = (float)mouseY;
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -98,10 +40,15 @@ public class GuiInventoryExpandedCrafting extends InventoryEffectRenderer
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		drawEntityOnScreen(i + 51, j + 75, 30, (float)(i + 51) - this.oldMouseX, (float)(j + 75 - 50) - this.oldMouseY, this.mc.thePlayer);
 	}
+	
+	@Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.oldMouseX = (float)mouseX;
+        this.oldMouseY = (float)mouseY;
+    }
 
-	/**
-	 * Draws an entity on the screen looking toward the cursor.
-	 */
 	public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
 	{
 		GlStateManager.enableColorMaterial();
@@ -142,19 +89,4 @@ public class GuiInventoryExpandedCrafting extends InventoryEffectRenderer
 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
-	/**
-	 * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-	 */
-	protected void actionPerformed(GuiButton button) throws IOException
-	{
-		if (button.id == 0)
-		{
-			this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
-		}
-
-		if (button.id == 1)
-		{
-			this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
-		}
-	}
 }
