@@ -30,7 +30,7 @@ public class GuiTablet extends GuiScreen
 
 	private int openTicks = 0;
 	private int lastTicks = 0;
-	private ITabletPage page;
+	private static ITabletPage page = TabletContent.catalog;
 	private boolean dragging;
 	private int dragOffset = 0;
 	
@@ -42,7 +42,6 @@ public class GuiTablet extends GuiScreen
 	{
 		openTicks = Minecraft.getMinecraft().thePlayer.ticksExisted;
 		//page = TabletContent.mainMenu;
-		page = TabletContent.catalog;
 		dragging = false;
 		dragOffset = 0;
 	}
@@ -305,11 +304,11 @@ public class GuiTablet extends GuiScreen
 
 		if (leftButton)
 		{
-			this.drawTexturedModalRect(i2 + 19, j + 85, 21, 180, 8, 10);
+			this.drawTexturedModalRect(i2 + 19, j + 84, 21, 180, 8, 12);
 		}
 		if (rightButton)
 		{
-			this.drawTexturedModalRect(i2 + tabletWidth - 26, j + 76, 42, 180, 8, 24);
+			this.drawTexturedModalRect(i2 + tabletWidth - 26, j + 78, 42, 180, 8, 24);
 		}
 		
 		GlStateManager.popMatrix();

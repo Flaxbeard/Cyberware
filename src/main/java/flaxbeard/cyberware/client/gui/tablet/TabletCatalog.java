@@ -65,6 +65,7 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 	private List<CatalogSort> sorts;
 	private int currentSort = 0;
 	private boolean sortOpen = false;
+	private boolean showHidden = true;
 	
 	public TabletCatalog()
 	{
@@ -90,9 +91,9 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 		}
 		
 		CatalogSort sort = sorts.get(currentSort);
-		sort.render(tablet, 20, 31, width, mouseX, mouseY, leftDown);
+		sort.render(tablet, 20, 31, width, mouseX, mouseY, leftDown, showHidden);
 		
-		int y = 20;
+		int y = 28;
 		int maxWidth = 0;
 		
 		for (CatalogSort sort2 : sorts)
@@ -105,14 +106,19 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 			}
 		}
 
-		s = "Sorted ";
+		s = I18n.format("cyberware.gui.tablet.catalog.sort") + " ";
 		tablet.drawStringSmall(s, width - tablet.getStringWidthSmall(s) - 20 - maxWidth, y, 0x188EA2);
+		
+		String showu = I18n.format("cyberware.gui.tablet.catalog.showUnknown") + " ";
+		tablet.drawStringSmall(showu, width - tablet.getStringWidthSmall(showu) - 20 - 3, y - 8, 0x188EA2);
+		
+
 
 		s = I18n.format(sort.getUnlocalizedName());
 		tablet.drawStringSmall(s, width - maxWidth - 20, y, 0x188EA2);
 		
 		if (sortOpen)
-		{
+		{			
 			int i = 0;
 			for (CatalogSort sort2 : sorts)
 			{
@@ -127,17 +133,17 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 				}
 				i++;
 			}
-			
-			if (leftDown)
-			{
-				sortOpen = false;
-			}
 		}
 		
-		
-		if (leftDown && mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1)
+		y = 28;
+
+		if (!sortOpen && leftDown && mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1)
 		{
-			sortOpen = !sortOpen;
+			sortOpen = true;
+		}
+		else if (leftDown)
+		{
+			sortOpen = false;
 		}
 
 
@@ -151,31 +157,22 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 
 
 
-		y = 20;
+		y = 28;
 		
 		if (!sortOpen)
 		{
 			if (mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1)
 			{
 				GlStateManager.color(1F, 1F, 1F, 0.101F);
-				tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 2, 256 - maxWidth - 4, 249, maxWidth + 4, 7);
-				
-				GlStateManager.color(1F, 1F, 1F, 0.3F);
-				tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 2, 256 - maxWidth - 4, 245, maxWidth + 4, 3);
-			}
-			else
-			{
-				GlStateManager.color(1F, 1F, 1F, 0.15F);
-				tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 2, 256 - maxWidth - 4, 245, maxWidth + 4, 3);
+				tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 1, 256 - maxWidth - 4, 249, maxWidth + 4, 6);
+
 			}
 		}
 		else
 		{
-			GlStateManager.color(1F, 1F, 1F, 0.3F);
-			tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 2, 256 - maxWidth - 4, 245, maxWidth + 4, 3);
 			boolean hover = mouseY >= y && mouseY < y + 6 && mouseX >= width - maxWidth - 20 - 1 && mouseX <= width - 20 + 1;
 			GlStateManager.color(1F, 1F, 1F, hover ? 0.2F : 0.101F);
-			tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 2, 256 - maxWidth - 4, 249, maxWidth + 4, 7);
+			tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 1, 256 - maxWidth - 4, 249, maxWidth + 4, 6);
 			for (CatalogSort sort2 : sorts)
 			{
 				y += 6;
@@ -184,6 +181,29 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 				tablet.drawTexturedModalRect(width - maxWidth - 20 - 1, y - 1, 256 - maxWidth - 4, 249, maxWidth + 4, 6);
 			}
 		}
+		
+		
+		boolean hover = false;
+		if (mouseX >= width - 23 - tablet.getStringWidthSmall(showu) && mouseX <= width - 23 + 5 && mouseY >= 20 && mouseY <= 20 + 5)
+		{
+			hover = true;
+		}
+		
+		if (hover && leftDown)
+		{
+			showHidden = !showHidden;
+		}
+			
+		GlStateManager.pushMatrix();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
+		
+		GlStateManager.enableBlend();
+		GlStateManager.color(1F, 1F, 1F, hover ? 0.8F : 0.6F);
+		GlStateManager.translate(width - 23, 20 - .5F, 0);
+		GlStateManager.scale(.5F, .5F, 1F);
+		tablet.drawTexturedModalRect(0, 0, showHidden ? 125 : 135, 245, 9, 9);
+		GlStateManager.popMatrix();
+
 
 
 	}
@@ -227,7 +247,7 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 	@Override
 	public int getHeight(GuiTablet tablet, int width, int height, int ticksOpen, float partialTicks)
 	{
-		return sorts.get(currentSort).getHeight() + 62;
+		return sorts.get(currentSort).getHeight(showHidden) + 62;
 	}
 
 	public void addItem(TabletCatalogItem tabletCatalogItem)

@@ -179,6 +179,7 @@ public class ContainerEngineeringTable extends Container
 		archive = null;
 		componentBox = null;
 		BlockPos target = null;
+		engineering.markDirty();
 		if (engineering.lastPlayerArchive.containsKey(uuid))
 		{
 			target = engineering.lastPlayerArchive.get(uuid);
@@ -198,7 +199,7 @@ public class ContainerEngineeringTable extends Container
 							archive = (TileEntityBlueprintArchive) te;
 							archiveIndex = archiveList.size();
 						}
-
+						te.markDirty();
 						archiveList.add((TileEntityBlueprintArchive) te);
 					}
 				}
@@ -244,7 +245,7 @@ public class ContainerEngineeringTable extends Container
 							componentBox = (TileEntityComponentBox) te;
 							componentBoxIndex = componentBoxList.size();
 						}
-
+						te.markDirty();
 						componentBoxList.add((TileEntityComponentBox) te);
 					}
 				}

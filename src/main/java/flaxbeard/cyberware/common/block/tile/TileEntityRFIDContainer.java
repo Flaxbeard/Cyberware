@@ -1,5 +1,7 @@
 package flaxbeard.cyberware.common.block.tile;
 
+import java.util.UUID;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +27,9 @@ public class TileEntityRFIDContainer extends TileEntity implements ITickable
 	
 	public ItemStackHandler slots = new ItemStackHandler(27);
 	public String customName = null;
+	public int ticksExisted = 0;
+	public int lastOpened = 0;
+	private UUID uuid = null;
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
@@ -58,6 +63,15 @@ public class TileEntityRFIDContainer extends TileEntity implements ITickable
 		{
 			customName = compound.getString("CustomName");
 		}
+		
+		if (compound.hasKey("PlayerFor"))
+		{
+			uuid = UUID.fromString(compound.getString("PlayerFor"));
+		}
+		else
+		{
+			uuid = null;
+		}
 	}
 	
 	@Override
@@ -70,6 +84,11 @@ public class TileEntityRFIDContainer extends TileEntity implements ITickable
 		if (this.hasCustomName())
 		{
 			compound.setString("CustomName", customName);
+		}
+		
+		if (uuid != null)
+		{
+			compound.setString("PlayerFor", uuid.toString());
 		}
 				
 		return compound;
@@ -159,5 +178,17 @@ public class TileEntityRFIDContainer extends TileEntity implements ITickable
 				RFIDRegistry.add(worldObj, pos, 300);
 			}
 		}
+		ticksExisted += 1;
+	}
+
+
+	public void setPlayer(EntityPlayer player)
+	{
+		uuid = player.getGameProfile().getId();
+	}
+	
+	public boolean isForPlayer(EntityPlayer player)
+	{
+		return uuid != null && player != null && uuid.equals(player.getGameProfile().getId());
 	}
 }

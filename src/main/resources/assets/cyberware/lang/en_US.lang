@@ -316,6 +316,7 @@ cyberware.commands.clearCyberware.success=Cleared the Cyberware of %1$s
 
 # ENTITIES
 entity.cyberware.cyberzombie.name=Cyberzombie
+entity.cyberware.bytebug.name=Bytebug
 
 # SCANNER SAYINGS
 # FOR TRANSLATORS - YOU CAN HAVE AS MANY OR FEW OF THESE AS YOU WANT, BUT YOU NEED AT LEAST ONE
@@ -531,6 +532,8 @@ cyberware.gui.tablet.catalog.item.ij=IJ
 cyberware.gui.tablet.catalog.item.kij=kIJ
 cyberware.gui.tablet.catalog.item.tol=tol
 
+cyberware.gui.tablet.catalog.sort=Sorted
+cyberware.gui.tablet.catalog.showUnknown=Show unknown items
 cyberware.gui.tablet.catalog.sort.slot=by Slot
 cyberware.gui.tablet.catalog.sort.alpha=Alphabetically
 cyberware.gui.tablet.catalog.sort.tag=by Tags

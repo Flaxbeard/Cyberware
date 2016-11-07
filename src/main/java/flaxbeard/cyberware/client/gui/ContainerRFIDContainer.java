@@ -8,20 +8,19 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
+import flaxbeard.cyberware.common.block.tile.TileEntityRFIDContainer;
 
-public class ContainerBlueprintArchive extends Container
+public class ContainerRFIDContainer extends Container
 {
-	private TileEntityBlueprintArchive archive;
+	private TileEntityRFIDContainer container;
 	private int numRows;
 
-	public ContainerBlueprintArchive(IInventory playerInventory, TileEntityBlueprintArchive archive)
+	public ContainerRFIDContainer(IInventory playerInventory, TileEntityRFIDContainer archive)
 	{
-		this.archive = archive;
-		archive.markDirty();
+		this.container = archive;
 		this.numRows = archive.slots.getSlots() / 9;
 		int i = (this.numRows - 4) * 18;
-
+		archive.markDirty();
 		for (int j = 0; j < this.numRows; ++j)
 		{
 			for (int k = 0; k < 9; ++k)
@@ -46,7 +45,7 @@ public class ContainerBlueprintArchive extends Container
 
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return this.archive.isUseableByPlayer(playerIn);
+		return this.container.isUseableByPlayer(playerIn);
 	}
 
 	/**

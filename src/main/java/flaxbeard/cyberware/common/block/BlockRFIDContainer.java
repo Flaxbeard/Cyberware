@@ -15,7 +15,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -30,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.api.ProgressionHelper;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntityRFIDContainer;
@@ -80,7 +80,7 @@ public class BlockRFIDContainer extends BlockContainer
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return EnumBlockRenderType.MODEL;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 	
 	@Override
@@ -94,6 +94,15 @@ public class BlockRFIDContainer extends BlockContainer
 			if (tileentity instanceof TileEntityRFIDContainer)
 			{
 				((TileEntityRFIDContainer) tileentity).setCustomInventoryName(stack.getDisplayName());
+			}
+		}
+		if (placer instanceof EntityPlayer)
+		{
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+
+			if (tileentity instanceof TileEntityRFIDContainer)
+			{
+				((TileEntityRFIDContainer) tileentity).setPlayer((EntityPlayer) placer);
 			}
 		}
 	}
@@ -152,16 +161,21 @@ public class BlockRFIDContainer extends BlockContainer
 			
 			if (state.getValue(ENABLED))
 			{
-				System.out.println("RE");
 				worldIn.setBlockState(pos, state.withProperty(ENABLED, false), 2);
 				// TODO
-				worldIn.setBlockToAir(pos);
+				//worldIn.setBlockToAir(pos);
+				ProgressionHelper.populateLootChest(((TileEntityRFIDContainer) tileentity), player);
 				
-				if (worldIn.isRemote)
+				if (!worldIn.isRemote)
 				{
-					spawnNewChest(worldIn, pos, 0);
+					spawnNewChest(worldIn, pos, 0, player);
 				}
 			}
+			
+			tileentity = worldIn.getTileEntity(pos);
+			((TileEntityRFIDContainer) tileentity).lastOpened = ((TileEntityRFIDContainer) tileentity).ticksExisted;
+			
+			player.openGui(Cyberware.INSTANCE, 7, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
 			//player.openGui(Cyberware.INSTANCE, 4, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
@@ -170,7 +184,7 @@ public class BlockRFIDContainer extends BlockContainer
 		
 	}
 	
-	private void spawnNewChest(World world, BlockPos pos, int t)
+	private void spawnNewChest(World world, BlockPos pos, int t, EntityPlayer player)
 	{
 		float direction = (float) (world.rand.nextFloat() * Math.PI * 2F);
 		double xComp = Math.sin(direction);
@@ -179,7 +193,6 @@ public class BlockRFIDContainer extends BlockContainer
 		int z = (int) (100 * zComp) + pos.getZ();
 		int y = 254;
 		
-
 		while (world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.SAND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.GROUND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.ROCK && y > 5)
 		{
 			y--;
@@ -187,7 +200,7 @@ public class BlockRFIDContainer extends BlockContainer
 		
 		if (y <= 5 && t < 25)
 		{
-			spawnNewChest(world, pos, t + 1);
+			spawnNewChest(world, pos, t + 1, player);
 		}
 		else
 		{
@@ -199,12 +212,12 @@ public class BlockRFIDContainer extends BlockContainer
 			}
 			if (counter >= 10 && t < 25)
 			{
-				spawnNewChest(world, pos, t + 1);
+				spawnNewChest(world, pos, t + 1, player);
 			}
 			else
 			{
 				world.setBlockState(new BlockPos(x, y, z), this.getDefaultState().withProperty(ENABLED, true));
-				System.out.println(x + " " + y + " " + z);
+				((TileEntityRFIDContainer) world.getTileEntity(new BlockPos(x, y, z))).setPlayer(player);
 
 			}
 		}
@@ -237,11 +250,16 @@ public class BlockRFIDContainer extends BlockContainer
 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{ 
+	{
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
 		if (tileentity instanceof TileEntityRFIDContainer && !worldIn.isRemote)
 		{
+			if (state.getValue(ENABLED))
+			{
+				ProgressionHelper.populateLootChest(((TileEntityRFIDContainer) tileentity), null);
+			}
+			
 			TileEntityRFIDContainer scanner = (TileEntityRFIDContainer) tileentity;
 			
 			for (int i = 0; i < scanner.slots.getSlots(); i++)
@@ -267,5 +285,18 @@ public class BlockRFIDContainer extends BlockContainer
 	{
 		return new ItemStack(this);
 	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+
 
 }

@@ -17,9 +17,11 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.client.render.CyberwareMeshDefinition;
+import flaxbeard.cyberware.client.render.RenderBytebug;
 import flaxbeard.cyberware.client.render.RenderCyberZombie;
 import flaxbeard.cyberware.client.render.TileEntityBeaconLargeRenderer;
 import flaxbeard.cyberware.client.render.TileEntityEngineeringRenderer;
+import flaxbeard.cyberware.client.render.TileEntityRFIDContainerRenderer;
 import flaxbeard.cyberware.client.render.TileEntityScannerRenderer;
 import flaxbeard.cyberware.client.render.TileEntitySurgeryChamberRenderer;
 import flaxbeard.cyberware.common.CommonProxy;
@@ -28,9 +30,11 @@ import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeaconPost.TileEntityBeaconPostMaster;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
+import flaxbeard.cyberware.common.block.tile.TileEntityRFIDContainer;
 import flaxbeard.cyberware.common.block.tile.TileEntityScanner;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
+import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.CyberwareMenuHandler;
@@ -61,10 +65,14 @@ public class ClientProxy extends CommonProxy
 		}
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySurgeryChamber.class, new TileEntitySurgeryChamberRenderer());
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityCyberZombie.class, RenderCyberZombie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityBytebug.class, RenderBytebug::new);
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityScanner.class, new TileEntityScannerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEngineeringTable.class, new TileEntityEngineeringRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBeaconPostMaster.class, new TileEntityBeaconLargeRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRFIDContainer.class, new TileEntityRFIDContainerRenderer());
 
 	}
 

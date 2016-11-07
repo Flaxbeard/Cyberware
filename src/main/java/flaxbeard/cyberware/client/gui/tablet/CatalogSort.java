@@ -68,17 +68,17 @@ public interface CatalogSort
 		}
 	}
 	
-	public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown);
-	public int getHeight();
+	public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden);
+	public int getHeight(boolean showHidden);
 	public void addItem(TabletCatalogItem item);
 	public String getUnlocalizedName();
 	
-	public static void renderCategories(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, Category category, boolean leftDown)
+	public static void renderCategories(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, Category category, boolean leftDown, boolean showHidden)
 	{
-		renderCategories(tablet, x, y, width, mouseX, mouseY, Lists.newArrayList(category), leftDown);
+		renderCategories(tablet, x, y, width, mouseX, mouseY, Lists.newArrayList(category), leftDown, showHidden);
 	}
 	
-	public static void renderCategories(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, List<Category> categories, boolean leftDown)
+	public static void renderCategories(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, List<Category> categories, boolean leftDown, boolean showHidden)
 	{
 		for (int z = 0; z < categories.size(); z++)
 		{
@@ -98,68 +98,83 @@ public interface CatalogSort
 				if (category.isOpened())
 				{
 					List<TabletCatalogItem> items = category.getItems();
-		
+					
+					int yO = y;
+					
 					for (int i = 0; i < items.size(); i++)
 					{
-						GlStateManager.pushMatrix();
 						TabletCatalogItem item = items.get(i);
-						boolean hovered = mouseX > 0 && mouseX < width - 55 && mouseY >= y && mouseY < y + 10;
-						if (ProgressionHelper.isUnlocked(item.getItem()) && hovered && leftDown)
+						boolean unlocked = ProgressionHelper.isUnlocked(item.getItem());
+						if (unlocked || showHidden)
 						{
-							tablet.setPage(item);
+							GlStateManager.pushMatrix();
+							boolean hovered = mouseX > 0 && mouseX < width - 55 && mouseY >= y && mouseY < y + 10;
+							
+							if (unlocked && hovered && leftDown)
+							{
+								tablet.setPage(item);
+							}
+							
+							String s = item.getItem().getDisplayName();
+							
+							if (!unlocked)
+							{
+								s = ChatFormatting.OBFUSCATED + s;
+								tablet.drawStringSmall(s, x + 9, y + 3, 0x2D6873, 0, 0);
+							}
+							else
+							{
+								tablet.drawStringSmall(s, x + 9, y + 3, hovered ? 0x34B1C7 : 0x188EA2, 0, 0);
+							}
+							
+							GlStateManager.popMatrix();
+							
+							y += 10;
 						}
-						
-						String s = item.getItem().getDisplayName();
-						
-						if (!ProgressionHelper.isUnlocked(item.getItem()))
-						{
-							s = ChatFormatting.OBFUSCATED + s;
-						}
-						
-						tablet.drawStringSmall(s, x + 9, y + 3, hovered ? 0x34B1C7 : 0x188EA2, 0, 0);
-						
-						GlStateManager.popMatrix();
-						
-						y += 10;
 					}
 					
-					y -= items.size() * 10;
+					y = yO;
 					
 					Random r = new Random(tablet.mc.thePlayer.ticksExisted + 999 * z);
 		
 					
 					for (int i = 0; i < items.size(); i++)
 					{
-						GlStateManager.pushMatrix();
 						ItemStack item = items.get(i).getItem();
-						boolean hovered = mouseX > 0 && mouseX < width - 55 && mouseY >= y && mouseY < y + 10;
-		
-						RenderHelper.enableGUIStandardItemLighting();
-		
-						GlStateManager.pushMatrix();
-						GlStateManager.translate(x, y + 1, 0);
-						GlStateManager.scale(.5F, .5F, .5F);
-						ShaderHelper.greyscale(hovered ? .8F : .6F);
-						
-						if (!ProgressionHelper.isUnlocked(item))
+						boolean unlocked = ProgressionHelper.isUnlocked(item);
+						if (unlocked || showHidden)
 						{
-							item = new ItemStack(Item.getItemById(r.nextInt(10000)));
-							while (item.getItem() == null)
+							GlStateManager.pushMatrix();
+							boolean hovered = mouseX > 0 && mouseX < width - 55 && mouseY >= y && mouseY < y + 10;
+			
+							RenderHelper.enableGUIStandardItemLighting();
+			
+							GlStateManager.pushMatrix();
+							GlStateManager.translate(x, y + 1, 0);
+							GlStateManager.scale(.5F, .5F, .5F);
+													
+							ShaderHelper.greyscale(unlocked ? hovered ? .8F : .6F : .3F);
+	
+							if (!unlocked)
 							{
 								item = new ItemStack(Item.getItemById(r.nextInt(10000)));
+								while (item.getItem() == null)
+								{
+									item = new ItemStack(Item.getItemById(r.nextInt(10000)));
+								}
 							}
+							
+							tablet.getItemRenderer().renderItemAndEffectIntoGUI(tablet.mc.thePlayer, item, 0, 0);
+												
+							ShaderHelper.releaseShader();
+							GlStateManager.popMatrix();
+			
+							RenderHelper.disableStandardItemLighting();
+							
+							GlStateManager.popMatrix();
+							
+							y += 10;
 						}
-						
-						tablet.getItemRenderer().renderItemAndEffectIntoGUI(tablet.mc.thePlayer, item, 0, 0);
-											
-						ShaderHelper.releaseShader();
-						GlStateManager.popMatrix();
-		
-						RenderHelper.disableStandardItemLighting();
-						
-						GlStateManager.popMatrix();
-						
-						y += 10;
 					}
 				}
 				
@@ -181,12 +196,12 @@ public interface CatalogSort
 		}
 	}
 	
-	public static int getHeightGeneral(Category category)
+	public static int getHeightGeneral(Category category, boolean showHidden)
 	{
-		return getHeightGeneral(Lists.newArrayList(category));
+		return getHeightGeneral(Lists.newArrayList(category), showHidden);
 	}
 	
-	public static int getHeightGeneral(List<Category> categories)
+	public static int getHeightGeneral(List<Category> categories, boolean showHidden)
 	{
 		int h = 0;
 		for (int z = 0; z < categories.size(); z++)
@@ -201,7 +216,13 @@ public interface CatalogSort
 				
 				if (category.isOpened())
 				{
-					h += 10 * category.getItems().size();
+					List<TabletCatalogItem> items = category.getItems();
+					for (int i = 0; i < items.size(); i++)
+					{
+						ItemStack item = items.get(i).getItem();
+						boolean unlocked = ProgressionHelper.isUnlocked(item);
+						if (unlocked || showHidden) h += 10;
+					}
 				}
 			}
 		}
@@ -222,15 +243,15 @@ public interface CatalogSort
 		}
 		
 		@Override
-		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown)
+		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden)
 		{
-			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown);
+			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown, showHidden);
 		}
 
 		@Override
-		public int getHeight()
+		public int getHeight(boolean showHidden)
 		{
-			return getHeightGeneral(categories);
+			return getHeightGeneral(categories, showHidden);
 		}
 
 		@Override
@@ -258,15 +279,15 @@ public interface CatalogSort
 		}
 		
 		@Override
-		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown)
+		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden)
 		{
-			renderCategories(tablet, x, y, width, mouseX, mouseY, alpha, leftDown);
+			renderCategories(tablet, x, y, width, mouseX, mouseY, alpha, leftDown, showHidden);
 		}
 
 		@Override
-		public int getHeight()
+		public int getHeight(boolean showHidden)
 		{
-			return getHeightGeneral(alpha);
+			return getHeightGeneral(alpha, showHidden);
 		}
 
 		@Override
@@ -306,15 +327,15 @@ public interface CatalogSort
 		}
 		
 		@Override
-		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown)
+		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden)
 		{
-			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown);
+			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown, showHidden);
 		}
 
 		@Override
-		public int getHeight()
+		public int getHeight(boolean showHidden)
 		{
-			return getHeightGeneral(categories);
+			return getHeightGeneral(categories, showHidden);
 		}
 
 		@Override
@@ -350,15 +371,15 @@ public interface CatalogSort
 		}
 		
 		@Override
-		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown)
+		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden)
 		{
-			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown);
+			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown, showHidden);
 		}
 
 		@Override
-		public int getHeight()
+		public int getHeight(boolean showHidden)
 		{
-			return getHeightGeneral(categories);
+			return getHeightGeneral(categories, showHidden);
 		}
 
 		@Override

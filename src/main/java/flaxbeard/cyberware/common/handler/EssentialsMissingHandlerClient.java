@@ -396,9 +396,11 @@ public class EssentialsMissingHandlerClient
 				float ticksPerPing = 102F - (int) ((percentDist / 2F) * 200F);
 				
 				totalPing += pingTime - lastPingTime;
+				
+				
 				if (totalPing >= ticksPerPing)
 				{
-					totalPing -= ticksPerPing;
+					totalPing = 0;
 					
 				
 					p.playSound(SoundEvents.BLOCK_NOTE_BASS, .5F + (percentDist * .8F), 0F + (percentDist * 2F));

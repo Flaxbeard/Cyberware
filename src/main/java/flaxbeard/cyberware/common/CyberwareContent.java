@@ -29,9 +29,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
-import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.common.block.BlockBeacon;
 import flaxbeard.cyberware.common.block.BlockBeaconLarge;
 import flaxbeard.cyberware.common.block.BlockBeaconPost;
@@ -44,6 +42,7 @@ import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
+import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
@@ -168,6 +167,13 @@ public class CyberwareContent
 			{
 				FMLInterModComms.sendMessage("EnderIO", "poweredSpawner:blacklist:add", "cyberware.cyberzombie");
 			}
+		}
+		
+		EntityRegistry.registerModEntity(EntityBytebug.class, "bytebug", 0, Cyberware.INSTANCE, 80, 3, true);
+		EntityRegistry.registerEgg(EntityBytebug.class, 0x6B6B6B, 0x008E8E);
+		if (Loader.isModLoaded("EnderIO"))
+		{
+			FMLInterModComms.sendMessage("EnderIO", "poweredSpawner:blacklist:add", "cyberware.bytebug");
 		}
 		
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);

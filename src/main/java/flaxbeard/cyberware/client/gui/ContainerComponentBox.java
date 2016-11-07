@@ -27,7 +27,7 @@ public class ContainerComponentBox extends Container
 		this.slots = box.slots;
 		this.numRows = slots.getSlots() / 9;
 		int i = (this.numRows - 4) * 18;
-
+		box.markDirty();
 		for (int j = 0; j < this.numRows; ++j)
 		{
 			for (int k = 0; k < 9; ++k)
