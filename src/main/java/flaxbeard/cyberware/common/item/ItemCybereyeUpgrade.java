@@ -120,7 +120,8 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 	public void handleNightVision(CyberwareUpdateEvent event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
-		if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(this, 1, 0)))
+		ItemStack testItem = new ItemStack(this, 1, 0);
+		if (CyberwareAPI.isCyberwareInstalled(e, testItem) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, testItem)))
 		{
 
 			e.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Integer.MAX_VALUE, 53, true, false));
@@ -243,7 +244,7 @@ public class ItemCybereyeUpgrade extends ItemCyberware implements IMenuItem, IHu
 	@Override
 	public boolean hasMenu(ItemStack stack)
 	{
-		return stack.getItemDamage() == 3 || stack.getItemDamage() == 2 || stack.getItemDamage() == 4;
+		return stack.getItemDamage() == 0 || stack.getItemDamage() == 3 || stack.getItemDamage() == 2 || stack.getItemDamage() == 4;
 	}
 
 	@Override
