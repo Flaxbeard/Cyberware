@@ -29,10 +29,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import flaxbeard.cyberware.Cyberware;
-import flaxbeard.cyberware.api.ProgressionHelper;
+import flaxbeard.cyberware.api.progression.ProgressionHelper;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.item.ItemBlockCyberware;
 import flaxbeard.cyberware.common.block.tile.TileEntityRFIDContainer;
+import flaxbeard.cyberware.common.entity.EntityBytebug;
 
 public class BlockRFIDContainer extends BlockContainer
 {
@@ -147,35 +148,38 @@ public class BlockRFIDContainer extends BlockContainer
 	}
 	
 
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileentity = worldIn.getTileEntity(pos);
+		TileEntity tileentity = world.getTileEntity(pos);
 		if (tileentity instanceof TileEntityRFIDContainer)
-		{
+		{			
 			((TileEntityRFIDContainer) tileentity).disable();
-			/*if (player.isCreative() && player.isSneaking())
-			{
-				TileEntityScanner scanner = ((TileEntityScanner) tileentity);
-				scanner.ticks = CyberwareConfig.SCANNER_TIME - 200;
-			}*/
 			
 			if (state.getValue(ENABLED))
 			{
-				worldIn.setBlockState(pos, state.withProperty(ENABLED, false), 2);
+				world.setBlockState(pos, state.withProperty(ENABLED, false), 2);
 				// TODO
 				//worldIn.setBlockToAir(pos);
 				ProgressionHelper.populateLootChest(((TileEntityRFIDContainer) tileentity), player);
 				
-				if (!worldIn.isRemote)
+				if (!world.isRemote)
 				{
-					spawnNewChest(worldIn, pos, 0, player);
+					int rand = 1 + world.rand.nextInt(3);
+					for (int i = 0; i < rand; i++)
+					{
+						EntityBytebug bug = new EntityBytebug(world);
+						bug.setPosition(pos.getX() + .5F, pos.getY() + 1.1F, pos.getZ() + .5F);
+						
+						world.spawnEntityInWorld(bug);
+					}
+					spawnNewChest(world, pos, 0, player);
 				}
 			}
 			
-			tileentity = worldIn.getTileEntity(pos);
+			tileentity = world.getTileEntity(pos);
 			((TileEntityRFIDContainer) tileentity).lastOpened = ((TileEntityRFIDContainer) tileentity).ticksExisted;
 			
-			player.openGui(Cyberware.INSTANCE, 7, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(Cyberware.INSTANCE, 7, world, pos.getX(), pos.getY(), pos.getZ());
 
 			//player.openGui(Cyberware.INSTANCE, 4, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}

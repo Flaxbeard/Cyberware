@@ -26,6 +26,7 @@ import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.api.item.IMenuItem;
+import flaxbeard.cyberware.api.progression.ICyberwareProgressionData;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
 public final class CyberwareAPI
@@ -50,6 +51,9 @@ public final class CyberwareAPI
 
 	@CapabilityInject(ICyberwareUserData.class)
 	public static final Capability<ICyberwareUserData> CYBERWARE_CAPABILITY = null;
+	
+	@CapabilityInject(ICyberwareProgressionData.class)
+	public static final Capability<ICyberwareProgressionData> PROGRESSION_CAPABILITY = null;
 	
 	public static Map<ItemStack, ICyberware> linkedWare = new HashMap<ItemStack, ICyberware>();
 	

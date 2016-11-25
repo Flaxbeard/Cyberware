@@ -17,9 +17,9 @@ import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.ProgressionHelper;
 import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.progression.ProgressionHelper;
 import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.GuiTablet;
 

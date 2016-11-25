@@ -1,15 +1,28 @@
-package flaxbeard.cyberware.api;
+package flaxbeard.cyberware.api.progression;
 
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.common.block.tile.TileEntityRFIDContainer;
 
 public class ProgressionHelper
 {
+	/**
+	 * A shortcut to get you the ICyberwareProgressionData for a player.
+	 * 
+	 * @param targetPlayer	The player whose ICyberwareProgressionData you want
+	 * @return				The ICyberwareProgressionData associated with the player
+	 */
+	public static ICyberwareProgressionData getCapability(EntityPlayer targetPlayer)
+	{
+		return targetPlayer.getCapability(CyberwareAPI.PROGRESSION_CAPABILITY, EnumFacing.EAST);
+	}
+	
 	public static boolean isUnlocked(ItemStack ware)
 	{
 		return ((ware.getItem().getIdFromItem(ware.getItem()) ^ (ware.getItemDamage())) % 2) == 0;

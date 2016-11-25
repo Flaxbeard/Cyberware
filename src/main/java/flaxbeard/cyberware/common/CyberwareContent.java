@@ -169,7 +169,7 @@ public class CyberwareContent
 			}
 		}
 		
-		EntityRegistry.registerModEntity(EntityBytebug.class, "bytebug", 0, Cyberware.INSTANCE, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityBytebug.class, "bytebug", 1, Cyberware.INSTANCE, 80, 3, true);
 		EntityRegistry.registerEgg(EntityBytebug.class, 0x6B6B6B, 0x008E8E);
 		if (Loader.isModLoaded("EnderIO"))
 		{
