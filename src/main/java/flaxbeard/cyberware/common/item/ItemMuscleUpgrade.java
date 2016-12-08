@@ -305,4 +305,10 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 	{
 		return EnableDisableHelper.isEnabled(stack) ? f : null;
 	}
+	
+	@Override
+	public boolean isEssential(ItemStack stack)
+	{
+		return stack.getItemDamage() == 0;		
+	}
 }
