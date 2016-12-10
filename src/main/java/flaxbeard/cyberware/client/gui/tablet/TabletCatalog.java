@@ -21,45 +21,7 @@ import flaxbeard.cyberware.client.gui.tablet.CatalogSort.TagSort;
 
 public class TabletCatalog implements ITabletPage, IScrollWheel
 {
-	public static class CatalogMenuItem implements IListMenuItem
-	{
-		private final TabletCatalogItem page;
-		
-		public CatalogMenuItem(TabletCatalogItem page)
-		{
-			this.page = page;
-		}
 
-		@Override
-		public void renderText(GuiTablet tablet, int x, int y, boolean hovered)
-		{
-			String s = page.getItem().getDisplayName();
-			
-			tablet.drawStringSmall(s, x + 9, y + 3, hovered ? 0x34B1C7 : 0x188EA2, 0, 0);
-
-			
-		}
-
-		@Override
-		public void render(GuiTablet tablet, int x, int y, boolean hovered)
-		{
-			RenderHelper.enableGUIStandardItemLighting();
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x, y + 1, 0);
-			GlStateManager.scale(.5F, .5F, .5F);
-			ShaderHelper.greyscale(hovered ? .8F : .6F);
-			
-			tablet.getItemRenderer().renderItemAndEffectIntoGUI(tablet.mc.thePlayer, page.getItem(), 0, 0);
-			
-			ShaderHelper.releaseShader();
-			GlStateManager.popMatrix();
-
-			RenderHelper.disableStandardItemLighting();
-		}
-		
-	}
-	
 	private int scroll = 0;
 	private List<TabletCatalogItem> items;
 	private List<CatalogSort> sorts;

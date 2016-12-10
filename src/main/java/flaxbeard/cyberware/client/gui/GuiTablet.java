@@ -1,14 +1,19 @@
 package flaxbeard.cyberware.client.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -16,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
-import flaxbeard.cyberware.client.gui.tablet.TabletCatalogItem;
+import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 
 public class GuiTablet extends GuiScreen
@@ -55,9 +60,15 @@ public class GuiTablet extends GuiScreen
 	private boolean leftDown = false;
 	private boolean rightDown = false;
 	
+	private int mouseXActual;
+	private int mouseYActual;
+	
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
+		mouseXActual = mouseX;
+		mouseYActual = mouseY;
 		if (page.getParent() != null && rightDown)
 		{
 			page = page.getParent();
@@ -140,6 +151,7 @@ public class GuiTablet extends GuiScreen
 		GlStateManager.translate(i + 32, j + 10, 0F);
 		pagei = i + 32;
 		pagej = j + 32;
+		int scroll = 0;
 		if (page != null)
 		{
 			int modMouseX = mouseX - 32 - i;
@@ -151,7 +163,7 @@ public class GuiTablet extends GuiScreen
 				h = Math.max(tabletHeight, h);
 				
 				
-				int scroll = swpage.getScrollAmount();
+				scroll = swpage.getScrollAmount();
 				int howFar = Math.round((scroll * 154F / h));
 				int howBig = Math.round((tabletHeight * 154F / h));
 				
@@ -206,84 +218,28 @@ public class GuiTablet extends GuiScreen
 				
 			}
 			
+			stacksToDraw = new ArrayList<ItemRequest>();
 			page.render(this, maxTabletWidth - 64, tabletHeight - 20, modMouseX, modMouseY, ticks, partialTicks, leftDown);
-			
 		}
 		GlStateManager.popMatrix();
 		
-		/*
-		/*boolean u = fontRendererObj.getUnicodeFlag();
-		fontRendererObj.setUnicodeFlag(false);
-		fontRendererObj.drawString("Hello Yulife!", i + 36 + 12, j + 18, 0x188EA2);
-		fontRendererObj.drawString("This is the tablet!", i + 36 + 12, j + 28, 0x188EA2);
-		fontRendererObj.setUnicodeFlag(u);
-		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TABLETHD);
-		
-		
-		if (init && ticks < 161)
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		for (ItemRequest request : stacksToDraw)
 		{
-			GlStateManager.enableBlend();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.6F);
-			
-			if (ticks < 92 || ((ticks / 2) %2 == 0) || ticks > 110)
-			{
-				
-				int move = (ticks) * 2;
-				int move1 = Math.min(76, move);
-				this.drawTexturedModalRect(i + maxTabletWidth / 2 - 10, j + 95 + 76 - move1, 0, 256 - move1, 20, move1);
-				
-				int move2 = Math.min(76, Math.max(move - 76, 0));
-				this.drawTexturedModalRect(i + maxTabletWidth / 2 - 10, j + 95 - move2, 0, 256 - move2, 20, move2);
-
-				int move3 = Math.min(10, Math.max(move - 76 - 76, 0));
-				this.drawTexturedModalRect(i + maxTabletWidth / 2 - 10, j + 95 - 76 - move3, 0, 256 - move3, 20, move3);
-
-			}
-	
-			GlStateManager.disableBlend();
-			
-			if (ticks > 112)
-			{
-				Minecraft.getMinecraft().getTextureManager().bindTexture(ANIMS);
-				int frame = ((ticks - 112) / 2) % 24;
-				int yframe = frame % 21;
-				int xframe = frame / 21;
-				
-				this.drawTexturedModalRect(i + maxTabletWidth / 2 - 6, j + tabletHeight / 2 - 6, xframe * 12, yframe * 12, 12, 12);
-			}
-		}
-		
-		
-		if ((ticks > 180 && (ticks / 2) %2 == 0) || ticks > 200)
-		{
-			GlStateManager.enableBlend();
-			
-			
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0F, 0F, 100F);
-			GlStateManager.translate(i + maxTabletWidth / 2, j + tabletHeight / 2, 0F);
-			//GL11.glScaled(Math.abs(Math.sin(ticks / 10F)), 1F, 1F);
-			float rot = Math.min(89, Math.abs(90 - (ticks * 3 % 180)));
-
-			GL11.glRotatef(rot, 0F, 1F, 0F);
-			GlStateManager.translate(-(i + maxTabletWidth / 2), -(j + tabletHeight / 2), 0F);
-			
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.6F);
-			this.drawTexturedModalRect(i + maxTabletWidth / 2 - 27, j + tabletHeight / 2 - 32, 52, 180, 54, 64);
-			GlStateManager.translate(0F, 0F, 1F);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
-			this.drawTexturedModalRect(i + maxTabletWidth / 2 - 26, j + tabletHeight / 2 - 32, 52, 180, 54, 64);
-			GlStateManager.translate(0F, 0F, -2F);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
-			this.drawTexturedModalRect(i + maxTabletWidth / 2 - 28, j + tabletHeight / 2 - 32, 52, 180, 54, 64);
-			
+			GlStateManager.translate(0F, -scroll, 0F);
+			GlStateManager.translate(i + 32 + request.xPos, j + 10 + request.yPos, 0F);
+			GlStateManager.scale(request.scale, request.scale, request.scale);
+			GlStateManager.translate(-8F, -8F, 0F);
+			RenderHelper.enableGUIStandardItemLighting();
+			ShaderHelper.greyscale(request.trans);
+			this.itemRender.renderItemAndEffectIntoGUI(request.stack, 0, 0);
+			ShaderHelper.releaseShader();
+			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popMatrix();
-			
-			GlStateManager.disableBlend();
 		}
-		
-		*/
+		GlStateManager.popMatrix();
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
@@ -314,6 +270,22 @@ public class GuiTablet extends GuiScreen
 		GlStateManager.popMatrix();
 		
 		leftDown = rightDown = false;
+
+		float reverseScaleFactor = specialScaleFactor / (float) (sr.getScaleFactor());
+		for (ItemRequest request : stacksToDraw)
+		{
+			if (request.tooltip)
+			{
+				int x = (int) (reverseScaleFactor * (i + 32 + request.xPos - (int) (request.scale * 8)));
+				int y = (int) (reverseScaleFactor * (j + 10 - scroll + request.yPos - (int) (request.scale * 8)));
+				int wh = (int) (reverseScaleFactor * (16 * request.scale));
+				
+				if (mouseXActual > x && mouseYActual > y && mouseXActual < x + wh && mouseYActual < y + wh)
+				{
+					this.renderToolTip(request.stack, mouseXActual, mouseYActual);
+				}
+			}
+		}
 	}
 	
 	public void setPage(ITabletPage page)
@@ -411,6 +383,60 @@ public class GuiTablet extends GuiScreen
 	public int getSplitStringSmallLines(String s, int width)
 	{
 		return fontRendererObj.listFormattedStringToWidth(s, width * 2).size();
+	}
+	
+	public void renderToolTipAtMouse(ItemStack stack)
+	{
+		
+		List<String> list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+
+		for (int i = 0; i < list.size(); ++i)
+		{
+			if (i == 0)
+			{
+				list.set(i, stack.getRarity().rarityColor + (String)list.get(i));
+			}
+			else
+			{
+				list.set(i, TextFormatting.GRAY + (String)list.get(i));
+			}
+		}
+		
+
+		FontRenderer font = stack.getItem().getFontRenderer(stack);
+		this.drawHoveringText(list, mouseXActual, mouseYActual, (font == null ? fontRendererObj : font));
+	}
+	
+	private class ItemRequest
+	{
+		private ItemStack stack;
+		private int xPos;
+		private int yPos;
+		private float scale;
+		private float trans;
+		private boolean tooltip;
+		
+		private ItemRequest(ItemStack stack, int xPos, int yPos, float scale, float trans, boolean tooltip)
+		{
+			this.stack = stack;
+			this.xPos = xPos;
+			this.yPos = yPos;
+			this.scale = scale;
+			this.trans = trans;
+			this.tooltip = tooltip;
+		}
+	}
+	
+	private List<ItemRequest> stacksToDraw = new ArrayList<ItemRequest>();
+
+	public void renderItemWithTooltip(ItemStack itemStack, int i, int y, int j, float f)
+	{
+		stacksToDraw.add(new ItemRequest(itemStack, i, y, j, f, true));
+	}
+	
+	public void renderItem(ItemStack itemStack, int i, int y, int j, float f)
+	{
+		stacksToDraw.add(new ItemRequest(itemStack, i, y, j, f, false));
 	}
 	
 	

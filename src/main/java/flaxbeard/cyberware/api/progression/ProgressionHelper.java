@@ -25,7 +25,7 @@ public class ProgressionHelper
 	
 	public static boolean isUnlocked(ItemStack ware)
 	{
-		return ((ware.getItem().getIdFromItem(ware.getItem()) ^ (ware.getItemDamage())) % 2) == 0;
+		return true || ((ware.getItem().getIdFromItem(ware.getItem()) ^ (ware.getItemDamage())) % 2) == 0;
 	}
 	
 	private static int range = 15;

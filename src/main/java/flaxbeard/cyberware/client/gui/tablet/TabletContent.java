@@ -28,14 +28,15 @@ public class TabletContent
 	public static void init()
 	{
 		mainMenu = new TabletMainMenu();
-		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test0", 0));
-		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test1", 1));
 		
 		catalog = new TabletCatalog();
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.cybereyes", INFO).setDefaultVisible();
+		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test0", catalog, 0));
+		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test1", catalog, 1));
+		
+		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.catalog.cybereyes", INFO).setDefaultVisible();
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyes), "cyberware.gui.tablet.cybereyes", REPLACMENT).setDefaultVisible();
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyes), "cyberware.gui.tablet.catalog.cybereyes", REPLACMENT).setDefaultVisible();
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
 

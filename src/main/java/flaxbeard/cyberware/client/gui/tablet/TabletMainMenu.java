@@ -3,6 +3,8 @@ package flaxbeard.cyberware.client.gui.tablet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -18,11 +20,13 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 	{
 		private final String unlocalizedName;
 		private final int iconIndex;
+		private final ITabletPage page;
 		
-		public MenuElement(String unlocalizedName, int iconIndex)
+		public MenuElement(String unlocalizedName, ITabletPage page, int iconIndex)
 		{
 			this.unlocalizedName = unlocalizedName;
 			this.iconIndex = iconIndex;
+			this.page = page;
 		}
 		
 		@Override
@@ -50,6 +54,12 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 			GlStateManager.popMatrix();
 		}
 		
+		@Override
+		public void onClick(GuiTablet tablet)
+		{
+			tablet.setPage(page);
+		}
+		
 	}
 	
 	private int scroll = 0;
@@ -72,9 +82,14 @@ public class TabletMainMenu implements ITabletPage, IScrollWheel, IListMenu
 		{
 			GlStateManager.pushMatrix();
 			IListMenuItem item = items.get(i);
-			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 143 * i && mouseY < 31 + 13 * (i + 1);
+			boolean hovered = mouseX > 0 && mouseX < width && mouseY >= 31 + 13 * i && mouseY < 31 + 13 * (i + 1);
 			item.renderText(tablet, 20, 31 + 13 * i, hovered);
 			GlStateManager.popMatrix();
+			
+			if (hovered && Mouse.isButtonDown(0))
+			{
+				item.onClick(tablet);
+			}
 		}
 		
 		for (int i = 0; i < items.size(); i++)

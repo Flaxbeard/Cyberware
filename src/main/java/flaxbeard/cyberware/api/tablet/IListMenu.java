@@ -12,6 +12,8 @@ public interface IListMenu
 		public void render(GuiTablet tablet, int x, int y, boolean hovered);
 
 		public void renderText(GuiTablet tablet, int x, int y, boolean hovered);
+
+		void onClick(GuiTablet tablet);
 	}
 	
 	public List<IListMenuItem> getItems();
