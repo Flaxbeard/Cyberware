@@ -558,6 +558,11 @@ cyberware.gui.tablet.catalog.cardioCoupler.quote=Touch Medical's Cardiovascular 
 cyberware.gui.tablet.catalog.cardioCoupler.author=Neogrammy winning actress Veronica Hughes
 cyberware.gui.tablet.catalog.cardioCoupler.text=From the leader in human augmentation technology, the Cardiovascular Coupler is the forefront of minimally invasive power generation. Designed with precision and custom-ordered to fit each customer, the Cardiovascular Coupler attaches to the heart of the user and utilizes the body's natural electrical pulses to power installed augmentations.
 
+cyberware.gui.tablet.catalog.cardioCoupler.quote=Touch Medical's Cardiovascular Coupler makes me feel like my body is my own. I can gain all the benefits of my augmentations without the hassle of a battery or a bulky generator.
+cyberware.gui.tablet.catalog.cardioCoupler.author=Neogrammy winning actress Veronica Hughes
+cyberware.gui.tablet.catalog.cardioCoupler.text=From the leader in human augmentation technology, the Cardiovascular Coupler is the forefront of minimally invasive power generation. Designed with precision and custom-ordered to fit each customer, the Cardiovascular Coupler attaches to the heart of the user and utilizes the body's natural electrical pulses to power installed augmentations.
+
+
 # MISC
 cyberware.container.engineering=Cyberware Engineering
 cyberware.container.scanner=Scanner

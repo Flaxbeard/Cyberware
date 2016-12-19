@@ -68,7 +68,7 @@ public class TabletContent
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 2), "cyberware.gui.tablet.catalog.stemcell", SURVIVABILITY);
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.lungsUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", UTILITY);
 		

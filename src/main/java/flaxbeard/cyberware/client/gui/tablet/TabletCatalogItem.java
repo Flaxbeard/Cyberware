@@ -272,11 +272,11 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				tablet.renderItemWithTooltip(new ItemStack(CyberwareContent.component, 1, j * 3 + k), width / 2 + (25 * (j - 1)), y + 48 + (25 * (k - 1)), 1, 0.9F);
+				//tablet.renderItemWithTooltip(new ItemStack(CyberwareContent.component, 1, j * 3 + k), width / 2 + (25 * (j - 1)), y + 48 + (25 * (k - 1)), 1, 0.9F);
 			}
 		}
 		
-		tablet.renderItem(new ItemStack(CyberwareContent.surgeryApparatus), width / 2, y + 48, 6, 0.2F);
+		//tablet.renderItem(new ItemStack(CyberwareContent.surgeryApparatus), width / 2, y + 48, 6, 0.2F);
 
 		
 		//tablet.renderToolTipAtMouse(new ItemStack(CyberwareContent.surgeryApparatus));
@@ -348,7 +348,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 				+ "body's natural electrical pulses to power installed augmentations.";
 		y += (int) (tablet.getSplitStringSmallLines(s, width) * 5.5F);
 			
-		return y + 45 + 100;
+		return y + 45;
 	}
 
 	public TabletCatalogItem setDefaultVisible()
