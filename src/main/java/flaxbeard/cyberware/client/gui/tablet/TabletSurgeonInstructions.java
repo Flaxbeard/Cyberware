@@ -1,26 +1,17 @@
 package flaxbeard.cyberware.client.gui.tablet;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
 import flaxbeard.cyberware.client.gui.GuiTablet;
-import flaxbeard.cyberware.common.CyberwareConfig;
-import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.sprockets.client.ClientUtils;
 
 public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 {
@@ -33,15 +24,225 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 	public static final ResourceLocation MANUAL6 = new ResourceLocation(Cyberware.MODID + ":textures/gui/tablet/manual6.png");
 
 	private int scroll = 0;
+	
+	private List<IRenderObject> objects;
+	
+	private int y = 10;
+	
+	private interface IRenderObject
+	{
+		public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks);
+	}
+	
+	private class SmallText implements IRenderObject
+	{
+		private String str;
+		private int color;
+		
+		public SmallText(String str)
+		{
+			this(str, 0x34B1C7);
+		}
+		
+		public SmallText(String str, int color)
+		{
+			this.str = str;
+			this.color = color;
+		}
+		
+		@Override
+		public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+		{
+			String s = I18n.format(str);
+			y += tablet.drawSplitStringSmall(s, 20, y, width - 40, color) * 5;
+		}
+	}
+	
+	private class Title implements IRenderObject
+	{
+		private String str;
+		
+		public Title(String str)
+		{
+			this.str = str;
+		}
+		
+		@Override
+		public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+		{
+			y += 5;
+			tablet.drawString(str, 20, y, 0x34B1C7);
+			GlStateManager.enableBlend();
+			Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
+			GlStateManager.color(1F, 1F, 1F, 0.6F);
+			tablet.drawTexturedModalRect(20, y + 9, 29, 254, tablet.getStringWidth(str) + 5, 1);
+			GlStateManager.disableBlend();
+			y += 14;
+		}
+	}
+	
+	private class Image implements IRenderObject
+	{
+		private String addr;
+		private int w;
+		private int h;
+		private float scale;
+		
+		public Image(String addr, int width, int height, float scale)
+		{
+			this.addr = addr;
+			this.w = width;
+			this.h = height;
+			this.scale = scale;
+		}
+		
+		@Override
+		public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+		{
+			GlStateManager.color(1F, 1F, 1F, 1F);
 
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((width) / 2 - (w * .5F * scale), y + 5, 0);
+			GlStateManager.scale(scale, scale, 0);
+			ClientUtils.bindTexture(addr);
+			tablet.drawTexturedModalRect(0, 0, 0, 0, w, h);
+			y += (h * scale) + 10;
+			GlStateManager.popMatrix();
+		}
+	}
+	
+	private class Break implements IRenderObject
+	{
+		@Override
+		public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks)
+		{
+			y += 3;
+		}
+	}
+	
 	@Override
 	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
-		String title = "Robosurgeon Instructions";
-		tablet.drawString(title, 20, 15, 0x34B1C7);
+		objects = null;
+		if (objects == null)
+		{
+			objects = new ArrayList<IRenderObject>();
+			String parse = "<title>Robosurgeon Instructions</title>"
+					+ "<warning>WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.</warning><br>"
+					+ "Thank you for your purchase of a Touch Medical Robosurgeon! The Robosurgeon enables rapid installation of human augmentations without the risk of error that comes with traditional human-provided surgery."
+					+ "<img src=cyberware:textures/gui/tablet/manual1.png width=176 height=131 scale=.5>";
+			String parseRemain = parse;
+			IRenderObject current = null;
+			String currentTag = null;
+			while (parseRemain.length() > 0 || currentTag != null)
+			{
+				if (currentTag == null)
+				{
+					int i = parseRemain.indexOf("<");
+					if (i > 0)
+					{
+						objects.add(new SmallText(parseRemain.substring(0, i)));
+					}
+					else if (i == -1)
+					{
+						objects.add(new SmallText(parseRemain));
+						break;
+					}
+					parseRemain = parseRemain.substring(i + 1);
+					int j = parseRemain.indexOf(">");
+					if (j == -1) break;
+					currentTag = parseRemain.substring(0, j);
+					parseRemain = parseRemain.substring(j + 1);
+				}
+				else if (currentTag.equals("br"))
+				{
+					objects.add(new Break());
+					currentTag = null;
+				}
+				else if (currentTag.substring(0, 3).equals("img"))
+				{
+					String subTag = currentTag;
+					
+					String source = "";
+					int w = 0;
+					int h = 0;
+					float s = 1F;
+
+					int index = currentTag.indexOf("src");
+					if (index != -1)
+					{
+						subTag = currentTag.substring(index);
+						int index2 = subTag.indexOf(" ");
+						if (index2 == -1) index2 = subTag.length();
+						source = subTag.substring(4, index2);
+					}
+					
+					index = currentTag.indexOf("width");
+					if (index != -1)
+					{
+						subTag = currentTag.substring(index);
+						int index2 = subTag.indexOf(" ");
+						if (index2 == -1) index2 = subTag.length();
+						w = Integer.parseInt(subTag.substring(6, index2));
+					}
+					
+					index = currentTag.indexOf("height");
+					if (index != -1)
+					{
+						subTag = currentTag.substring(index);
+						int index2 = subTag.indexOf(" ");
+						if (index2 == -1) index2 = subTag.length();
+						h = Integer.parseInt(subTag.substring(7, index2));
+					}
+					
+					index = currentTag.indexOf("scale");
+					if (index != -1)
+					{
+						subTag = currentTag.substring(index);
+						int index2 = subTag.indexOf(" ");
+						if (index2 == -1) index2 = subTag.length();
+						s = Float.parseFloat(subTag.substring(6, index2));
+					}
+					
+					objects.add(new Image(source, w, h, s));
+					currentTag = null;
+				}
+				else
+				{
+
+					int i = parseRemain.indexOf("<");
+					if (i == -1) i = parseRemain.length();
+					if (currentTag.equals("title"))
+					{
+						objects.add(new Title(parseRemain.substring(0, i)));
+					}
+					else if (currentTag.equals("warning"))
+					{
+						objects.add(new SmallText(parseRemain.substring(0, i), 0xC61700));
+					}
+					else
+					{
+						objects.add(new SmallText(parseRemain.substring(0, i)));
+					}
+					parseRemain = parseRemain.substring(i + 1);
+					int j = parseRemain.indexOf(">");
+					if (j == -1) break;
+					parseRemain = parseRemain.substring(j + 1);
+					currentTag = null;
+				}
+			}
+		}
+		
+		y = 10;
+		for (IRenderObject object : objects)
+		{
+			object.render(tablet, width, height, mouseX, mouseY, ticks, partialTicks);
+		}
+		//String title = "Robosurgeon Instructions";
+		//tablet.drawString(title, 20, 15, 0x34B1C7);
 		
 			
-		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
+		/*Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
 				
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 0.6F);
@@ -349,7 +550,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 			}
 		}
 		
-		return (int) Math.ceil(56 * size);
+		return (int) Math.ceil(56 * size);*/
 		
 	}
 
