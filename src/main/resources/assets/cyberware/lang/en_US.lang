@@ -562,6 +562,31 @@ cyberware.gui.tablet.catalog.cardioCoupler.quote=Touch Medical's Cardiovascular 
 cyberware.gui.tablet.catalog.cardioCoupler.author=Neogrammy winning actress Veronica Hughes
 cyberware.gui.tablet.catalog.cardioCoupler.text=From the leader in human augmentation technology, the Cardiovascular Coupler is the forefront of minimally invasive power generation. Designed with precision and custom-ordered to fit each customer, the Cardiovascular Coupler attaches to the heart of the user and utilizes the body's natural electrical pulses to power installed augmentations.
 
+cyberware.gui.tablet.surgeonInstructions=<title>Robosurgeon Instructions</title><warning>WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.</warning><br>Thank you for your purchase of a Touch Medical Robosurgeon! The Robosurgeon enables rapid installation of human augmentations without the risk of error that comes with traditional human-provided surgery.<img src=cyberware:textures/gui/tablet/manual1.png width=176 height=131 scale=.5>
+
+cyberware.gui.tablet.surgeonInstructions.title0=Robosurgeon Instructions
+cyberware.gui.tablet.surgeonInstructions.0=WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.
+cyberware.gui.tablet.surgeonInstructions.1=Thank you for your purchase of a Touch Medical Robosurgeon! The Robosurgeon enables rapid installation of human augmentations without the risk of error that comes with traditional human-provided surgery. This guide will provide information on installation and usage of your device.
+cyberware.gui.tablet.surgeonInstructions.title1=Components
+cyberware.gui.tablet.surgeonInstructions.title2=Installation
+cyberware.gui.tablet.surgeonInstructions.title3=Operation
+cyberware.gui.tablet.surgeonInstructions.title4=Tolerance
+cyberware.gui.tablet.surgeonInstructions.2=Below is a list of components used to construct the items in your Robosurgeon package. Refer to this list for repair purposes.
+cyberware.gui.tablet.surgeonInstructions.3=To install your Touch Medical Robosurgeon, place down the included Surgery Chamber. Place the Robosurgeon directly on top of the Surgery Chamber.
+cyberware.gui.tablet.surgeonInstructions.4=To set up a surgery, tap on the screen of the Robosurgeon to boot into the surgery window.
+cyberware.gui.tablet.surgeonInstructions.5=The meter on the left side of the display shows your body's Tolerance. Installation of augmentations will deplete the meter. Refer to the section labeled Tolerance for more information.
+cyberware.gui.tablet.surgeonInstructions.6=The button on the top right of the display will take you to an index page that will display a list of all currently installed augmentations and all augmentations that will be installed after the surgery.
+cyberware.gui.tablet.surgeonInstructions.7=The center of the screen displays your body. Tap on your arms, legs, chest, head, or flesh to zoom in and install augmentations.
+cyberware.gui.tablet.surgeonInstructions.8=Once zoomed in, icons will appear showing each area where augmentations can be installed. Tap one to proceed.
+cyberware.gui.tablet.surgeonInstructions.9=The top red slots show your currently installed organs and augmentations. The bottom blue slots show the organs and augmentations that will be installed after the surgery.
+cyberware.gui.tablet.surgeonInstructions.10=You may place augmentations in the bottom blue slots. A red flashing effect indicates that the augment you are trying to install is not compatible with one already set to be installed.
+cyberware.gui.tablet.surgeonInstructions.11=You may click on an augmentation in the bottom blue slot to set it to be removed. Clicking the slot again will set the augmentation to not be removed.
+cyberware.gui.tablet.surgeonInstructions.12=WARNING: If the above icon is displayed, hover over it. This symbol alerts the user that they are set to remove a critical organ during surgery or will fall into dangerous Tolerance levels.
+cyberware.gui.tablet.surgeonInstructions.13=Once you are ready to perform the surgery, simply step into the Surgery Chamber and close the doors.
+cyberware.gui.tablet.surgeonInstructions.14=Make sure that you are healthy before undergoing surgery, as it may result in damage.
+cyberware.gui.tablet.surgeonInstructions.15=The human body will only tolerate a certain amount of augmentation before its rejection process becomes dangerous. Most augmentations available on the market have a tolerance impact rating measured in the standard unit tols. A standard human can handle %d tols of augmentation.
+cyberware.gui.tablet.surgeonInstructions.16=If the amount of tolerance displayed on the meter falls below %d tols, the user will suffer from Augmentation Rejection Syndrome (ARS). Utilizing Neuropozene will prevent ARS, with each dose lasting for about one day.
+cyberware.gui.tablet.surgeonInstructions.17=If the meter falls to 0 tols, the user will suffer from Lethal Augmentation Rejection Syndrome (LARS) which will result in a swift death.
 
 # MISC
 cyberware.container.engineering=Cyberware Engineering

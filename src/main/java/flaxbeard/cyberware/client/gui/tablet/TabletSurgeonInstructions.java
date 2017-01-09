@@ -33,11 +33,12 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 	public static final ResourceLocation MANUAL6 = new ResourceLocation(Cyberware.MODID + ":textures/gui/tablet/manual6.png");
 
 	private int scroll = 0;
+	private int height = 840;
 
 	@Override
 	public void render(GuiTablet tablet, int width, int height, int mouseX, int mouseY, int ticks, float partialTicks, boolean leftDown)
 	{
-		String title = "Robosurgeon Instructions";
+		String title = I18n.format("cyberware.gui.tablet.surgeonInstructions.title0");
 		tablet.drawString(title, 20, 15, 0x34B1C7);
 		
 			
@@ -50,19 +51,16 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		
 		int y = 30;
 		
-		String s = I18n.format("Thank you for your purchase of ");
-		s = "WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.";
+		String s = I18n.format("cyberware.gui.tablet.surgeonInstructions.0");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0xC61700) * 5;
 
 		y += 3;
 		
-		s = I18n.format("");
-		s = "Thank you for your purchase of a Touch Medical Robosurgeon! The Robosurgeon enables rapid installation of human augmentations without the risk of error that comes with traditional human-provided surgery."
-				+ " This guide will provide information on installation and usage of your device.";
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.1");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 
 		y += 5;
-		title = "Components";
+		title = I18n.format("cyberware.gui.tablet.surgeonInstructions.title1");
 		tablet.drawString(title, 20, y, 0x34B1C7);
 		GlStateManager.enableBlend();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
@@ -71,8 +69,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		GlStateManager.disableBlend();
 		y += 14;
 		
-		s = I18n.format("");
-		s = "Below is a list of components used to construct the items in your Robosurgeon package. Refer to this list for repair purposes.";
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.2");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 
 		
@@ -81,7 +78,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += drawCraftingRecipe(tablet, width / 2 + 30, y, new ItemStack(CyberwareContent.componentBox.ib), .5F);
 		
 		y += 5;
-		title = "Installation";
+		title = I18n.format("cyberware.gui.tablet.surgeonInstructions.title2");
 		tablet.drawString(title, 20, y, 0x34B1C7);
 		GlStateManager.enableBlend();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
@@ -90,12 +87,11 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		GlStateManager.disableBlend();
 		y += 14;
 		
-		s = I18n.format("");
-		s = "To install your Touch Medical Robosurgeon, place down the included Surgery Chamber. Place the Robosurgeon directly on top of the Surgery Chamber.";
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.3");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		
 		y += 5;
-		title = "Operation";
+		title = I18n.format("cyberware.gui.tablet.surgeonInstructions.title3");
 		tablet.drawString(title, 20, y, 0x34B1C7);
 		GlStateManager.enableBlend();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
@@ -104,7 +100,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		GlStateManager.disableBlend();
 		y += 14;
 		
-		s = I18n.format("To set up a surgery, tap on the screen of the Robosurgeon to boot into the surgery window.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.4");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
@@ -119,13 +115,11 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += (131 / 2) + 10;
 		GlStateManager.popMatrix();
 
-		s = I18n.format("The meter on the left side of the display shows your body's Tolerance. Installation of augmentations will deplete the meter. Refer to the section labeled"
-				+ " Tolerance for more information.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.5");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("The button on the top right of the display will take you to an index page that will display a list of all currently installed augmentations and all augmentations"
-				+ " that will be installed after the surgery.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.6");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -138,7 +132,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += (131 / 2) + 10;
 		GlStateManager.popMatrix();
 		
-		s = I18n.format("The center of the screen displays your body. Tap on your arms, legs, chest, head, or flesh to zoom in and install augmentations.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.7");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -151,7 +145,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += (131 / 2) + 10;
 		GlStateManager.popMatrix();
 		
-		s = I18n.format("Once zoomed in, icons will appear showing each area where augmentations can be installed. Tap one to proceed.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.8");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -164,15 +158,15 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += (131 / 2) + 10;
 		GlStateManager.popMatrix();
 		
-		s = I18n.format("The top red slots show your currently installed organs and augmentations. The bottom blue slots show the organs and augmentations that will be installed after the surgery.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.9");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("You may place augmentations in the bottom blue slots. A red flashing effect indicates that the augment you are trying to install is not compatible with one already set to be installed.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.10");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("You may click on an augmentation in the bottom blue slot to set it to be removed. Clicking the slot again will set the augmentation to not be removed.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.11");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		
 		
@@ -186,19 +180,19 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		y += (131 / 2) + 10;
 		GlStateManager.popMatrix();
 		
-		s = I18n.format("WARNING: If the above icon is displayed, hover over it. This symbol alerts the user that they are set to remove a critical organ during surgery or will fall into dangerous Tolerance levels.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.12");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0xC61700) * 5;
 		y += 2;
 		
-		s = I18n.format("Once you are ready to perform the surgery, simply step into the Surgery Chamber and close the doors.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.13");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("Make sure that you are healthy before undergoing surgery, as it may result in damage.");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.14");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0xC61700) * 5;
 		
 		y += 5;
-		title = "Tolerance";
+		title = I18n.format("cyberware.gui.tablet.surgeonInstructions.title4");
 		tablet.drawString(title, 20, y, 0x34B1C7);
 		GlStateManager.enableBlend();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tablet.TABLETHD);
@@ -207,29 +201,22 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		GlStateManager.disableBlend();
 		y += 14;
 		
-		s = I18n.format("The human body will only tolerate a certain amount of augmentation before its rejection process becomes dangerous. Most augmentations available on the market have a tolerance impact rating"
-				+ " measured in the standard unit tols. A standard human can handle %d tols of augmentation.", CyberwareConfig.ESSENCE);
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.15");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("If the amount of tolerance displayed on the meter falls below %d tols, the user will suffer from Augmentation Rejection Syndrome (ARS). Utilizing Neuropozene will prevent ARS, with each dose lasting for about one day",
-				CyberwareConfig.CRITICAL_ESSENCE);
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.16");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("If the meter falls to 0 tols, the user will suffer from Lethal Augmentation Rejection Syndrome (LARS) which will result in a swift death.",
-				CyberwareConfig.ESSENCE, CyberwareConfig.CRITICAL_ESSENCE);
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.17");
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
+		
+		this.height = y;
 
 		
 		//tablet.renderToolTipAtMouse(new ItemStack(CyberwareContent.surgeryApparatus));
-
-		
-		s = I18n.format("[19:51:51] [Client thread/INFO] [STDOUT]: [flaxbeard.cyberware.client.ClientUtils:bindTexture:53]: [Cyberware] Registering new ResourceLocation: cyberware:textures/models/surgeryChamberDoor.png");
-		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
-		
-
 		
 		RenderHelper.disableStandardItemLighting();
 
@@ -392,7 +379,7 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 	@Override
 	public int getHeight(GuiTablet tablet, int width, int height, int ticksOpen, float partialTicks)
 	{
-		return height * 6;
+		return this.height + 45;
 	}
 
 
