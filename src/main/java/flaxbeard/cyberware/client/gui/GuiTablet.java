@@ -23,6 +23,7 @@ import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
 import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.tablet.TabletContent;
+import flaxbeard.cyberware.common.CyberwareContent;
 
 public class GuiTablet extends GuiScreen
 {
@@ -410,13 +411,13 @@ public class GuiTablet extends GuiScreen
 	private class ItemRequest
 	{
 		private ItemStack stack;
-		private int xPos;
-		private int yPos;
+		private float xPos;
+		private float yPos;
 		private float scale;
 		private float trans;
 		private boolean tooltip;
 		
-		private ItemRequest(ItemStack stack, int xPos, int yPos, float scale, float trans, boolean tooltip)
+		private ItemRequest(ItemStack stack, float xPos, float yPos, float scale, float trans, boolean tooltip)
 		{
 			this.stack = stack;
 			this.xPos = xPos;
@@ -429,12 +430,12 @@ public class GuiTablet extends GuiScreen
 	
 	private List<ItemRequest> stacksToDraw = new ArrayList<ItemRequest>();
 
-	public void renderItemWithTooltip(ItemStack itemStack, int i, int y, int j, float f)
+	public void renderItemWithTooltip(ItemStack itemStack, float i, float y, float j, float f)
 	{
 		stacksToDraw.add(new ItemRequest(itemStack, i, y, j, f, true));
 	}
 	
-	public void renderItem(ItemStack itemStack, int i, int y, int j, float f)
+	public void renderItem(ItemStack itemStack, float i, float y, float j, float f)
 	{
 		stacksToDraw.add(new ItemRequest(itemStack, i, y, j, f, false));
 	}

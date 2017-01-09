@@ -24,14 +24,17 @@ public class TabletContent
 
 	public static TabletMainMenu mainMenu;
 	public static TabletCatalog catalog;
+	
+	public static TabletSurgeonInstructions instructions;
 
 	public static void init()
 	{
 		mainMenu = new TabletMainMenu();
 		
 		catalog = new TabletCatalog();
+		instructions = new TabletSurgeonInstructions();
 		
-		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test0", catalog, 0));
+		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test0", instructions, 0));
 		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test1", catalog, 1));
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.catalog.cybereyes", INFO).setDefaultVisible();
