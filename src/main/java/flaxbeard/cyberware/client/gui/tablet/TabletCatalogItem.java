@@ -51,7 +51,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	private boolean constPowerUse = true;
 	
 	private String manufacturer;
-	
+
 	public TabletCatalogItem(ItemStack itemStack, String unlocalizedName, CyberwareTag... tags)
 	{
 		this(itemStack, "", unlocalizedName, tags);
@@ -63,13 +63,14 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 		this.item = itemStack;
 		this.ware = CyberwareAPI.getCyberware(item);
 		this.unlocalizedName = unlocalizedName;
-		TabletContent.catalog.addItem(this);
 		maxStackSize = getMaxStackSize();
 		production = getPowerProduction();
 		consumption = getPowerConsumption();
 		storage = getPowerCapacity();
 		tolerance = getToleranceCost();
 		this.manufacturer = manufacturer;
+		TabletContent.catalog.addItem(this);
+
 	}
 
 
@@ -79,39 +80,46 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 		String title = item.getDisplayName();
 		tablet.drawString(title, 20, 15, 0x34B1C7);
 		
+		String title2 = I18n.format(unlocalizedName + ".name");
+		title2 = (title2.equals(unlocalizedName + ".name")) ? title : title2;
+		tablet.drawString(ChatFormatting.ITALIC + title2, 21, 25, 0x188EA2);
+		
+		int titleLen = Math.max(tablet.getStringWidth(title), tablet.getStringWidth(title2));
+		
 		String s = I18n.format(ware.getSlot(item).getUnlocalizedName());
 		tablet.drawStringSmall(s, 15, 9, 0x188EA2);
 		
 		s = "9,982,123";
-		tablet.drawString(s, 20, 30, 0x34B1C7);
+		tablet.drawString(s, 20, 40, 0x34B1C7);
 		
 		String z = "\u00a5";
-		tablet.drawString(z, 21 + tablet.getStringWidth(s), 28, 0x34B1C7);
+		tablet.drawString(z, 22 + tablet.getStringWidth(s), 37, 0x34B1C7);
 		s = ChatFormatting.OBFUSCATED + "?220" + ChatFormatting.RESET + " in stock";
-		tablet.drawStringSmall(s, 20, 40, 0x188EA2);
+		tablet.drawStringSmall(s, 20, 50, 0x188EA2);
 		
 		s = I18n.format("cyberware.gui.tablet.catalog.item.code");
-		tablet.drawStringSmall(s, 20, 47, 0x34B1C7);
+		tablet.drawStringSmall(s, 20, 57, 0x34B1C7);
 		s = Integer.toString(new Random(item.getItemDamage() << 2 + item.getItem().getIdFromItem(item.getItem())).nextInt(100000000));
 		while (s.length() < 8)
 		{
 			s = "0" + s;
 		}
 		s = s.substring(0, 2) + "-" + s.substring(2);
-		tablet.drawStringSmall(s, 25, 52, 0x188EA2);
+		tablet.drawStringSmall(s, 25, 62, 0x188EA2);
 		
 		s = I18n.format("cyberware.gui.tablet.catalog.item.manufacturer");
-		tablet.drawStringSmall(s, 20, 59, 0x34B1C7);
+		tablet.drawStringSmall(s, 20, 69, 0x34B1C7);
 		s = I18n.format(manufacturer);
-		tablet.drawStringSmall(s, 25, 64, 0x188EA2);
+		tablet.drawStringSmall(s, 25, 74, 0x188EA2);
 		
 		
 		s = ChatFormatting.ITALIC + "\"" + I18n.format(unlocalizedName + ".quote") + "\"";
-		int i = tablet.drawSplitStringSmall(s, 20, 80, width - 40, 0x34B1C7);
+		int i = tablet.drawSplitStringSmall(s, 20, 90, width - 40, 0x34B1C7);
 		s = "- " + I18n.format(unlocalizedName + ".author");
-		tablet.drawStringSmall(s, width - tablet.getStringWidthSmall(s) - 20, 80 + ((int) (i * 5F)), 0x188EA2);
-		
-		int y = 97 + ((int) (i * 5F));
+		//tablet.drawStringSmall(s, width - tablet.getStringWidthSmall(s) - 20, 90 + ((int) (i * 5F)), 0x188EA2);
+		i += tablet.drawSplitStringSmall(s, width - Math.min(width - 60, tablet.getStringWidthSmall(s)) - 20, 90 + ((int) (i * 5F)), width - 60, 0x188EA2);
+
+		int y = 102 + ((int) (i * 5F));
 		
 		if (maxStackSize > 1)
 		{
@@ -238,9 +246,9 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 				
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 0.6F);
-		tablet.drawTexturedModalRect(20, 25, 29, 254, tablet.getStringWidth(title) + 5, 1);
+		tablet.drawTexturedModalRect(20, 35, 29, 254, titleLen + 5, 1);
 		
-		tablet.drawTexturedModalRect(20, 90 + i * 5, 29, 254, width - 40, 1);
+		tablet.drawTexturedModalRect(20, 95 + i * 5, 29, 254, width - 40, 1);
 		if (statsBar != 0)
 		{
 			tablet.drawTexturedModalRect(20, statsBar + 19, 29, 254, width - 40, 1);
@@ -258,7 +266,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 			entity.worldObj = world;
 		}
 		entity.hoverStart = 0F;
-		GuiSurgery.renderEntity(entity, 148, 101, 100, ticks * 3);
+		GuiSurgery.renderEntity(entity, 148, 111, 100, ticks * 3);
 				
 		ShaderHelper.releaseShader();
 
@@ -326,9 +334,8 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	public int getHeight(GuiTablet tablet, int width, int height, int ticksOpen, float partialTicks)
 	{
 		FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRendererObj;
-		String s = ChatFormatting.ITALIC + "\"Touch Medical's Cardiovascular Coupler makes me feel like my body is my own. "
-				+ "I can gain all the benefits of my augmentations without the hassle of a battery or a bulky generator.\"";
-		int i = tablet.getSplitStringSmallLines(s, width);
+		String s = ChatFormatting.ITALIC + "\"" + I18n.format(unlocalizedName + ".quote") + "\"";
+		int i = tablet.getSplitStringSmallLines(s, width - 40);
 		int y = 97 + ((int) (i * 5F));
 		
 		if (maxStackSize > 1)
@@ -341,14 +348,13 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 			y += 27;
 		}
 
+		s = "- " + I18n.format(unlocalizedName + ".author");
+		y += (int) (tablet.getSplitStringSmallLines(s, width - 60) * 5F);
 		
-		s = "From the leader in human augmentation technology, the Cardiovascular Coupler is the forefront of "
-				+ "minimally invasive power generation. Designed with precision and custom-ordered "
-				+ "to fit each customer, the Cardiovascular Coupler attaches to the heart of the user and utilizes the "
-				+ "body's natural electrical pulses to power installed augmentations.";
-		y += (int) (tablet.getSplitStringSmallLines(s, width) * 5.5F);
+		s = I18n.format(unlocalizedName + ".text");
+		y += (int) (tablet.getSplitStringSmallLines(s, width - 40) * 5F);
 			
-		return y + 45;
+		return y + 40;
 	}
 
 	public TabletCatalogItem setDefaultVisible()
@@ -426,5 +432,10 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 	public void setPowerUseConstant(boolean constant)
 	{
 		constPowerUse = constant;
+	}
+	
+	public String getManufacturer()
+	{
+		return this.manufacturer;
 	}
 }

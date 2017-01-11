@@ -221,6 +221,8 @@ public class GuiTablet extends GuiScreen
 			
 			stacksToDraw = new ArrayList<ItemRequest>();
 			page.render(this, maxTabletWidth - 64, tabletHeight - 20, modMouseX, modMouseY, ticks, partialTicks, leftDown);
+			leftDown = rightDown = false;
+
 		}
 		GlStateManager.popMatrix();
 		
@@ -270,7 +272,6 @@ public class GuiTablet extends GuiScreen
 		
 		GlStateManager.popMatrix();
 		
-		leftDown = rightDown = false;
 
 		float reverseScaleFactor = specialScaleFactor / (float) (sr.getScaleFactor());
 		for (ItemRequest request : stacksToDraw)
@@ -293,6 +294,7 @@ public class GuiTablet extends GuiScreen
 	{
 		this.page = page;
 		this.openTicks = lastTicks;
+		
 	}
 
 	public RenderItem getItemRenderer()

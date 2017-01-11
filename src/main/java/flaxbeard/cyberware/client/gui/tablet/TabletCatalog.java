@@ -3,18 +3,14 @@ package flaxbeard.cyberware.client.gui.tablet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import flaxbeard.cyberware.api.tablet.IListMenu.IListMenuItem;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
-import flaxbeard.cyberware.client.ShaderHelper;
 import flaxbeard.cyberware.client.gui.GuiTablet;
 import flaxbeard.cyberware.client.gui.tablet.CatalogSort.AlphaSort;
+import flaxbeard.cyberware.client.gui.tablet.CatalogSort.CorpSort;
 import flaxbeard.cyberware.client.gui.tablet.CatalogSort.ModSort;
 import flaxbeard.cyberware.client.gui.tablet.CatalogSort.SlotSort;
 import flaxbeard.cyberware.client.gui.tablet.CatalogSort.TagSort;
@@ -36,6 +32,7 @@ public class TabletCatalog implements ITabletPage, IScrollWheel
 		sorts.add(new SlotSort());
 		sorts.add(new AlphaSort());
 		sorts.add(new TagSort());
+		sorts.add(new CorpSort());
 		sorts.add(new ModSort());
 	}
 	

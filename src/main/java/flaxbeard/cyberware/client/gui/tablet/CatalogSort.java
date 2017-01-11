@@ -116,7 +116,7 @@ public interface CatalogSort
 							}
 							
 							String s = item.getItem().getDisplayName();
-							
+	
 							if (!unlocked)
 							{
 								s = ChatFormatting.OBFUSCATED + s;
@@ -358,6 +358,62 @@ public interface CatalogSort
 		public String getUnlocalizedName()
 		{
 			return "cyberware.gui.tablet.catalog.sort.tag";
+		}
+	}
+	
+	public class CorpSort implements CatalogSort
+	{
+		private List<Category> categories;
+		
+		public CorpSort()
+		{
+			categories = new ArrayList<Category>();
+			categories.add(new Category("cyberware.gui.tablet.catalog.sort.other"));
+		}
+		
+		@Override
+		public void render(GuiTablet tablet, int x, int y, int width, int mouseX, int mouseY, boolean leftDown, boolean showHidden)
+		{
+			renderCategories(tablet, x, y, width, mouseX, mouseY, categories, leftDown, showHidden);
+		}
+
+		@Override
+		public int getHeight(boolean showHidden)
+		{
+			return getHeightGeneral(categories, showHidden);
+		}
+
+		@Override
+		public void addItem(TabletCatalogItem item)
+		{
+			String manufacturer = item.getManufacturer();
+			
+			if (manufacturer == null || manufacturer.length() == 0)
+			{
+				categories.get(categories.size() - 1).add(item);
+			}
+			else
+			{
+				for (Category category : categories)
+				{
+					if (category.getUnlocalizedName().equals(manufacturer))
+					{
+						category.add(item);
+						return;
+					}
+				}
+				
+				Category cat = new Category(manufacturer);
+				categories.add(0, cat);
+				cat.add(item);
+				
+			}
+		}
+
+		@Override
+		public String getUnlocalizedName()
+		{
+			return "cyberware.gui.tablet.catalog.sort.corp";
 		}
 	}
 	

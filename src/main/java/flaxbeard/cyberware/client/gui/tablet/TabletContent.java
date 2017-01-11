@@ -39,19 +39,19 @@ public class TabletContent
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.catalog.cybereyes", INFO).setDefaultVisible();
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyes), "cyberware.gui.tablet.catalog.cybereyes", REPLACMENT).setDefaultVisible();
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyes), "cyberware.corp.neovision", "cyberware.gui.tablet.catalog.cybereyes", REPLACMENT).setDefaultVisible();
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 0), "cyberware.corp.panoptics", "cyberware.gui.tablet.catalog.nightVision", INFO);
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 1), "cyberware.corp.barracuda", "cyberware.gui.tablet.catalog.underwaterVision", INFO);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 3), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 3), "cyberware.corp.panoptics", "cyberware.gui.tablet.catalog.targeting", INFO);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 4), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 0), "cyberware.corp.argent", "cyberware.gui.tablet.catalog.corticalStack", SURVIVABILITY);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", COMBAT);
 		
@@ -65,7 +65,7 @@ public class TabletContent
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cyberheart), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 3), "cyberware.gui.tablet.catalog.cardioCoupler", POWERGEN).setDefaultVisible();
+		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 3), "cyberware.corp.touch", "cyberware.gui.tablet.catalog.cardioCoupler", POWERGEN).setDefaultVisible();
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY).setPowerUseConstant(false);
 		
@@ -73,7 +73,7 @@ public class TabletContent
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.heartUpgrades, 1, 2), "cyberware.gui.tablet.catalog.stemcell", SURVIVABILITY);
 
-		new TabletCatalogItem(new ItemStack(CyberwareContent.lungsUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", UTILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.lungsUpgrades, 1, 0), "cyberware.corp.barracuda", "cyberware.gui.tablet.catalog.oxygen", UTILITY);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.lungsUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
 		
@@ -122,7 +122,7 @@ public class TabletContent
 		new TabletCatalogItem(new ItemStack(CyberwareContent.legUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
-		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 1), "cyberware.corp.olympiads", "cyberware.gui.tablet.catalog.aqua", MOBILITY);
 		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
 		
 		if (Loader.isModLoaded("ToughAsNails"))
