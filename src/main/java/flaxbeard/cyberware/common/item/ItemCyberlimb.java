@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -83,7 +84,7 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 	public void handleSound(PlaySoundAtEntityEvent event)
 	{
 		Entity e = event.getEntity();
-		if (event.getSound() == SoundEvents.ENTITY_PLAYER_HURT && e.worldObj.isRemote)
+		if (e instanceof EntityPlayer && event.getSound() == SoundEvents.ENTITY_PLAYER_HURT && e.worldObj.isRemote)
 		{
 			if (didFall.contains(e.getEntityId()))
 			{
