@@ -65,7 +65,7 @@ public class ItemBlueprint extends Item implements IBlueprint
 				}
 				else
 				{
-					tooltip.add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt"));
+					tooltip.add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName()));
 					return;
 				}
 			}

@@ -113,7 +113,7 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 				{
 					if (!worldObj.isRemote)
 					{
-						System.out.println(container.getStoredPower());
+						//System.out.println(container.getStoredPower());
 						container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
 					}
 					data.addPower(20, null);
