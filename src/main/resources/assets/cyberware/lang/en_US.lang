@@ -183,7 +183,7 @@ cyberware.gui.toScan=Insert Cyberware to Scan
 cyberware.gui.percent=%1$s Chance
 cyberware.gui.timeLeft=%1$dm%2$ds Left
 
-cyberware.tooltip.shiftPrompt=Hold shift for more info
+cyberware.tooltip.shiftPrompt=Hold %s for more info
 cyberware.tooltip.requires=Requires
 cyberware.tooltip.joiner=,
 cyberware.tooltip.joinerOr=or

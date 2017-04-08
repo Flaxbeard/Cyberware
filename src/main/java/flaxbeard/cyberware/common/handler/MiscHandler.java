@@ -101,7 +101,7 @@ public class MiscHandler
 			}
 			else
 			{
-				event.getToolTip().add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt"));
+				event.getToolTip().add(ChatFormatting.DARK_GRAY + I18n.format("cyberware.tooltip.shiftPrompt", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName()));
 			}
 		}
 		else if (stack.getItem() instanceof IDeconstructable)
