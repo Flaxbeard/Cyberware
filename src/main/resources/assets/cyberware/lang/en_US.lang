@@ -183,7 +183,7 @@ cyberware.gui.toScan=Insert Cyberware to Scan
 cyberware.gui.percent=%1$s Chance
 cyberware.gui.timeLeft=%1$dm%2$ds Left
 
-cyberware.tooltip.shiftPrompt=Hold shift for more info
+cyberware.tooltip.shiftPrompt=Hold %s for more info
 cyberware.tooltip.requires=Requires
 cyberware.tooltip.joiner=,
 cyberware.tooltip.joinerOr=or
@@ -572,6 +572,11 @@ cyberware.gui.tablet.catalog.cybereyes.quote=When making split-second decisions 
 cyberware.gui.tablet.catalog.cybereyes.author=Ozpot Galosim, Cosmonaut on the Jovian mission
 cyberware.gui.tablet.catalog.cybereyes.text=20^20 Cybereyes are the standard in replacement eye technology. With a direct wired 750 megapixel video feed, 20^20 Cybereyes deliver an unrivaled image quality that far outpaces organic eyes. In situations where vision would typically be impaired, 20^20 Cybereyes allow you to persevere. Ask your Optometrist about 20^20 today, and inquire about the many available upgrade chips.
 
+cyberware.gui.tablet.catalog.zoom.name=Zoom+
+cyberware.gui.tablet.catalog.zoom.quote=Neovision's Zoom+ allows me to see 
+cyberware.gui.tablet.catalog.zoom.author=Hoyt Jann, volcanic researcher
+cyberware.gui.tablet.catalog.zoom.text=The Neovision Zoom+ is the first certified upgrade chip for 20^20 brand Cybereyes. Zoom+ unlocks the potential of the high definition cameras within 20^20 Cybereyes, allowing the user to zoom in on distant objects so that nothing escapes their sight.
+
 cyberware.gui.tablet.catalog.nightVision.name=Pulsatrix
 cyberware.gui.tablet.catalog.nightVision.quote=When on the tail of elusive and scheming criminals, the Pulsatrix lets me see into the shadows so I never miss a single clue.
 cyberware.gui.tablet.catalog.nightVision.author=Dave Holden, private bounty hunter
@@ -602,6 +607,11 @@ cyberware.gui.tablet.catalog.oxygen.quote=Barracuda's Compressed Oxygen Implant 
 cyberware.gui.tablet.catalog.oxygen.author=Scylla Herrera, commercial diving instructor
 cyberware.gui.tablet.catalog.oxygen.text=With the Second Wind Compressed Oxygen Implant, divers' can supply their body with oxygen for extended periods of time without surfacing. The internal oxygen tank, typically installed below the left lung, slowly refills through normal breathing. The Second Wind remains compatible with existing external diving equipment.
 
+cyberware.gui.tablet.catalog.immuno.name=GC Allocator
+cyberware.gui.tablet.catalog.immuno.quote=The GC Allocator gives me the peace of mind that my patients will be safe from the dangers of transplant rejection. It is an indispensable tool in the surgeon's arsenal.
+cyberware.gui.tablet.catalog.immuno.author=Zhuang Bo, first surgeon to successfully transplant a human brain
+cyberware.gui.tablet.catalog.immuno.text=The Touch Medical GC Allocator provides a robust and noninvasive method for distributing immunosuppressing glucocorticoids throughout the body, useful for treatment of autoimmune disorders or transplant rejection. Clinical trials are ongoing regarding utilizing the GC Allocator as a means to increase the body's tolerance of augmentation. Note that the use of immunosuppressants inherently weakens the body's response to diseases and poisons.
+
 cyberware.gui.tablet.surgeonInstructions.title0=Robosurgeon Instructions
 cyberware.gui.tablet.surgeonInstructions.0=WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.
 cyberware.gui.tablet.surgeonInstructions.1=Thank you for your purchase of a Touch Medical Robosurgeon! The Robosurgeon enables rapid installation of human augmentations without the risk of error that comes with traditional human-provided surgery. This guide will provide information on installation and usage of your device.
@@ -622,9 +632,9 @@ cyberware.gui.tablet.surgeonInstructions.11=You may click on an augmentation in 
 cyberware.gui.tablet.surgeonInstructions.12=WARNING: If the above icon is displayed, hover over it. This symbol alerts the user that they are set to remove a critical organ during surgery or will fall into dangerous Tolerance levels.
 cyberware.gui.tablet.surgeonInstructions.13=Once you are ready to perform the surgery, simply step into the Surgery Chamber and close the doors.
 cyberware.gui.tablet.surgeonInstructions.14=Make sure that you are healthy before undergoing surgery, as it may result in damage.
-cyberware.gui.tablet.surgeonInstructions.15=The human body will only tolerate a certain amount of augmentation before its rejection process becomes dangerous. Most augmentations available on the market have a tolerance impact rating measured in the standard unit tols. A standard human can handle %d tols of augmentation.
-cyberware.gui.tablet.surgeonInstructions.16=If the amount of tolerance displayed on the meter falls below %d tols, the user will suffer from Augmentation Rejection Syndrome (ARS). Utilizing Neuropozene will prevent ARS, with each dose lasting for about one day.
-cyberware.gui.tablet.surgeonInstructions.17=If the meter falls to 0 tols, the user will suffer from Lethal Augmentation Rejection Syndrome (LARS) which will result in a swift death.
+cyberware.gui.tablet.surgeonInstructions.15=The human body will only tolerate a certain amount of augmentation before its rejection process becomes dangerous. Most augmentations available on the market have a tolerance impact rating measured in the standard unit tol. A standard human can handle %d tol of augmentation.
+cyberware.gui.tablet.surgeonInstructions.16=If the amount of tolerance displayed on the meter falls below %d tol, the user will suffer from Augmentation Rejection Syndrome (ARS). Utilizing Neuropozene will prevent ARS, with each dose lasting for about one day.
+cyberware.gui.tablet.surgeonInstructions.17=If the meter falls to 0 tol, the user will suffer from Lethal Augmentation Rejection Syndrome (LARS) which will result in a swift death.
 
 # MISC
 cyberware.container.engineering=Cyberware Engineering

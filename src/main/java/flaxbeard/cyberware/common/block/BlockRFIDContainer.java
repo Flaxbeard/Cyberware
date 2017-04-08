@@ -165,13 +165,13 @@ public class BlockRFIDContainer extends BlockContainer
 				if (!world.isRemote)
 				{
 					int rand = 1 + world.rand.nextInt(3);
-					for (int i = 0; i < rand; i++)
+					/*for (int i = 0; i < rand; i++)
 					{
 						EntityBytebug bug = new EntityBytebug(world);
 						bug.setPosition(pos.getX() + .5F, pos.getY() + 1.1F, pos.getZ() + .5F);
 						
 						world.spawnEntityInWorld(bug);
-					}
+					}*/
 					spawnNewChest(world, pos, 0, player);
 				}
 			}
@@ -193,8 +193,8 @@ public class BlockRFIDContainer extends BlockContainer
 		float direction = (float) (world.rand.nextFloat() * Math.PI * 2F);
 		double xComp = Math.sin(direction);
 		double zComp = Math.cos(direction);
-		int x = (int) (100 * xComp) + pos.getX();
-		int z = (int) (100 * zComp) + pos.getZ();
+		int x = (int) (10 * xComp) + pos.getX();
+		int z = (int) (10 * zComp) + pos.getZ();
 		int y = 254;
 		
 		while (world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.SAND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.GROUND && world.getBlockState(new BlockPos(x, y, z)).getMaterial() != Material.ROCK && y > 5)

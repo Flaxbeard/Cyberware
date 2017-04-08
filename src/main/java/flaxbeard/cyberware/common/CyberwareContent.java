@@ -141,8 +141,6 @@ public class CyberwareContent
 	public static List<Block> blocks;
 	
 	public static List<NumItems> numItems;
-	public static List<ZombieItem> zombieItems;
-
 
 	public static void preInit()
 	{
@@ -157,7 +155,6 @@ public class CyberwareContent
 		numItems.add(new NumItems(15, 6));
 		numItems.add(new NumItems(5, 10));
 
-		zombieItems = new ArrayList<ZombieItem>();
 
 		if (!CyberwareConfig.NO_ZOMBIES)
 		{
@@ -546,24 +543,6 @@ public class CyberwareContent
 		public boolean equals(Object target)
 		{
 			return target instanceof NumItems && num == ((NumItems)target).num;
-		}
-	}
-	
-	public static class ZombieItem extends WeightedRandom.Item
-	{
-		public ItemStack stack;
-		public ZombieItem(int weight, ItemStack stack)
-		{
-			super(weight);
-			this.stack = stack;
-		}
-
-		@Override
-		public boolean equals(Object target)
-		{
-			if (!(target instanceof ZombieItem)) return false;
-			ItemStack stack2 = ((ZombieItem)target).stack;
-			return (stack == stack2 || (stack != null && stack2 != null && stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage() && stack.stackSize == stack2.stackSize));
 		}
 	}
 

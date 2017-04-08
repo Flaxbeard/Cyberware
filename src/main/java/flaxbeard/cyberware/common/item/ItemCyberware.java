@@ -15,12 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberwareTabItem;
 import flaxbeard.cyberware.api.item.IDeconstructable;
-import flaxbeard.cyberware.common.CyberwareContent;
-import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
+import flaxbeard.cyberware.api.progression.ItemPool;
 
 public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyberwareTabItem, IDeconstructable
 {
@@ -56,7 +54,7 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 			int installedStackSize = installedStackSize(stack);
 			stack.stackSize = installedStackSize;
 			this.setQuality(stack, CyberwareAPI.QUALITY_SCAVENGED);
-			CyberwareContent.zombieItems.add(new ZombieItem(weight[meta], stack));
+			ItemPool.addCyberware(weight[meta], stack, true, true);
 		}
 		return this;
 	}

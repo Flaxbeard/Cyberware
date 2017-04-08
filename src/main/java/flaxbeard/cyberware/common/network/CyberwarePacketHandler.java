@@ -14,6 +14,7 @@ import flaxbeard.cyberware.common.network.EngineeringSwitchArchivePacket.Enginee
 import flaxbeard.cyberware.common.network.GuiPacket.GuiPacketHandler;
 import flaxbeard.cyberware.common.network.OpenRadialMenuPacket.OpenRadialMenuPacketHandler;
 import flaxbeard.cyberware.common.network.ParticlePacket.ParticlePacketHandler;
+import flaxbeard.cyberware.common.network.ProgressionSyncPacket.ProgressionSyncPacketHandler;
 import flaxbeard.cyberware.common.network.ScannerSmashPacket.ScannerSmashPacketHandler;
 import flaxbeard.cyberware.common.network.SurgeryRemovePacket.SurgeryRemovePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket.SwitchHeldItemAndRotationPacketHandler;
@@ -47,6 +48,7 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(OpenRadialMenuPacketHandler.class, OpenRadialMenuPacket.class, 12, Side.SERVER);
 		INSTANCE.registerMessage(UpdateHudColorPacketHandler.class, UpdateHudColorPacket.class, 13, Side.SERVER);
 		INSTANCE.registerMessage(UpdateConfigPacketHandler.class, UpdateConfigPacket.class, 14, Side.CLIENT);
+		INSTANCE.registerMessage(ProgressionSyncPacketHandler.class, ProgressionSyncPacket.class, 15, Side.CLIENT);
 
 	}
 }

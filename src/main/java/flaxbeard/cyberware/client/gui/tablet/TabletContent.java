@@ -49,7 +49,7 @@ public class TabletContent
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 3), "cyberware.corp.panoptics", "cyberware.gui.tablet.catalog.targeting", INFO);
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 4), "cyberware.gui.tablet.catalog.cardioCoupler", INFO);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyeUpgrades, 1, 4), "cyberware.corp.neovision", "cyberware.gui.tablet.catalog.zoom", INFO);
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 0), "cyberware.corp.argent", "cyberware.gui.tablet.catalog.corticalStack", SURVIVABILITY);
 		
@@ -93,7 +93,7 @@ public class TabletContent
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.skinUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", UTILITY);
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.skinUpgrades, 1, 3), "cyberware.gui.tablet.catalog.cardioCoupler", UTILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.skinUpgrades, 1, 3), "cyberware.corp.touch", "cyberware.gui.tablet.catalog.immuno", UTILITY);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.muscleUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", COMBAT);
 		

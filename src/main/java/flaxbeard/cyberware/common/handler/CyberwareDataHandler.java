@@ -33,15 +33,19 @@ import flaxbeard.cyberware.api.CyberwareUserDataImpl;
 import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.progression.CyberwareProgressionDataImpl;
+import flaxbeard.cyberware.api.progression.ItemPool;
+import flaxbeard.cyberware.api.progression.ItemPool.ItemPoolItem;
+import flaxbeard.cyberware.api.progression.ProgressionHelper;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.CyberwareContent.NumItems;
-import flaxbeard.cyberware.common.CyberwareContent.ZombieItem;
 import flaxbeard.cyberware.common.block.tile.TileEntityBeacon;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.lib.LibConstants;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
+import flaxbeard.cyberware.common.network.ProgressionSyncPacket;
 
 public class CyberwareDataHandler
 {
@@ -69,6 +73,7 @@ public class CyberwareDataHandler
 		if (event.getEntity() instanceof EntityPlayer)
 		{
 			event.addCapability(CyberwareUserDataImpl.Provider.NAME, new CyberwareUserDataImpl.Provider());
+			event.addCapability(CyberwareProgressionDataImpl.Provider.NAME, new CyberwareProgressionDataImpl.Provider());
 		}
 	}
 	
@@ -93,6 +98,10 @@ public class CyberwareDataHandler
 			{
 				CyberwareAPI.getCapability(p).deserializeNBT(CyberwareAPI.getCapability(o).serializeNBT());
 			}
+		}
+		if (ProgressionHelper.hasCapability(o))
+		{
+			ProgressionHelper.getCapability(p).deserializeNBT(ProgressionHelper.getCapability(o).serializeNBT());
 		}
 	}
 	
@@ -275,7 +284,7 @@ public class CyberwareDataHandler
 		wares.get(((ICyberware) re.getItem()).getSlot(re).ordinal()).add(re);
 		installed.add(re);*/
 		
-		List<ZombieItem> items = new ArrayList(CyberwareContent.zombieItems);
+		List<ItemPoolItem> items = ItemPool.getZombieItems();
 		for (int i = 0; i < numberOfItemsToInstall; i++)
 		{
 			int tries = 0;
@@ -285,7 +294,7 @@ public class CyberwareDataHandler
 			// Ensure we get a unique item
 			do
 			{
-				randomItem = ItemStack.copyItemStack(((ZombieItem) WeightedRandom.getRandomItem(cyberZombie.worldObj.rand, items)).stack);
+				randomItem = ItemStack.copyItemStack(((ItemPoolItem) WeightedRandom.getRandomItem(cyberZombie.worldObj.rand, items)).stack);
 				randomWare = CyberwareAPI.getCyberware(randomItem);
 				randomItem.stackSize = randomWare.installedStackSize(randomItem);
 				tries++;
@@ -370,6 +379,8 @@ public class CyberwareDataHandler
 					//System.out.println("Sent data for player " + ((EntityPlayer) e).getName() + " to that player's client");
 					NBTTagCompound nbt = CyberwareAPI.getCapability(e).serializeNBT();
 					CyberwarePacketHandler.INSTANCE.sendTo(new CyberwareSyncPacket(nbt, e.getEntityId()), (EntityPlayerMP) e);
+					nbt = ProgressionHelper.getCapability((EntityPlayer) e).serializeNBT();
+					CyberwarePacketHandler.INSTANCE.sendTo(new ProgressionSyncPacket(nbt, e.getEntityId()), (EntityPlayerMP) e);
 				}
 			}
 		}
@@ -387,7 +398,8 @@ public class CyberwareDataHandler
 			{
 				if (target instanceof EntityPlayer)
 				{
-					//System.out.println("Sent data for player " + ((EntityPlayer) target).getName() + " to player " + tracker.getName());
+					NBTTagCompound nbt = ProgressionHelper.getCapability((EntityPlayer) target).serializeNBT();
+					CyberwarePacketHandler.INSTANCE.sendTo(new ProgressionSyncPacket(nbt, target.getEntityId()), (EntityPlayerMP) tracker);
 				}
 
 				NBTTagCompound nbt = CyberwareAPI.getCapability(target).serializeNBT();

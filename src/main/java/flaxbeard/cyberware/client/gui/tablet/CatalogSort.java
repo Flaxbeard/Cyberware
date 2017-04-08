@@ -104,7 +104,7 @@ public interface CatalogSort
 					for (int i = 0; i < items.size(); i++)
 					{
 						TabletCatalogItem item = items.get(i);
-						boolean unlocked = ProgressionHelper.isUnlocked(item.getItem());
+						boolean unlocked = ProgressionHelper.isUnlocked(tablet.mc.thePlayer, item.getItem());
 						if (unlocked || showHidden)
 						{
 							GlStateManager.pushMatrix();
@@ -141,7 +141,7 @@ public interface CatalogSort
 					for (int i = 0; i < items.size(); i++)
 					{
 						ItemStack item = items.get(i).getItem();
-						boolean unlocked = ProgressionHelper.isUnlocked(item);
+						boolean unlocked = ProgressionHelper.isUnlocked(tablet.mc.thePlayer, item);
 						if (unlocked || showHidden)
 						{
 							GlStateManager.pushMatrix();
@@ -220,7 +220,7 @@ public interface CatalogSort
 					for (int i = 0; i < items.size(); i++)
 					{
 						ItemStack item = items.get(i).getItem();
-						boolean unlocked = ProgressionHelper.isUnlocked(item);
+						boolean unlocked = ProgressionHelper.isUnlocked(Minecraft.getMinecraft().thePlayer, item);
 						if (unlocked || showHidden) h += 10;
 					}
 				}

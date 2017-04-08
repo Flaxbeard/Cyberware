@@ -201,11 +201,11 @@ public class TabletSurgeonInstructions implements ITabletPage, IScrollWheel
 		GlStateManager.disableBlend();
 		y += 14;
 		
-		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.15");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.15", CyberwareConfig.ESSENCE);
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
-		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.16");
+		s = I18n.format("cyberware.gui.tablet.surgeonInstructions.16", CyberwareConfig.CRITICAL_ESSENCE);
 		y += tablet.drawSplitStringSmall(s, 20, y, width - 40, 0x34B1C7) * 5;
 		y += 2;
 		
