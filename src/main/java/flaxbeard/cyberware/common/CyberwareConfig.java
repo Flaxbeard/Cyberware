@@ -2,21 +2,33 @@ package flaxbeard.cyberware.common;
 
 import java.io.File;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.NumberInvalidException;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.lib.LibConstants;
+import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
+import flaxbeard.cyberware.common.network.UpdateConfigPacket;
 
 public class CyberwareConfig
 {
+	public static CyberwareConfig INSTANCE = new CyberwareConfig();
+	
 	public static float ENGINEERING_CHANCE = 15F;
 	public static float SCANNER_CHANCE = 10F;
 	public static float SCANNER_CHANCE_ADDL = 10F;
@@ -35,6 +47,10 @@ public class CyberwareConfig
 	public static int HUDG = 255;
 	public static int HUDB = 0;
 	
+	public static boolean ENABLE_FLOAT = false;
+	public static float HUDLENS_FLOAT = 0.1F;
+	public static float HUDJACK_FLOAT = 0.05F;
+	
 	public static boolean SURGERY_CRAFTING = false;
 	
 	private static String[][] defaultStartingItems;
@@ -46,15 +62,25 @@ public class CyberwareConfig
 
 	public static boolean KATANA = true;
 	public static boolean CLOTHES = true;
+	public static boolean RENDER = true;
 	
 	public static int TESLA_PER_POWER = 1;
 	
 	public static Configuration config;
 	
 	public static File configDirectory;
+	
+	private static final String C_MOBS = "Mobs";
+	private static final String C_OTHER = "Other";
+	private static final String C_HUD = "HUD";
+	private static final String C_MACHINES = "Machines";
+	private static final String C_ESSENCE = "Essence";
+	private static final String C_GAMERULES = "Gamerules";
 
-	public static void loadConfig(FMLPreInitializationEvent event)
+	public static void preInit(FMLPreInitializationEvent event)
 	{
+		configDirectory = event.getModConfigurationDirectory();
+		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		startingItems = defaultStartingItems = new String[EnumSlot.values().length][0];
 		startingStacks = new ItemStack[EnumSlot.values().length][LibConstants.WARE_PER_SLOT];
 		
@@ -79,41 +105,56 @@ public class CyberwareConfig
 				defaultStartingItems[i] = new String[0];
 			}
 		}
+		loadConfig();
 		
-		configDirectory = event.getModConfigurationDirectory();
-		config = new Configuration(new File(event.getModConfigurationDirectory(), Cyberware.MODID + ".cfg"));
 		config.load();
-		
 		for (int index = 0; index < EnumSlot.values().length; index++)
 		{
 			EnumSlot slot = EnumSlot.values()[index];
 			startingItems[index] = config.getStringList("Default augments for " + slot.getName() + " slot",
 					"Defaults", defaultStartingItems[index], "Use format 'id amount metadata'");
 		}
+		config.save();
 		
-		NO_ZOMBIES = config.getBoolean("Disable cyberzombies", "Mobs", NO_ZOMBIES, "");
-		ZOMBIE_WEIGHT = config.getInt("Spawning weight of Cyberzombies", "Mobs", ZOMBIE_WEIGHT, 0, Integer.MAX_VALUE, "Vanilla Zombie = 100, Enderman = 10, Witch = 5");
-		ZOMBIE_MIN_PACK = config.getInt("Minimum Cyberzombie pack size", "Mobs", ZOMBIE_MIN_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 1, Witch = 1");
-		ZOMBIE_MAX_PACK = config.getInt("Maximum Cyberzombie pack size", "Mobs", ZOMBIE_MAX_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 4, Witch = 1");
+	}
+	
+	public static void loadConfig()
+	{
 
-		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", "Mobs", DROP_RARITY, 0F, 100F, "");
 		
-		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", "Other", SURGERY_CRAFTING, "Normally only found in Nether fortresses");
-		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", "Other", TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
-		
-		ESSENCE = config.getInt("Maximum Essence", "Essence", ESSENCE, 0, Integer.MAX_VALUE, "");
-		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", "Essence", CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
-		
-		DEFAULT_DROP = config.getBoolean("Default for gamerule cyberware_dropCyberware", "Gamerules", DEFAULT_DROP, "Determines if players drop their Cyberware on death. Does not change settings on existing worlds, use /gamerule for that. Overridden if cyberware_keepCyberware is true");
-		DEFAULT_KEEP = config.getBoolean("Default for gamerule cyberware_keepCyberware", "Gamerules", DEFAULT_KEEP, "Determines if players keep their Cyberware between lives. Does not change settings on existing worlds, use /gamerule for that.");
+		config.load();
 
-		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", "Machines", ENGINEERING_CHANCE, 0, 100F, "");
-		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", "Machines", SCANNER_CHANCE, 0, 100F, "");
-		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", "Machines", SCANNER_CHANCE_ADDL, 0, 100F, "");
-		SCANNER_TIME = config.getInt("Ticks taken per Scanner operation", "Machines", SCANNER_TIME, 0, Integer.MAX_VALUE, "24000 is one Minecraft day, 1200 is one real-life minute");
+		NO_ZOMBIES = config.getBoolean("Disable cyberzombies", C_MOBS, NO_ZOMBIES, "");
+		ZOMBIE_WEIGHT = config.getInt("Spawning weight of Cyberzombies", C_MOBS, ZOMBIE_WEIGHT, 0, Integer.MAX_VALUE, "Vanilla Zombie = 100, Enderman = 10, Witch = 5");
+		ZOMBIE_MIN_PACK = config.getInt("Minimum Cyberzombie pack size", C_MOBS, ZOMBIE_MIN_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 1, Witch = 1");
+		ZOMBIE_MAX_PACK = config.getInt("Maximum Cyberzombie pack size", C_MOBS, ZOMBIE_MAX_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 4, Witch = 1");
+
+		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", C_MOBS, DROP_RARITY, 0F, 100F, "");
 		
-		KATANA = config.getBoolean("Enable Katana", "Other", KATANA, "");
-		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", "Other", CLOTHES, "");
+		SURGERY_CRAFTING = config.getBoolean("Enable crafting recipe for Robosurgeon", C_OTHER, SURGERY_CRAFTING, "Normally only found in Nether fortresses");
+		TESLA_PER_POWER = config.getInt("RF/Tesla per internal power unit", C_OTHER, TESLA_PER_POWER, 0, Integer.MAX_VALUE, "");
+		
+		ESSENCE = config.getInt("Maximum Essence", C_ESSENCE, ESSENCE, 0, Integer.MAX_VALUE, "");
+		CRITICAL_ESSENCE = config.getInt("Critical Essence value, where rejection begins", C_ESSENCE, CRITICAL_ESSENCE, 0, Integer.MAX_VALUE, "");
+		
+		DEFAULT_DROP = config.getBoolean("Default for gamerule cyberware_dropCyberware", C_GAMERULES, DEFAULT_DROP, "Determines if players drop their Cyberware on death. Does not change settings on existing worlds, use /gamerule for that. Overridden if cyberware_keepCyberware is true");
+		DEFAULT_KEEP = config.getBoolean("Default for gamerule cyberware_keepCyberware", C_GAMERULES, DEFAULT_KEEP, "Determines if players keep their Cyberware between lives. Does not change settings on existing worlds, use /gamerule for that.");
+
+		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", C_MACHINES, ENGINEERING_CHANCE, 0, 100F, "");
+		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", C_MACHINES, SCANNER_CHANCE, 0, 100F, "");
+		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", C_MACHINES, SCANNER_CHANCE_ADDL, 0, 100F, "");
+		SCANNER_TIME = config.getInt("Ticks taken per Scanner operation", C_MACHINES, SCANNER_TIME, 0, Integer.MAX_VALUE, "24000 is one Minecraft day, 1200 is one real-life minute");
+		
+		KATANA = config.getBoolean("Enable Katana", C_OTHER, KATANA, "");
+		CLOTHES = config.getBoolean("Enable Trenchcoat, Mirrorshades, and Biker Jacket", C_OTHER, CLOTHES, "");
+		
+		RENDER = config.getBoolean("Enable changes to player model (missing skin, missing limbs, Cybernetic limbs)", C_OTHER, RENDER, "");
+		
+		ENABLE_FLOAT = config.getBoolean("Enable hudlens and hudjack float.", C_HUD, ENABLE_FLOAT, "Experimental, defaults to false.");
+
+		HUDJACK_FLOAT = config.getFloat("Amount hudjack HUD will 'float' with movement. Set to 0 for no float.", C_HUD, HUDJACK_FLOAT, 0F, 100F, "");
+		HUDLENS_FLOAT = config.getFloat("Amount hudlens HUD will 'float' with movement. Set to 0 for no float.", C_HUD, HUDLENS_FLOAT, 0F, 100F, "");
+
 		config.save();
 	}
 	
@@ -206,4 +247,35 @@ public class CyberwareConfig
 		return startingStacks[slot.ordinal()];
 	}
 	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onWorldUnload(WorldEvent.Unload event)
+	{
+		if (event.getWorld().isRemote && !Minecraft.getMinecraft().getConnection().getNetworkManager().isChannelOpen())
+		{
+			loadConfig();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLogin(PlayerLoggedInEvent event)
+	{
+		EntityPlayer player = event.player;
+		World world = player.worldObj;
+		
+		if (!world.isRemote)
+		{
+			CyberwarePacketHandler.INSTANCE.sendTo(new UpdateConfigPacket(), (EntityPlayerMP) player);  
+		}
+	}
+	
+	@SubscribeEvent
+	public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if (event.getModID().equalsIgnoreCase(Cyberware.MODID))
+		{
+			loadConfig();
+		}
+	}
+
 }

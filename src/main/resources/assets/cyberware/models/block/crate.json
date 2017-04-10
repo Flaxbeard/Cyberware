@@ -1,0 +1,55 @@
+{
+"elements": [ 
+{
+    "__comment": "Beam1",
+    "from": [ 1, 0, 6.5 ],
+    "to": [ 3, 10, 9.5 ],
+    "faces": {
+        "down":  { "uv": [ 14.5, 14.5, 15.5, 16 ], "texture": "#texture", "cullface": "down" },
+        "up":    { "uv": [ 14.5, 14.5, 15.5, 16 ], "texture": "#texture" },
+        "north": { "uv": [ 13, 11, 14, 16 ], "texture": "#texture" },
+        "south": { "uv": [ 13, 11, 14, 16 ], "texture": "#texture" },
+        "west":  { "uv": [ 12.5, 11, 14, 16 ], "texture": "#texture" },
+        "east":  { "uv": [ 12.5, 11, 14, 16 ], "texture": "#texture" }
+    }
+},
+{
+    "__comment": "Beam2",
+    "from": [ 13, 0, 6.5 ],
+    "to": [ 15, 10, 9.5 ],
+    "faces": {
+        "down":  { "uv": [ 15.5, 14.5, 14.5, 16 ], "texture": "#texture", "cullface": "down" },
+        "up":    { "uv": [ 15.5, 14.5, 14.5, 16 ], "texture": "#texture" },
+        "north": { "uv": [ 12.5, 11, 13.5, 16 ], "texture": "#texture" },
+        "south": { "uv": [ 13.5, 11, 12.5, 16 ], "texture": "#texture" },
+        "west":  { "uv": [ 12.5, 11, 14, 16 ], "texture": "#texture" },
+        "east":  { "uv": [ 12.5, 11, 14, 16 ], "texture": "#texture" }
+    }
+},
+{
+    "from": [ 3, 0, 3 ],
+    "to": [ 13, 5, 13 ],
+    "faces": {
+        "down":  { "uv": [ 6, 0, 12, 6 ], "texture": "#texture", "cullface": "down" },
+        "up":    { "uv": [ 6, 10, 12, 16 ], "texture": "#texture" },
+        "north": { "uv": [ 6, 7.5, 12, 10 ], "texture": "#texture" },
+        "south": { "uv": [ 0, 7.5, 6, 10 ], "texture": "#texture" },
+        "west":  { "uv": [ 0, 7.5, 6, 10 ], "texture": "#texture" },
+        "east":  { "uv": [ 0, 7.5, 6, 10 ], "texture": "#texture" }
+    }
+},
+{
+    "__comment": "Top",
+    "from": [ 3, 5, 3.0625 ],
+    "to": [ 13, 10, 13.0625 ],
+    "faces": {
+        "down":  { "uv": [ 0, 10, 6, 16 ], "texture": "#texture" },
+        "up":    { "uv": [ 0, 0, 6, 6 ], "texture": "#texture" },
+        "north": { "uv": [ 13.5, 0, 16, 6 ], "rotation": 270, "texture": "#texture" },
+        "south": { "uv": [ 13.5, 0, 16, 6 ], "rotation": 270, "texture": "#texture" },
+        "west":  { "uv": [ 13.5, 0, 16, 6 ], "rotation": 270, "texture": "#texture" },
+        "east":  { "uv": [ 13.5, 0, 16, 6 ], "rotation": 270, "texture": "#texture" }
+    }
+}
+]
+}

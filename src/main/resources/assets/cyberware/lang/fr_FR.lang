@@ -1,0 +1,355 @@
+# BLOCKS
+tile.cyberware.surgery.name=Robochirurgien
+item.cyberware.surgeryChamber.name=Chambre de Chirurgie
+tile.cyberware.surgeryChamber.name=Chambre de Chirurgie
+tile.cyberware.charger.name=Charger de Cybernétque
+tile.cyberware.engineeringTable.name=Table d'Ingénierie Cybernétique
+tile.cyberware.scanner.name=Scanner Cybernétique
+tile.cyberware.blueprintArchive.name=Banque de Schémas
+item.cyberware.engineeringTable.name=Table d'Ingénierie Cybernétique
+tile.cyberware.componentBox.name=Boîte à Composants
+item.cyberware.componentBox.name=Boîte à Composants
+tile.cyberware.beacon.name=Kit Radio
+tile.cyberware.beaconLarge.name=Balise Radio
+tile.cyberware.radioPost.name=Partie de Tour Radio
+
+
+# ITEMS
+item.cyberware.bodyPart.brain.name=Cerveau Humain
+item.cyberware.bodyPart.eyes.name=Yeux Humains
+item.cyberware.bodyPart.heart.name=Coeur Humain
+item.cyberware.bodyPart.lungs.name=Poumons Humains
+item.cyberware.bodyPart.stomach.name=Estomac Humain
+item.cyberware.bodyPart.skin.name=Peau Humaine
+item.cyberware.bodyPart.muscles.name=Muscles Humains
+item.cyberware.bodyPart.bones.name=Os Humains
+item.cyberware.bodyPart.armLeft.name=Bras Gauche Humain
+item.cyberware.bodyPart.armRight.name=Bras Droit Humain
+item.cyberware.bodyPart.handLeft.name=Main Gauche Humaine
+item.cyberware.bodyPart.handRight.name=Main Droite Humaine
+item.cyberware.bodyPart.legLeft.name=Jambe Gauche Humaine
+item.cyberware.bodyPart.legRight.name=Jambe Droite Humaine
+item.cyberware.bodyPart.footLeft.name=Pied Gauche Humain
+item.cyberware.bodyPart.footRight.name=Pied Droit Humain
+item.cyberware.cyberlimbs.cyberlegLeft.name=Cyberjambe Gauche
+item.cyberware.cyberlimbs.cyberlegRight.name=Cyberjambe Droite
+item.cyberware.cyberlimbs.cyberarmLeft.name=Cyberbras Gauche
+item.cyberware.cyberlimbs.cyberarmRight.name=Cyberbras Droit
+
+item.cyberware.manaseerLens.lens.name=Lentille de Manavision
+item.cyberware.manaseerLens.link.name=Manalien
+item.cyberware.cybereyes.name=Cyberyeux
+item.cyberware.cybereyeUpgrades.nightVision.name=Vision Basse Luminosité Améliorée
+item.cyberware.cybereyeUpgrades.underwaterVision.name=Calibreur de Réfraction Liquide
+item.cyberware.cybereyeUpgrades.hudjack.name=Interface Visuelle
+item.cyberware.cybereyeUpgrades.targeting.name=Surbrillance de Visée
+item.cyberware.cybereyeUpgrades.zoom.name=Améliorateur de distance
+item.cyberware.eyeUpgrades.hudlens.name=Lentille d'Interface
+item.cyberware.expCapsule.name=Capsule d'Expérience
+item.cyberware.brainUpgrades.corticalStack.name=Pile Corticale
+item.cyberware.brainUpgrades.enderJammer.name=Brouilleur d'Ender
+item.cyberware.brainUpgrades.consciousnessTransmitter.name=Transmetteur de Conscience
+item.cyberware.brainUpgrades.neuralContextualizer.name=Contextualiseur Neural
+item.cyberware.brainUpgrades.matrix.name=Matrice de Calculation des Risques
+item.cyberware.brainUpgrades.radio.name=Diffuseur Crânien
+cyberware.gui.radioInternal=CB
+item.cyberware.cyberheart.name=Pompe Cardiomécanique
+item.cyberware.creativeBattery.name=Condensateur Créatif
+item.cyberware.heartUpgrades.defibrillator.name=Défibrillateur interne
+item.cyberware.heartUpgrades.platelets.name=Distributeur de Plaquettes
+item.cyberware.heartUpgrades.medkit.name=Synthétiseur de Cellules Souches
+item.cyberware.heartUpgrades.coupler.name=Coupleur Cardiovasculaire
+item.cyberware.lungsUpgrades.oxygen.name=Implant d'Oxygène Compressé
+item.cyberware.lungsUpgrades.hyperoxygenation.name=Augmentation d'Hyperoxygènation
+item.cyberware.lowerOrgansUpgrades.liverFilter.name=Filtre de Foie
+item.cyberware.lowerOrgansUpgrades.metabolic.name=Générateur Métabolique
+item.cyberware.lowerOrgansUpgrades.battery.name=Batterie Interne
+item.cyberware.lowerOrgansUpgrades.adrenaline.name=Pompe à Adrénaline
+item.cyberware.denseBattery.name=Condesateur Ultradense
+item.cyberware.skinUpgrades.solarSkin.name=Peau Solaire
+item.cyberware.skinUpgrades.subdermalSpikes.name=Piques Subdermiques
+item.cyberware.skinUpgrades.fakeSkin.name=Peau Synthétiques
+item.cyberware.skinUpgrades.immuno.name=Immunosupresseur Ciblé
+item.cyberware.muscleUpgrades.wiredReflexes.name=Réflexes Câblés
+item.cyberware.muscleUpgrades.muscleReplacements.name=Remplacement Myomérique de Muscles
+item.cyberware.boneUpgrades.bonelacing.name=Entrelacement Osseux
+item.cyberware.boneUpgrades.boneflex.name=Augmentation de Citrate
+item.cyberware.boneUpgrades.bonebattery.name=Batterie de Moelle
+item.cyberware.handUpgrades.craftHands.name=Manipulateurs de Précision
+item.cyberware.handUpgrades.claws.name=Griffes Rétractiles
+item.cyberware.handUpgrades.mining.name=Poing Renforcé
+item.cyberware.footUpgrades.spurs.name=Éperons Implantés
+item.cyberware.footUpgrades.aqua.name=Système de Propulsion aquatique
+item.cyberware.footUpgrades.wheels.name=Roue Déployables
+item.cyberware.armUpgrades.bow.name=Poulies d'Archerie Rapide
+item.cyberware.legUpgrades.jumpBoost.name=Actionneurs Linéaires
+item.cyberware.legUpgrades.fallDamage.name=Absorbeur de Chute
+
+item.cyberware.toughAsNailsUpgrades.sweat.name=Gland de Sueur Superfroide
+item.cyberware.toughAsNailsUpgrades.blubber.name=Blubber
+
+item.cyberware.neuropozyne.name=Neuropozyne
+item.cyberware.blueprint.name=Schéma vierge
+item.cyberware.blueprint.notBlank.name=Schéma de/d' %1$s
+item.cyberware.component.actuator.name=Actionneur
+item.cyberware.component.reactor.name=Bioréacteur
+item.cyberware.component.titanium.name=Grille de Titane
+item.cyberware.component.ssc.name=Circuit Solide
+item.cyberware.component.plating.name=Plaques de Chrome
+item.cyberware.component.fiberoptics.name=Fibres Optiques
+item.cyberware.component.fullerene.name=Microstructures de Fullerene
+item.cyberware.component.synthnerves.name=Nerfs Synthétiques
+item.cyberware.component.storage.name=Cellule de Stockage
+item.cyberware.component.microelectric.name=Cellules Microélectriques
+
+item.cyberware.shades.name=Lunettes de Soleil
+item.cyberware.shades2.name=Lunettes de Soleil Rondes
+item.cyberware.katana.name=Katana
+item.cyberware.jacket.name=Veste de Biker
+item.cyberware.trenchcoat.name=Imperméable
+
+# TOOLTIPS
+itemGroup.cyberware=Cyberware
+
+cyberware.slot.eyes=Emplacement d'yeux
+cyberware.gui.missingEssential.eyes=Pas d'oeil, causera la Cécité
+cyberware.slot.cranium=Emplacement de Crâne
+cyberware.gui.missingEssential.cranium=Pas de Cerveau, causera votre mort
+cyberware.slot.heart=Emplacement de Crâne
+cyberware.gui.missingEssential.heart=Pas de Coeur, causera votre mort
+cyberware.slot.lungs=Emplacement de Poumons
+cyberware.gui.missingEssential.lungs=Pas de Poumon, causera votre mort
+cyberware.slot.lowerOrgans=Emplacement d'Organes Bas.
+cyberware.gui.missingEssential.lowerOrgans=Pas d'Estomac, il sera impossible de manger
+cyberware.slot.skin=Emplacement de Peau
+cyberware.gui.missingEssential.skin=Pas de Peau, les blessures feront plus mal.
+cyberware.slot.muscle=Emplacement des Muscles
+cyberware.gui.missingEssential.muscle=Pas de Muscle, causera votre mort
+cyberware.slot.bone=Emplacement des Os
+cyberware.gui.missingEssential.bone=Pas d'Os, causera votre mort
+cyberware.slot.arm=Emplacement des Bras
+cyberware.gui.missingEssential.arm.left=Pas de Bras Gauche, il sera inutilisable
+cyberware.gui.missingEssential.arm.right=Pas de Bras Droit, il sera inutilisable
+cyberware.slot.hand=Emplacement des Mains
+cyberware.gui.missingEssential.hand.left=Pas de Main Gauche, elle sera inutilisable.
+cyberware.gui.missingEssential.hand.right=Pas de Main Droite, elle sera inutilisable.
+cyberware.slot.leg=Emplacement des Jambes
+cyberware.gui.missingEssential.leg.left=Pas de Jambe Gauche, elle sera inutilisable.
+cyberware.gui.missingEssential.leg.right=Pas de Jambe Droite, elle sera inutilisable.
+cyberware.slot.foot=Emplacement des pieds
+cyberware.gui.missingEssential.foot.left=Pas de Pied Gauche, il sera inutilisable.
+cyberware.gui.missingEssential.foot.right=Pas de Pied Droit, il sera inutilisable.
+
+cyberware.gui.noEssence=Aucune tolérance, causera votre mort
+cyberware.gui.criticalEssence=Basse tolérance, causera des rejets.
+cyberware.gui.back=Retour arrière (ou clic-droit)
+cyberware.gui.noPower=Pas de production d'énergie
+cyberware.gui.remove=Cliquez pour retirer
+cyberware.gui.add=(Cliquez pour ajouter %1$s)
+cyberware.gui.index=Index
+cyberware.gui.click=Cliquez pour voir
+cyberware.gui.installed=Implants Post-Chirurgie
+cyberware.gui.added=(Sera ajouté)
+cyberware.gui.removed=(Sera retiré)
+
+cyberware.gui.destroy=Annulez la garantie
+cyberware.gui.destroyChance=%1$s de Chance d'avoir le schéma
+cyberware.gui.toDestroy=Insérez un Implant à détruire
+cyberware.gui.paper=Insérez du papier
+cyberware.gui.blueprint=Insérez un Schéma d'Implant
+
+cyberware.gui.keybind.0=Aide du menu:
+cyberware.gui.keybind.1=Mettez votre souris sur un implant et relachez le menu pour l'activer/le désactiver.
+cyberware.gui.keybind.2=Clic gauche sur un implant pour régler sa touche d'activation/désactivation.
+cyberware.gui.keybind.3=Clic droit sur un implant pour retirer sa touche d'activation/désactivation.
+cyberware.gui.keybind.4=Échap pour annuler un réglage de touche en cours.
+
+cyberware.gui.openHudConfig=Cliquez pour configurer l'Interface
+cyberware.gui.openColorChange=Cliquez pour changer la couleur de l'Interface
+
+cyberware.gui.stickLeft=Aligner à gauche
+cyberware.gui.stickRight=Aligner à droite
+cyberware.gui.stickUp=Aligner au dessus
+cyberware.gui.stickDown=Align en dessous
+cyberware.gui.show=Montrer l'élément
+cyberware.gui.hide=Cacher l'élément
+cyberware.gui.resetHud=Remettre à zéro la position
+
+cyberware.gui.openMenu=Laissez %s appuyé pour ouvrir le menu Cyberware
+
+
+cyberware.gui.toScan=Insérez un Implant à scanner
+cyberware.gui.percent=%1$s de Chance
+cyberware.gui.timeLeft=%1$dm%2$ds restantes
+
+cyberware.tooltip.shiftPrompt=Laissez Shift appuyé pour plus d'infos
+cyberware.tooltip.requires=Requiert
+cyberware.tooltip.joiner=,
+cyberware.tooltip.joinerOr=ou
+
+cyberware.tooltip.neuropozyne=Anti-Rejet (20:00)
+cyberware.potion.neuropozyne=Anti-Rejet
+
+cyberware.tooltip.componentBox=Shift-clic pour placer ou ramasser
+cyberware.tooltip.componentBox2=Accessible par une Table d'Ingénierie si proche ou dans l'inventaire
+
+cyberware.tooltip.blueprintArchive=Accessible par une Table d'Ingénierie si proche
+cyberware.tooltip.beacon=Augmente légérement le taux d'apparition de Cyberzombies proches
+cyberware.tooltip.beaconLarge=Augmente le taux d'apparition de Cyberzombies proches
+cyberware.tooltip.beaconPost.0=Pour le construire:
+cyberware.tooltip.beaconPost.1=6 couches de 1 Composant, centré sur
+cyberware.tooltip.beaconPost.2=4 couches de 3x3 de Composants
+
+
+
+cyberware.tooltip.blueprint=Crée %1$s
+cyberware.tooltip.craftBlueprint=Craftez avec une pièce d'Implant
+
+cyberware.tooltip.powerConsumption=Requiert %1$s pow/s quand c'est actif
+cyberware.tooltip.powerProduction=Produit %1$s pow/s quand c'est actif
+cyberware.tooltip.capacity=%1$d de capacité en unité d'énergie
+cyberware.tooltip.maxInstall=Jusqu'à %1$d d'installable
+cyberware.tooltip.essence=Coût en Tolérance:%1$s
+cyberware.tooltip.essenceAdd=Boost en Tolérance:%1$s
+
+cyberware.quality.scavenged=de récup'
+cyberware.quality.scavenged.nameModifier=%1$s de récup'
+cyberware.quality.manufactured=Usiné
+
+cyberware.tooltip.canDeconstruct=Peut être déconstruit ou scanné
+
+cyberware.gui.active.enable=Activer
+cyberware.gui.active.disable=Désactiver
+cyberware.gui.active.zoom=Zoom
+
+# KEYBINDS
+cyberware.keybinds.category=Cyberware
+cyberware.keybinds.menu=Menu Cyberware
+
+# ITEM TOOLTIPS
+cyberware.tooltip.spiderEye=Vue d'araignée\nVoir dans le noir
+cyberware.tooltip.bodyPart.0=
+cyberware.tooltip.bodyPart.1=
+cyberware.tooltip.bodyPart.2=
+cyberware.tooltip.bodyPart.3=
+cyberware.tooltip.bodyPart.4=
+cyberware.tooltip.bodyPart.5=
+cyberware.tooltip.bodyPart.6=
+cyberware.tooltip.bodyPart.7=
+cyberware.tooltip.bodyPart.8=
+cyberware.tooltip.bodyPart.9=
+cyberware.tooltip.bodyPart.10=
+cyberware.tooltip.bodyPart.11=
+cyberware.tooltip.bodyPart.12=
+cyberware.tooltip.bodyPart.13=
+cyberware.tooltip.bodyPart.14=
+cyberware.tooltip.bodyPart.15=
+cyberware.tooltip.cybereyes=Immunité à la cécité\nAutorise les Améliorations de Cyberyeux
+cyberware.tooltip.cybereyeUpgrades.0=Voir dans le noir
+cyberware.tooltip.cybereyeUpgrades.1=Voir sous l'eau
+cyberware.tooltip.cybereyeUpgrades.2=Montre les réserves d'énergie\nPermet aux amélioration d'afficher des infos
+cyberware.tooltip.cybereyeUpgrades.3=Affiche les créatures proches
+cyberware.tooltip.cybereyeUpgrades.4=Zoomez sur les objets distants
+cyberware.tooltip.eyeUpgrades.0=Montre les réserves d'énergie\nPermet aux amélioration d'afficher des infos
+cyberware.tooltip.manaseerLens.0=Révèle le rayon d'action des fleurs\nAffiche plus d'informations sur la redstone
+cyberware.tooltip.manaseerLens.1=Révèle le rayon d'action des fleurs\nAffiche plus d'informations sur la redstone
+cyberware.tooltip.expCapsule.before=
+cyberware.tooltip.expCapsule.after=expérience enregistrée stockée
+cyberware.tooltip.brainUpgrades.0=Sauvegarde l'XP dans des capsules à la mort
+cyberware.tooltip.brainUpgrades.1=Bloque les téléportation d'ender proches
+cyberware.tooltip.brainUpgrades.2=Garde un peu d'xp après la mort
+cyberware.tooltip.brainUpgrades.3=Sélectionne automatiquement le bon outil
+cyberware.tooltip.brainUpgrades.4=Haute probabilité d'éviter les attaques\nsans armure ou en armure légère
+cyberware.tooltip.brainUpgrades.5=Augmente légérement le taux\nd'apparition de Cyberzombiez proches 
+cyberware.tooltip.cyberheart=Immunité à la faiblesse
+cyberware.tooltip.creativeBattery=Potentiel illimité
+cyberware.tooltip.heartUpgrades.0=Évite UNE mort certaine
+cyberware.tooltip.heartUpgrades.0.powerConsumption=Utilise%1$d unité d'énergie pour réanimer
+cyberware.tooltip.heartUpgrades.1=Soigne quand vie presque complète
+cyberware.tooltip.heartUpgrades.2=Soigne le dernier coup, après un long délai
+cyberware.tooltip.heartUpgrades.3=Exploite l'électricité du corps
+cyberware.tooltip.lungsUpgrades.0=Oxygène supplémentaire\nSe régénère lentement
+cyberware.tooltip.lungsUpgrades.1=Vitesse augmentée en sprintant
+cyberware.tooltip.denseBattery=Stockage massif\nChargé uniquement par une station de charge
+cyberware.tooltip.lowerOrgansUpgrades.0=Pas d'effets négatifs de boisson ou nourriture
+cyberware.tooltip.lowerOrgansUpgrades.1=Utilise des calories pour produire de l'énergie
+cyberware.tooltip.lowerOrgansUpgrades.2=Stock de l'énergie
+cyberware.tooltip.lowerOrgansUpgrades.3=Augmente force et vitesse
+cyberware.tooltip.skinUpgrades.0=Produit de l'énergie au soleil
+cyberware.tooltip.skinUpgrades.1=Sans armure ou en armure légère, blesse les attaquants
+cyberware.tooltip.skinUpgrades.2=Cache les membres cybernétiques
+cyberware.tooltip.skinUpgrades.3=Supprrime la réponse immunitaire\nMoins résistant aux maladies et poisons
+cyberware.tooltip.muscleUpgrades.0=R1: Vitesse d'attaque\nR2: Prépare l'arme en cas d'attaque\nR3: Fait face automatiquement à l'attaquant
+cyberware.tooltip.muscleUpgrades.1=Vitesse augmentée\nForce améliorée
+cyberware.tooltip.boneUpgrades.0=Vie augmentée
+cyberware.tooltip.boneUpgrades.1=Résistance aux dégâts de chute
+cyberware.tooltip.boneUpgrades.2=Stock de l'énergie
+cyberware.tooltip.cyberlimbs.0=Autorise les amélioration de Cyberbras
+cyberware.tooltip.cyberlimbs.1=Autorise les amélioration de Cyberbras
+cyberware.tooltip.cyberlimbs.2=Autorise les amélioration de Cyberjambe
+cyberware.tooltip.cyberlimbs.3=Autorise les amélioration de Cyberjambe
+cyberware.tooltip.handUpgrades.0=Table de craft 3x3 personelle
+cyberware.tooltip.handUpgrades.1=Attaque désarmée plus forte
+cyberware.tooltip.handUpgrades.2=La main mine de la pierre
+cyberware.tooltip.armUpgrades.0=Bande les arcs plus vite
+cyberware.tooltip.footUpgrades.0=Augmente la vitesse des chevaux
+cyberware.tooltip.footUpgrades.1=Nage plus vite\nPlus puissant avec deux Cyberjambes
+cyberware.tooltip.footUpgrades.2=Grimpe les blocs pleins
+cyberware.tooltip.legUpgrades.0=Saute plus hait\nShift-saut pour vous lancer\nPlus puissant avec deux Cyberjambes
+cyberware.tooltip.legUpgrades.1=Absorbe les petits impacts
+cyberware.tooltip.toughAsNailsUpgrades.0=Vous rafraîchis quand vous avez chaud\nen utilisant de la soif
+cyberware.tooltip.toughAsNailsUpgrades.1=Vous garde chaud
+
+# DAMAGE TYPE
+death.attack.cyberware.brainless=Si seulement %1$s avait un cerveau...
+death.attack.cyberware.heartless=%1$s n'a pas de coeur
+death.attack.cyberware.surgery=%1$s n'est jamais revenu de son opération
+death.attack.cyberware.spineless=%1$s courbe le dos
+death.attack.cyberware.nomuscles=%1$s n'as aucune contenance
+death.attack.cyberware.noessence=Le corps de %1$s s'est vengé
+death.attack.cyberware.lowessence=Le corps de %1$s s'est vengé
+
+# COMMAND
+cyberware.commands.clearCyberware.usage=Utilisation /clearcyberware [Joueur]
+cyberware.commands.clearCyberware.success=Cyberware de %1$s nettoyé
+
+# ENTITIES
+entity.cyberware.cyberzombie.name=Cyberzombie
+
+# SCANNER SAYINGS
+# FOR TRANSLATORS - YOU CAN HAVE AS MANY OR FEW OF THESE AS YOU WANT, BUT YOU NEED AT LEAST ONE
+# DON'T BOTHER TRANSLATING THESE PHRASES, INCLUDE SOMETHING THAT'D BE MILDLY HUMOROUS IN
+# THE LANGUAGE YOU'RE TRANSLATING TO
+
+# THIS MUST BE THE NUMBER OF THE LAST KEY + 1 TO INCLUDE THE 0 SAYING
+cyberware.gui.scannerSaying.count=22
+
+cyberware.gui.scannerSaying.0=Alignement des planètes
+cyberware.gui.scannerSaying.1=Création de dossiers récursifs
+cyberware.gui.scannerSaying.2=Simplification de problème NP
+cyberware.gui.scannerSaying.3=Recyclage d'anciens schémas
+cyberware.gui.scannerSaying.4=Remise en question du doute hyperbolique
+cyberware.gui.scannerSaying.5=Destruction de (vidéos de) chatons
+cyberware.gui.scannerSaying.6=Extrapolation de contenu du frigo
+cyberware.gui.scannerSaying.7=Collecte de vos données personnelles
+cyberware.gui.scannerSaying.8=Préparation à l'explosion imminente
+cyberware.gui.scannerSaying.9=Mise à jour de l'utilisateur
+cyberware.gui.scannerSaying.10=Calcul des possibilités de meurtre. 3 sur 17542
+cyberware.gui.scannerSaying.11=Attaque de la Base de données
+cyberware.gui.scannerSaying.12=Insérez expression régulière pour continuer
+cyberware.gui.scannerSaying.13=Calcul des conséquences d'échec critique
+cyberware.gui.scannerSaying.14=Invention de fin heureuse
+cyberware.gui.scannerSaying.15=Répression de la Propagande
+cyberware.gui.scannerSaying.16=Accès au serveur local
+cyberware.gui.scannerSaying.17=Modification d'autre mods
+cyberware.gui.scannerSaying.18=Création de commentaires sarcastiques
+cyberware.gui.scannerSaying.19=Intégration de Pensées Profondes
+cyberware.gui.scannerSaying.20=Réutilisation de Code oubliés
+cyberware.gui.scannerSaying.21=Recréation des Civilisations
+
+
+# MISC
+cyberware.container.engineering=Ingénierie Cyberware
+cyberware.container.scanner=Scanneur
+cyberware.container.blueprintArchive=Banque de Schémas
+cyberware.container.componentBox=Boîte à composants

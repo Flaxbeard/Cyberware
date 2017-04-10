@@ -25,6 +25,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,6 +41,7 @@ import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.client.render.RenderCyberlimbHand;
 import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemCyberlimb;
 
@@ -59,7 +61,7 @@ public class EssentialsMissingHandlerClient
 	{
 		
 		EntityPlayer p = event.getEntityPlayer();
-		if (CyberwareAPI.hasCapability(p))
+		if (CyberwareConfig.RENDER && CyberwareAPI.hasCapability(p))
 		{	
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
 			boolean hasLeftLeg = cyberware.hasEssential(EnumSlot.LEG, EnumSide.LEFT);
@@ -287,53 +289,56 @@ public class EssentialsMissingHandlerClient
 	@SubscribeEvent
 	public void handleMissingSkin(RenderPlayerEvent.Post event)
 	{
-		event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
-		event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
-		event.getRenderer().getMainModel().bipedLeftLeg.isHidden = false;
-		event.getRenderer().getMainModel().bipedRightLeg.isHidden = false;
-
-		EntityPlayer p = event.getEntityPlayer();
-		if (CyberwareAPI.hasCapability(p))
+		if (CyberwareConfig.RENDER)
 		{
-			ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
-			
-			if (pants.containsKey(p.getEntityId()))
+			event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
+			event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
+			event.getRenderer().getMainModel().bipedLeftLeg.isHidden = false;
+			event.getRenderer().getMainModel().bipedRightLeg.isHidden = false;
+	
+			EntityPlayer p = event.getEntityPlayer();
+			if (CyberwareAPI.hasCapability(p))
 			{
-				p.inventory.armorInventory[1] = pants.get(p.getEntityId());
-				pants.remove(p.getEntityId());
-			}
-			
-			if (shoes.containsKey(p.getEntityId()))
-			{
-				p.inventory.armorInventory[0] = shoes.get(p.getEntityId());
-				shoes.remove(p.getEntityId());
-			}
-
-			if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.LEFT))
-			{
-				event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
-				if (mainHand.containsKey(p.getEntityId()))
+				ICyberwareUserData cyberware = CyberwareAPI.getCapability(p);
+				
+				if (pants.containsKey(p.getEntityId()))
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
-					p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
-					mainHand.remove(p.getEntityId());
-					offHand.remove(p.getEntityId());
+					p.inventory.armorInventory[1] = pants.get(p.getEntityId());
+					pants.remove(p.getEntityId());
 				}
-			}
-			
-
-			if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.RIGHT))
-			{
-				event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
-				if (mainHand.containsKey(p.getEntityId()))
+				
+				if (shoes.containsKey(p.getEntityId()))
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
-					p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
-					mainHand.remove(p.getEntityId());
-					offHand.remove(p.getEntityId());
+					p.inventory.armorInventory[0] = shoes.get(p.getEntityId());
+					shoes.remove(p.getEntityId());
 				}
+	
+				if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.LEFT))
+				{
+					event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
+					if (mainHand.containsKey(p.getEntityId()))
+					{
+						p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+						p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+						mainHand.remove(p.getEntityId());
+						offHand.remove(p.getEntityId());
+					}
+				}
+				
+	
+				if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.RIGHT))
+				{
+					event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
+					if (mainHand.containsKey(p.getEntityId()))
+					{
+						p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+						p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+						mainHand.remove(p.getEntityId());
+						offHand.remove(p.getEntityId());
+					}
+				}
+	
 			}
-
 		}
 	}
 	
@@ -449,7 +454,7 @@ public class EssentialsMissingHandlerClient
 	@SubscribeEvent
 	public void handleRenderHand(RenderHandEvent event)
 	{
-		if (!(Loader.isModLoaded("optifine") || Loader.isModLoaded("Optifine")) && (missingArm || missingSecondArm || hasRoboLeft || hasRoboRight))
+		if (CyberwareConfig.RENDER && !(FMLClientHandler.instance().hasOptifine()) && (missingArm || missingSecondArm || hasRoboLeft || hasRoboRight))
 		{
 			float partialTicks = event.getPartialTicks();
 			EntityRenderer er = mc.entityRenderer;

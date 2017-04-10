@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -18,9 +19,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
-public class ItemLowerOrgansUpgrade extends ItemCyberware
+public class ItemLowerOrgansUpgrade extends ItemCyberware implements IMenuItem
 {
 
 	public ItemLowerOrgansUpgrade(String name, EnumSlot slot, String[] subnames)
@@ -99,7 +102,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 	{
 		EntityLivingBase e = event.getEntityLiving();
 		ItemStack test = new ItemStack(this, 1, 1);
-		if (CyberwareAPI.isCyberwareInstalled(e, test))
+		if (CyberwareAPI.isCyberwareInstalled(e, test) && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 		{
 			ItemStack stack = CyberwareAPI.getCyberware(e, test);
 			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
@@ -114,7 +117,14 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 						int toRemove = getTicksTilRemove(stack);
 						if (!p.isCreative() && toRemove <= 0)
 						{
-							p.getFoodStats().setFoodLevel(p.getFoodStats().getFoodLevel() - 1);
+							/*if (p.getFoodStats().getSaturationLevel() >= 1F)
+							{
+								p.getFoodStats().setFoodSaturationLevel(p.getFoodStats().getSaturationLevel() - 1);
+							}
+							else
+							{*/
+								p.getFoodStats().setFoodLevel(p.getFoodStats().getFoodLevel() - 1);
+							/*}*/
 							toRemove = LibConstants.METABOLIC_USES;
 						}
 						else if (toRemove > 0)
@@ -222,5 +232,35 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware
 			}
 		}
 		return super.getUnmodifiedEssenceCost(stack);
+	}
+
+	@Override
+	public boolean hasMenu(ItemStack stack)
+	{
+		return stack.getItemDamage() == 1;
+	}
+
+	@Override
+	public void use(Entity e, ItemStack stack)
+	{
+		EnableDisableHelper.toggle(stack);
+	}
+
+	@Override
+	public String getUnlocalizedLabel(ItemStack stack)
+	{
+		if (stack.getItemDamage() == 4)
+		{
+			return "cyberware.gui.active.zoom";
+		}
+		return EnableDisableHelper.getUnlocalizedLabel(stack);
+	}
+
+	private static final float[] f = new float[] { 1F, 0F, 0F };
+	
+	@Override
+	public float[] getColor(ItemStack stack)
+	{
+		return EnableDisableHelper.isEnabled(stack) ? f : null;
 	}
 }

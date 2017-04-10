@@ -100,7 +100,6 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 	@Override
 	public void update()
 	{
-
 		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 2.5F, pos.getZ() + 1F));
 		for (EntityLivingBase entity : entities)
 		{
@@ -112,7 +111,11 @@ public class TileEntityCharger extends TileEntity implements ITickable, IEnergyR
 				
 				if(!data.isAtCapacity(null, 20) && (container.getStoredPower() >= CyberwareConfig.TESLA_PER_POWER))
 				{
-					container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
+					if (!worldObj.isRemote)
+					{
+						//System.out.println(container.getStoredPower());
+						container.takePower(CyberwareConfig.TESLA_PER_POWER, false);
+					}
 					data.addPower(20, null);
 					
 					if (entity.ticksExisted % 5 == 0)

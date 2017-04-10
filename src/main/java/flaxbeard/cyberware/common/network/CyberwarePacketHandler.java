@@ -20,6 +20,7 @@ import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket.Switch
 import flaxbeard.cyberware.common.network.SyncHotkeyPacket.SyncHotkeyPacketHandler;
 import flaxbeard.cyberware.common.network.SyncHudDataPacket.SyncHudDataPacketHandler;
 import flaxbeard.cyberware.common.network.TriggerActiveAbilityPacket.TriggerActiveAbilityPacketHandler;
+import flaxbeard.cyberware.common.network.UpdateConfigPacket.UpdateConfigPacketHandler;
 
 public class CyberwarePacketHandler
 {
@@ -45,6 +46,7 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(SyncHudDataPacketHandler.class, SyncHudDataPacket.class, 11, Side.SERVER);
 		INSTANCE.registerMessage(OpenRadialMenuPacketHandler.class, OpenRadialMenuPacket.class, 12, Side.SERVER);
 		INSTANCE.registerMessage(UpdateHudColorPacketHandler.class, UpdateHudColorPacket.class, 13, Side.SERVER);
+		INSTANCE.registerMessage(UpdateConfigPacketHandler.class, UpdateConfigPacket.class, 14, Side.CLIENT);
 
 	}
 }
