@@ -23,8 +23,9 @@ public class ContainerSurgery extends Container
 		public final EnumSlot slot;
 		private final int index;
 		private IItemHandler playerItems;
-
-		public SlotSurgery(IItemHandler itemHandler, IItemHandler playerItems, int index, int xPosition, int yPosition, EnumSlot slot)
+		private boolean takesEssential;
+		
+		public SlotSurgery(IItemHandler itemHandler, IItemHandler playerItems, int index, int xPosition, int yPosition, EnumSlot slot, boolean takesEssential)
 		{
 			super(itemHandler, index, xPosition, yPosition);
 			
@@ -33,6 +34,7 @@ public class ContainerSurgery extends Container
 			this.slot = slot;
 			this.index = index;
 			this.playerItems = playerItems;
+			this.takesEssential = takesEssential;
 		}
 		
 		public ItemStack getPlayerStack()
@@ -94,7 +96,9 @@ public class ContainerSurgery extends Container
 			ItemStack playerStack = getPlayerStack();
 			//if (stack != null && playerStack != null && stack.getit) return false;
 			if (getPlayerStack() != null && !surgery.canDisableItem(playerStack, slot, index % LibConstants.WARE_PER_SLOT)) return false;
-			if (!(stack != null && stack.getItem() != null && CyberwareAPI.isCyberware(stack) && CyberwareAPI.getCyberware(stack).getSlot(stack) == this.slot)) return false;
+			if (!(stack != null && stack.getItem() != null && CyberwareAPI.isCyberware(stack)
+					&& CyberwareAPI.getCyberware(stack).getSlot(stack) == this.slot
+					&& (!takesEssential || CyberwareAPI.getCyberware(stack).isEssential(stack)))) return false;
 			
 			if (CyberwareAPI.areCyberwareStacksEqual(stack, playerStack))
 			{
@@ -146,12 +150,36 @@ public class ContainerSurgery extends Container
 		{
 			for (int n = 0; n < 8; n++)
 			{
-				this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, 9 + 20 * n, 109, slot));
-				c++;
+				if (slot.hasEssential())
+				{
+					if (slot.isSided())
+					{
+						if (n == 1)
+						{
+							this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, 10 + 7 * 20 + 4, 109, slot, n < 2));
+							c++;
+						}
+						else
+						{
+							this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, 6 + 20 * n + (n > 1 ? 4 - 20 : 0), 109, slot, n < 2));
+							c++;
+						}
+					}
+					else
+					{
+						this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, 8 + 20 * n + (n > 0 ? 4 : 0), 109, slot, n == 0));
+						c++;
+					}
+				}
+				else
+				{
+					this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, 8 + 20 * n, 109, slot, false));
+
+				}
 			}
 			for (int n = 0; n < LibConstants.WARE_PER_SLOT - 8; n++)
 			{
-				this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, Integer.MIN_VALUE, Integer.MIN_VALUE, slot));
+				this.addSlotToContainer(new SlotSurgery(surgery.slots, surgery.slotsPlayer, c, Integer.MIN_VALUE, Integer.MIN_VALUE, slot, false));
 				c++;
 			}
 			row++;
