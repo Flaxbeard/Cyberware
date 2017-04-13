@@ -37,7 +37,7 @@ public class TabletContent
 		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test0", instructions, 0));
 		mainMenu.addItem(new MenuElement("cyberware.gui.tablet.test1", catalog, 1));
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.catalog.cybereyes", INFO).setDefaultVisible();
+		new TabletCatalogItem(new ItemStack(CyberwareContent.eyeUpgrades), "cyberware.gui.tablet.catalog.hudlens", INFO).setDefaultVisible();
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.cybereyes), "cyberware.corp.neovision", "cyberware.gui.tablet.catalog.cybereyes", REPLACMENT).setDefaultVisible();
 		
@@ -53,7 +53,7 @@ public class TabletContent
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 0), "cyberware.corp.argent", "cyberware.gui.tablet.catalog.corticalStack", SURVIVABILITY);
 		
-		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", COMBAT);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 1), "cyberware.corp.neovision", "cyberware.gui.tablet.catalog.enderJammer", COMBAT);
 		
 		new TabletCatalogItem(new ItemStack(CyberwareContent.brainUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
 		
@@ -119,7 +119,7 @@ public class TabletContent
 		new TabletCatalogItem(new ItemStack(CyberwareContent.handUpgrades, 1, 2), "cyberware.gui.tablet.catalog.cardioCoupler", MINING);
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.legUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
-		new TabletCatalogItem(new ItemStack(CyberwareContent.legUpgrades, 1, 1), "cyberware.gui.tablet.catalog.cardioCoupler", SURVIVABILITY);
+		new TabletCatalogItem(new ItemStack(CyberwareContent.legUpgrades, 1, 1), "cyberware.corp.olympiads",  "cyberware.gui.tablet.catalog.fallDamage", SURVIVABILITY);
 
 		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 0), "cyberware.gui.tablet.catalog.cardioCoupler", MOBILITY);
 		new TabletCatalogItem(new ItemStack(CyberwareContent.footUpgrades, 1, 1), "cyberware.corp.olympiads", "cyberware.gui.tablet.catalog.aqua", MOBILITY);

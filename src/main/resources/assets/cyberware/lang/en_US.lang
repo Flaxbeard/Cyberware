@@ -51,7 +51,7 @@ item.cyberware.brainUpgrades.enderJammer.name=Ender Jammer
 item.cyberware.brainUpgrades.consciousnessTransmitter.name=Consciousness Transmitter
 item.cyberware.brainUpgrades.neuralContextualizer.name=Neural Contextualizer
 item.cyberware.brainUpgrades.matrix.name=Threat Matrix Calculator
-item.cyberware.brainUpgrades.radio.name=Cranial Broadcaster
+item.cyberware.brainUpgrades.radio.name=Cranial Emergency Beacon
 cyberware.gui.radioInternal=CB
 item.cyberware.cyberheart.name=Cardiomechanic Pump
 item.cyberware.creativeBattery.name=Creative Capacitor
@@ -609,8 +609,48 @@ cyberware.gui.tablet.catalog.oxygen.text=With the Second Wind Compressed Oxygen 
 
 cyberware.gui.tablet.catalog.immuno.name=GC Allocator
 cyberware.gui.tablet.catalog.immuno.quote=The GC Allocator gives me the peace of mind that my patients will be safe from the dangers of transplant rejection. It is an indispensable tool in the surgeon's arsenal.
-cyberware.gui.tablet.catalog.immuno.author=Zhuang Bo, first surgeon to successfully transplant a human brain
+cyberware.gui.tablet.catalog.immuno.author=Dr. Zhuang Bo, first surgeon to successfully transplant a human brain
 cyberware.gui.tablet.catalog.immuno.text=The Touch Medical GC Allocator provides a robust and noninvasive method for distributing immunosuppressing glucocorticoids throughout the body, useful for treatment of autoimmune disorders or transplant rejection. Clinical trials are ongoing regarding utilizing the GC Allocator as a means to increase the body's tolerance of augmentation. Note that the use of immunosuppressants inherently weakens the body's response to diseases and poisons.
+
+cyberware.gui.tablet.catalog.fallDamage.name=Ortal III
+cyberware.gui.tablet.catalog.fallDamage.quote=You should have seen their faces when I stepped off the roof!
+cyberware.gui.tablet.catalog.fallDamage.author=Amanda McGee, teen reality star
+cyberware.gui.tablet.catalog.fallDamage.text=Inspired by a mechanic from a long-defunct video game, Olympiad's Ortal III Fall Bracers completely negate the impact from vertical falls. Their reliability and effectiveness have made them number one among extreme environment sports fanatics. Note that the Ortal III is not rated for falls over 6 meters.
+
+cyberware.gui.tablet.catalog.hudlens.name=Headzup
+cyberware.gui.tablet.catalog.hudlens.quote=Headzup!
+cyberware.gui.tablet.catalog.hudlens.author=Amanda McGee, teen reality star, before throwing a nanopaint grenade
+cyberware.gui.tablet.catalog.hudlens.text=Want access to AR overlays without having your beautiful or natural eyes carved out? Want to see AR overlays without fear of censorware controlling what you see? Want to play video games without other people noticing what you’re doing? The ___ Headzup Hudlens Contacts contain patented transparent screens that fit seamlessly over organic eyes to display important information readouts. The Headzup will connect directly to installed augments and will display power usage and notifications.
+
+cyberware.gui.tablet.catalog.enderJammer.name=TnFlHt-003
+cyberware.gui.tablet.catalog.enderJammer.quote=I used to worry about unknowable horrors from the outer darkness stealing my stuff, now I just worry about fluoridation.
+cyberware.gui.tablet.catalog.enderJammer.author=Anonymous
+cyberware.gui.tablet.catalog.enderJammer.text=Popular among those within the coporate espionage field as well as former Neovision employees who can’t say anything about why because their NDA literally paralyses the speech centers of their brain. If you’re worried about teleportation and its related side effects, or have ever been called a "crackpot" or "conspiracy theorist", the teleportation-blocking TnFlHt-003 is for you. Using a high power frequency projector, it device interferes with nearby Ender teleporation fields.
+
+cyberware.gui.tablet.catalog.consciousnessTransmitter.name=
+cyberware.gui.tablet.catalog.consciousnessTransmitter.quote=
+cyberware.gui.tablet.catalog.consciousnessTransmitter.author=
+cyberware.gui.tablet.catalog.consciousnessTransmitter.text=
+
+cyberware.gui.tablet.catalog.neuralContextualizer.name=ReFLEXive
+cyberware.gui.tablet.catalog.neuralContextualizer.quote=It doesn’t even matter If I slept through classes man, great investment of headspace.
+cyberware.gui.tablet.catalog.neuralContextualizer.author=Dr. August Claw, neurosurgeon
+cyberware.gui.tablet.catalog.neuralContextualizer.text=Most knowledge is context for other simple facts, so the ReFLEXive Neural Contextualizer creates a synthetic bridge between this neural knowledge and physical action, taking the load of difficult thinking off of your brain. With the ReFLEXive unit active, users will find themselves reflexivly grabbing the right tool for the job.
+
+cyberware.gui.tablet.catalog.matrix.name=Everwatch
+cyberware.gui.tablet.catalog.matrix.quote=Everwatch keeps you aware, even when it’s annoying.
+cyberware.gui.tablet.catalog.matrix.author=Bruno, personal bodyguard
+cyberware.gui.tablet.catalog.matrix.text=Let's face it, whether at the club, boardroom, or rain soaked back alley full of mercenaries, there are people out to get you. The kind and nature of the threat they pose runs the gamut from sexually transmitted viruses to 50 caliber bullets. The Everwatch system keeps you ever aware of threats to your safety and can trigger near instantaneous muscular reactions, giving you a chance to dodge a bullet, blade, punch, or health insurance premium. The Everwatch system functions optimally with light clothing - heavy armor will render triggered micromovements useless.
+
+cyberware.gui.tablet.catalog.radio.name=UN 021 EB
+cyberware.gui.tablet.catalog.radio.quote=Don’t leave the arcology without one installed. Seriously, we might need to recover your head to make a new body for you to prevent running afoul of antispamming laws.
+cyberware.gui.tablet.catalog.radio.author=Neovision Arcology Handbook
+cyberware.gui.tablet.catalog.radio.text=On user activation, the Cranial Emergency Beacon will broadcast your location into Augmented Reality allowing you to easily be found by anyone who accesses AR. Note that reports that the Cranial Emergency Beacon attracts the attention of individuals with Lethal Rejection Syndrome (Colloquially known as "Cyberzombies") remain unconfirmed. There is no need to be concerned.
+
+cyberware.gui.tablet.catalog.defibrillator.name=Touch of Life
+cyberware.gui.tablet.catalog.defibrillator.quote=Now with 98% less exploding from your chest!
+cyberware.gui.tablet.catalog.defibrillator.author=Touch of Life trideo advertisement
+cyberware.gui.tablet.catalog.defibrillator.text=Heart attacks getting you down? Well you can die less frequently and for shorter durations with the Touch of Life Internal Defibrillator! This simple implant works on proven technology over two centuries old, now in a smaller and less invasive internal package. Provided the device's internal capacity is full, its user can expect a life-giving shock upon death.
 
 cyberware.gui.tablet.surgeonInstructions.title0=Robosurgeon Instructions
 cyberware.gui.tablet.surgeonInstructions.0=WARNING: Operation of this device without proper training can result in serious injury and death! Please read the entirety of this manual before using the device.
