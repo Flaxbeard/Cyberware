@@ -39,6 +39,7 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.item.ILimbReplacement;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.client.ClientUtils;
@@ -122,14 +123,14 @@ public class EssentialsMissingHandler
 
 		}
 		
-		ItemStack legLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 2));
-		if (legLeft != null && !ItemCyberlimb.isPowered(legLeft))
+		ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
+		if (legLeft != null && !((ILimbReplacement) legLeft.getItem()).isActive(legLeft))
 		{
 			numMissingLegs++;
 		}
 		
-		ItemStack legRight = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 3));
-		if (legRight != null && !ItemCyberlimb.isPowered(legRight))
+		ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
+		if (legRight != null && !((ILimbReplacement) legRight.getItem()).isActive(legRight))
 		{
 			numMissingLegs++;
 		}
@@ -266,14 +267,14 @@ public class EssentialsMissingHandler
 				numMissingLegs++;
 			}
 			
-			ItemStack legLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 2));
-			if (legLeft != null && !ItemCyberlimb.isPowered(legLeft))
+			ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
+			if (legLeft != null && !((ILimbReplacement) legLeft.getItem()).isActive(legLeft))
 			{
 				numMissingLegs++;
 			}
 			
-			ItemStack legRight = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 3));
-			if (legRight != null && !ItemCyberlimb.isPowered(legRight))
+			ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
+			if (legRight != null && !((ILimbReplacement) legRight.getItem()).isActive(legRight))
 			{
 				numMissingLegs++;
 			}
@@ -484,25 +485,25 @@ public class EssentialsMissingHandler
 		EnumSide correspondingMainHand = ((mainHand == EnumHandSide.RIGHT) ? EnumSide.RIGHT : EnumSide.LEFT);
 		EnumSide correspondingOffHand = ((offHand == EnumHandSide.RIGHT) ? EnumSide.RIGHT : EnumSide.LEFT);
 		
-		boolean leftUnpowered = false;
-		ItemStack armLeft = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 0));
-		if (armLeft != null && !ItemCyberlimb.isPowered(armLeft))
+		boolean leftInactive = false;
+		ItemStack armLeft = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
+		if (armLeft != null && !((ILimbReplacement) armLeft.getItem()).isActive(armLeft))
 		{
-			leftUnpowered = true;
+			leftInactive = true;
 		}
 		
-		boolean rightUnpowered = false;
-		ItemStack armRight = cyberware.getCyberware(new ItemStack(CyberwareContent.cyberlimbs, 1, 1));
-		if (armRight != null && !ItemCyberlimb.isPowered(armRight))
+		boolean rightInactive = false;
+		ItemStack armRight = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
+		if (armRight != null && !((ILimbReplacement) armRight.getItem()).isActive(armLeft))
 		{
-			rightUnpowered = true;
+			rightInactive = true;
 		}
 
-		if (hand == EnumHand.MAIN_HAND && (!cyberware.hasEssential(EnumSlot.ARM, correspondingMainHand) || leftUnpowered))
+		if (hand == EnumHand.MAIN_HAND && (!cyberware.hasEssential(EnumSlot.ARM, correspondingMainHand) || leftInactive))
 		{
 			event.setCanceled(true);
 		}
-		else if (hand == EnumHand.OFF_HAND && (!cyberware.hasEssential(EnumSlot.ARM, correspondingOffHand) || rightUnpowered))
+		else if (hand == EnumHand.OFF_HAND && (!cyberware.hasEssential(EnumSlot.ARM, correspondingOffHand) || rightInactive))
 		{
 			event.setCanceled(true);
 		}

@@ -56,4 +56,5 @@ public interface ICyberwareUserData
 	public void setHudColor(float[] color);
 	public int getHudColorHex();
 	public float[] getHudColor();
+	public ItemStack getLimb(EnumSlot arm, EnumSide left);
 }

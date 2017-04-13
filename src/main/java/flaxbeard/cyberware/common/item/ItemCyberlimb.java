@@ -10,6 +10,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -19,9 +20,11 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.ILimbReplacement;
+import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
-public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
+public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbReplacement
 {
 	
 	public ItemCyberlimb(String name, EnumSlot[] slots, String[] subnames)
@@ -53,16 +56,6 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 	public EnumSide getSide(ItemStack stack)
 	{
 		return stack.getItemDamage() % 2 == 0 ? EnumSide.LEFT : EnumSide.RIGHT;
-	}
-	
-	public static boolean isPowered(ItemStack stack)
-	{
-		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
-		if (!data.hasKey("active"))
-		{
-			data.setBoolean("active", true);
-		}
-		return data.getBoolean("active");
 	}
 	
 	private Set<Integer> didFall = new HashSet<Integer>();
@@ -133,5 +126,31 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb
 	public int getPowerConsumption(ItemStack stack)
 	{
 		return LibConstants.LIMB_CONSUMPTION;
+	}
+	
+	
+	
+	@Override
+	public boolean isActive(ItemStack stack)
+	{
+		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
+		if (!data.hasKey("active"))
+		{
+			data.setBoolean("active", true);
+		}
+		return data.getBoolean("active");
+	}
+
+	@Override
+	public ResourceLocation getTexture(ItemStack stack)
+	{
+		if (getQuality(stack) == CyberwareAPI.QUALITY_MANUFACTURED)
+		{
+			return RenderPlayerCyberware.robo;
+		}
+		else
+		{
+			return RenderPlayerCyberware.roboRust;
+		}
 	}
 }

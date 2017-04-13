@@ -26,8 +26,10 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.item.HotkeyHelper;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
+import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.item.IHudjack;
+import flaxbeard.cyberware.api.item.ILimbReplacement;
 import flaxbeard.cyberware.api.item.IMenuItem;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -883,5 +885,26 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	public float[] getHudColor()
 	{
 		return hudColorFloat;
+	}
+
+	@Override
+	public ItemStack getLimb(EnumSlot slot, EnumSide side)
+	{
+		ItemStack[] slotItems = getInstalledCyberware(slot);
+		for (ItemStack item : slotItems)
+		{
+			if (item != null)
+			{
+				ICyberware ware = CyberwareAPI.getCyberware(item);
+				if (ware instanceof ISidedLimb && ware instanceof ILimbReplacement)
+				{
+					if (((ISidedLimb) ware).getSide(item) == side)
+					{
+						return item;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -27,8 +27,8 @@ public class RenderPlayerCyberware extends RenderPlayer
 {
 
 	public boolean doMuscles = false;
-	public boolean doRobo = false;
-	public boolean doRusty = false;
+	public boolean doCustom = false;
+	public ResourceLocation texture = robo;
 
 	public RenderPlayerCyberware(RenderManager renderManager, boolean arms)
 	{
@@ -36,13 +36,13 @@ public class RenderPlayerCyberware extends RenderPlayer
 	}
 
 	private static final ResourceLocation muscles = new ResourceLocation(Cyberware.MODID + ":textures/models/playerMuscles.png");
-	private static final ResourceLocation robo = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRobot.png");
-	private static final ResourceLocation roboRust = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRustyRobot.png");
+	public static final ResourceLocation robo = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRobot.png");
+	public static final ResourceLocation roboRust = new ResourceLocation(Cyberware.MODID + ":textures/models/playerRustyRobot.png");
 
 	@Override
 	protected ResourceLocation getEntityTexture(AbstractClientPlayer entity)
 	{
-		return doRusty ? roboRust : doRobo ? robo :
+		return doCustom ? texture :
 			doMuscles ? muscles : super.getEntityTexture(entity);
 	}
 	
@@ -139,7 +139,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 		ItemStack heldItem = entity.getHeldItemMainhand();
 		ItemStack offHand = entity.getHeldItemOffhand();
 
-		if (this.doRobo)
+		if (this.doCustom)
 		{
 			entity.inventory.armorInventory[0] = null;	
 			entity.inventory.armorInventory[1] = null;
