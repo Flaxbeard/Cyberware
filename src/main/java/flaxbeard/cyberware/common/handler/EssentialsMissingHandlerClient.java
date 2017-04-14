@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -140,57 +141,52 @@ public class EssentialsMissingHandlerClient
 					if (!cyberware.isCyberwareInstalled(new ItemStack(CyberwareContent.skinUpgrades, 1, 2)))
 					{
 						
-						ModelPlayer mp = renderF.getMainModel();
 						
-						if (bigArms)
-						{
-							mp = renderT.getMainModel();
-						}
-						mp.bipedBody.isHidden = true;
-						mp.bipedHead.isHidden = true;
-						
-						Set<ResourceLocation> textures = new HashSet<ResourceLocation>();
-						ResourceLocation[] individualTextures = new ResourceLocation[4];
+						Set<Tuple<ResourceLocation, ModelPlayer>> setups = new HashSet<Tuple<ResourceLocation, ModelPlayer>>();
+						Tuple<ResourceLocation, ModelPlayer>[] individualSetups = new Tuple[4];
 						ItemStack[] limbs = new ItemStack[] { leftArm, rightArm, leftLeg, rightLeg };
 
 						for (int i = 0; i < limbs.length; i++)
 						{
 							if (limbs[i] != null)
 							{
-								individualTextures[i] = ((ILimbReplacement) limbs[i].getItem()).getTexture(limbs[i]);
-								textures.add(individualTextures[i]);
+								ILimbReplacement lr = ((ILimbReplacement) limbs[i].getItem());
+								individualSetups[i] = new Tuple<ResourceLocation, ModelPlayer>(
+													lr.getTexture(limbs[i]), 
+													lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel()));
+								setups.add(individualSetups[i]);
 							}
 						}
 						
-						for (ResourceLocation texture : textures)
+						for (Tuple<ResourceLocation, ModelPlayer> setup : setups)
 						{
-							mp.bipedLeftArm.isHidden  = !texture.equals(individualTextures[0]);
-							mp.bipedRightArm.isHidden = !texture.equals(individualTextures[1]);
-							mp.bipedLeftLeg.isHidden  = !texture.equals(individualTextures[2]);
-							mp.bipedRightLeg.isHidden = !texture.equals(individualTextures[3]);
+							ModelPlayer temp = renderF.getMainModel();
 							
-							if (bigArms)
-							{
-								renderT.doCustom = true;
-								renderT.texture = texture;
-								renderT.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
-								renderT.doCustom = false;
-							}
-							else
-							{
-								renderF.doCustom = true;
-								renderF.texture = texture;
-								renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
-								renderF.doCustom = false;
-							}
+							ModelPlayer mp = setup.getSecond();
+							renderF.setMainModel(mp);
+							mp.bipedBody.isHidden = true;
+							mp.bipedHead.isHidden = true;
+							
+							mp.bipedLeftArm.isHidden  = !setup.equals(individualSetups[0]);
+							mp.bipedRightArm.isHidden = !setup.equals(individualSetups[1]);
+							mp.bipedLeftLeg.isHidden  = !setup.equals(individualSetups[2]);
+							mp.bipedRightLeg.isHidden = !setup.equals(individualSetups[3]);
+							
+							renderF.doCustom = true;
+							renderF.texture = setup.getFirst();
+							renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
+							renderF.doCustom = false;
+
+							mp.bipedBody.isHidden = false;
+							mp.bipedHead.isHidden = false;
+							mp.bipedLeftArm.isHidden = false;
+							mp.bipedRightArm.isHidden = false;
+							mp.bipedLeftLeg.isHidden = false;
+							mp.bipedRightLeg.isHidden = false;
+							
+							renderF.setMainModel(temp);
 						}
 
-						mp.bipedBody.isHidden = false;
-						mp.bipedHead.isHidden = false;
-						mp.bipedLeftArm.isHidden = false;
-						mp.bipedRightArm.isHidden = false;
-						mp.bipedLeftLeg.isHidden = false;
-						mp.bipedRightLeg.isHidden = false;
 					}
 				
 				}
@@ -224,12 +220,12 @@ public class EssentialsMissingHandlerClient
 			
 
 
-			if (!hasLeftLeg)
+			if (!hasLeftLeg || (leftLeg != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom)))
 			{
 				renderer.getMainModel().bipedLeftLeg.isHidden = true;
 			}
 			
-			if (!hasRightLeg)
+			if (!hasRightLeg || (rightLeg != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom)))
 			{
 				renderer.getMainModel().bipedRightLeg.isHidden = true;
 			}
@@ -254,6 +250,10 @@ public class EssentialsMissingHandlerClient
 					p.inventory.offHandInventory[0] = null;
 				}
 			}
+			else if (leftArm != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom))
+			{
+				renderer.getMainModel().bipedLeftArm.isHidden = true;
+			}
 			
 			if (!hasRightArm)
 			{
@@ -274,7 +274,10 @@ public class EssentialsMissingHandlerClient
 					p.inventory.offHandInventory[0] = null;
 				}
 			}
-			
+			else if (rightArm != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom))
+			{
+				renderer.getMainModel().bipedRightArm.isHidden = true;
+			}
 
 			
 

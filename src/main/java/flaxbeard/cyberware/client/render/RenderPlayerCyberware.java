@@ -139,13 +139,21 @@ public class RenderPlayerCyberware extends RenderPlayer
 		ItemStack heldItem = entity.getHeldItemMainhand();
 		ItemStack offHand = entity.getHeldItemOffhand();
 
-		if (this.doCustom)
+		if (doCustom)
 		{
 			entity.inventory.armorInventory[0] = null;	
 			entity.inventory.armorInventory[1] = null;
-			entity.inventory.mainInventory[entity.inventory.currentItem] = null;
-			entity.inventory.offHandInventory[0] = null;
+			if (((ModelPlayer)this.mainModel).bipedRightArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (((ModelPlayer)this.mainModel).bipedLeftArm.isHidden) entity.inventory.offHandInventory[0] = null;
 		}
+		else if (doMuscles)
+		{
+			entity.inventory.armorInventory[0] = null;	
+			entity.inventory.armorInventory[1] = null;
+			if (((ModelPlayer)this.mainModel).bipedRightArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (((ModelPlayer)this.mainModel).bipedLeftArm.isHidden) entity.inventory.offHandInventory[0] = null;
+		}
+		
 		try
 		{
 			float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
