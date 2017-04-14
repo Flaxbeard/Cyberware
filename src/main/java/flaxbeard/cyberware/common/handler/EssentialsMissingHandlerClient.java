@@ -234,21 +234,24 @@ public class EssentialsMissingHandlerClient
 			if (!hasLeftArm)
 			{
 				renderer.getMainModel().bipedLeftArm.isHidden = true;
-				
+				/*
 				// Hide the main or offhand item if no arm there
-				if (!mainHand.containsKey(p.getEntityId()))
-				{
-					mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
-					offHand.put(p.getEntityId(), p.getHeldItemOffhand());
-				}
 				if (mc.gameSettings.mainHand == EnumHandSide.LEFT)
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = null;
+					if (!mainHand.containsKey(p.getEntityId()))
+					{
+						mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
+						p.inventory.mainInventory[p.inventory.currentItem] = null;
+					}
 				}
 				else
 				{
-					p.inventory.offHandInventory[0] = null;
-				}
+					if (!offHand.containsKey(p.getEntityId()))
+					{
+						offHand.put(p.getEntityId(), p.getHeldItemOffhand());
+						//p.inventory.offHandInventory[0] = null;
+					}
+				}*/
 			}
 			else if (leftArm != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom))
 			{
@@ -259,20 +262,23 @@ public class EssentialsMissingHandlerClient
 			{
 				renderer.getMainModel().bipedRightArm.isHidden = true;
 				
-				// Hide the main or offhand item if no arm there
-				if (!mainHand.containsKey(p.getEntityId()))
-				{
-					mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
-					offHand.put(p.getEntityId(), p.getHeldItemOffhand());
-				}
+				/*// Hide the main or offhand item if no arm there
 				if (mc.gameSettings.mainHand == EnumHandSide.RIGHT)
 				{
-					p.inventory.mainInventory[p.inventory.currentItem] = null;
+					if (!mainHand.containsKey(p.getEntityId()))
+					{
+						mainHand.put(p.getEntityId(), p.getHeldItemMainhand());
+						p.inventory.mainInventory[p.inventory.currentItem] = null;
+					}
 				}
 				else
 				{
-					p.inventory.offHandInventory[0] = null;
-				}
+					if (!offHand.containsKey(p.getEntityId()))
+					{
+						offHand.put(p.getEntityId(), p.getHeldItemOffhand());
+						p.inventory.offHandInventory[0] = null;
+					}
+				}*/
 			}
 			else if (rightArm != null && (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom))
 			{
@@ -297,6 +303,7 @@ public class EssentialsMissingHandlerClient
 	{
 		if (CyberwareConfig.RENDER)
 		{
+			RenderPlayer renderer = event.getRenderer();
 			event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
 			event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
 			event.getRenderer().getMainModel().bipedLeftLeg.isHidden = false;
@@ -319,31 +326,53 @@ public class EssentialsMissingHandlerClient
 					shoes.remove(p.getEntityId());
 				}
 	
-				if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.LEFT))
+				/*if (!(renderer instanceof RenderPlayerCyberware) || !((RenderPlayerCyberware) renderer).doCustom)
 				{
-					event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
-					if (mainHand.containsKey(p.getEntityId()))
+					if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.LEFT))
 					{
-						p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
-						p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
-						mainHand.remove(p.getEntityId());
-						offHand.remove(p.getEntityId());
+						event.getRenderer().getMainModel().bipedLeftArm.isHidden = false;
+						if (mc.gameSettings.mainHand == EnumHandSide.LEFT)
+						{
+							if (mainHand.containsKey(p.getEntityId()))
+							{
+								p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+								mainHand.remove(p.getEntityId());
+							}
+						}
+						else
+						{
+							if (offHand.containsKey(p.getEntityId()))
+							{
+								p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+								offHand.remove(p.getEntityId());
+							}
+						}
+						
 					}
-				}
-				
-	
-				if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.RIGHT))
-				{
-					event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
-					if (mainHand.containsKey(p.getEntityId()))
+					
+		
+					if (!cyberware.hasEssential(EnumSlot.ARM, EnumSide.RIGHT))
 					{
-						p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
-						p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
-						mainHand.remove(p.getEntityId());
-						offHand.remove(p.getEntityId());
+						event.getRenderer().getMainModel().bipedRightArm.isHidden = false;
+						if (mc.gameSettings.mainHand == EnumHandSide.RIGHT)
+						{
+							if (mainHand.containsKey(p.getEntityId()))
+							{
+								p.inventory.mainInventory[p.inventory.currentItem] = mainHand.get(p.getEntityId());
+								mainHand.remove(p.getEntityId());
+							}
+						}
+						else
+						{
+							if (offHand.containsKey(p.getEntityId()))
+							{
+								p.inventory.offHandInventory[0] = offHand.get(p.getEntityId());
+								offHand.remove(p.getEntityId());
+							}
+						}
+						
 					}
-				}
-	
+				}*/
 			}
 		}
 	}
