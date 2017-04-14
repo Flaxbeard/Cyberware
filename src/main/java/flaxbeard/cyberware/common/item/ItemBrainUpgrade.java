@@ -295,6 +295,7 @@ public class ItemBrainUpgrade extends ItemCyberware implements IMenuItem
 						event.setCanceled(true);
 						e.hurtResistantTime = e.maxHurtResistantTime;
 						e.hurtTime = e.maxHurtTime = 10;
+						// private float lastDamage
 						ReflectionHelper.setPrivateValue(EntityLivingBase.class, e, 9999F, 46);
 						
 						CyberwarePacketHandler.INSTANCE.sendToAllAround(new DodgePacket(e.getEntityId()), new TargetPoint(e.worldObj.provider.getDimension(), e.posX, e.posY, e.posZ, 50));

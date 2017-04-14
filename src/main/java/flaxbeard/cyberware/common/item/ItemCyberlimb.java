@@ -3,6 +3,7 @@ package flaxbeard.cyberware.common.item;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,8 @@ import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.ICyberware;
@@ -151,6 +154,20 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbRep
 		else
 		{
 			return RenderPlayerCyberware.roboRust;
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny)
+	{
+		if (wideArms)
+		{
+			return baseWide;
+		}
+		else
+		{
+			return baseSkinny;
 		}
 	}
 }

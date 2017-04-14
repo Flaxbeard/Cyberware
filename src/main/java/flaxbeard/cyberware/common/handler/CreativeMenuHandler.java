@@ -97,6 +97,7 @@ public class CreativeMenuHandler
 			buttons.add(salvaged = new CEXButton(355, i + 166 + 4, j + 29 + 8, 0));
 			buttons.add(manufactured = new CEXButton(356, i + 166 + 4, j + 29 + 31, 1));
 			
+			// private static int selectedTabIndex
 			int selectedTabIndex = ReflectionHelper.getPrivateValue(GuiContainerCreative.class, (GuiContainerCreative) gui, 2);
 			if (selectedTabIndex != Cyberware.creativeTab.getTabIndex())
 			{
@@ -219,6 +220,7 @@ public class CreativeMenuHandler
 	{
 		if (gui instanceof GuiContainerCreative)
 		{
+			// private static int selectedTabIndex
 			int selectedTabIndex = ReflectionHelper.getPrivateValue(GuiContainerCreative.class, (GuiContainerCreative) gui, 2);
 			if (selectedTabIndex == Cyberware.creativeTab.getTabIndex())
 			{

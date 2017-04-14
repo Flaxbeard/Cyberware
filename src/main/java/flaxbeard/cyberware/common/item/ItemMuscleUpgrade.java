@@ -109,6 +109,8 @@ public class ItemMuscleUpgrade extends ItemCyberware implements IMenuItem
 			{
 				EntityDamageSource source = (EntityDamageSource) event.getSource();
 				Entity attacker = source.getEntity();
+				
+				// private int lastDamageTime
 				int lastAttacked = ReflectionHelper.getPrivateValue(CombatTracker.class, p.getCombatTracker(), 2);
 				
 				if (p.ticksExisted - lastAttacked > 120)

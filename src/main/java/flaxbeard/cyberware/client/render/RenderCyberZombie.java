@@ -80,6 +80,7 @@ public class RenderCyberZombie extends RenderZombie
 	public RenderCyberZombie(RenderManager renderManagerIn)
 	{
 		super(renderManagerIn);
+		// private final List<LayerRenderer<EntityZombie>> defaultLayers
         List<LayerRenderer<EntityZombie>> defaultLayers = ReflectionHelper.getPrivateValue(RenderZombie.class, this, 10);
         defaultLayers.add(new LayerZombieHighlight(this));
         ReflectionHelper.setPrivateValue(RenderZombie.class, this, defaultLayers, 10);
