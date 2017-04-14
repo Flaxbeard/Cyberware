@@ -82,6 +82,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 	{
 		Minecraft.getMinecraft().getTextureManager().bindTexture(robo);
 		super.renderLeftArm(clientPlayer);
+
 		
 		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))
 			&& CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))
@@ -105,7 +106,18 @@ public class RenderPlayerCyberware extends RenderPlayer
 
 	public void doRender(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+		boolean bla = this.getMainModel().bipedLeftArm.isHidden;
+		boolean bra = this.getMainModel().bipedRightArm.isHidden;
+		boolean bll = this.getMainModel().bipedLeftLeg.isHidden;
+		boolean brl = this.getMainModel().bipedRightLeg.isHidden;
+		
 		if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.RenderPlayerEvent.Pre(entity, this, partialTicks, x, y, z))) return;
+		
+		this.getMainModel().bipedLeftArm.isHidden |= bla;
+		this.getMainModel().bipedRightArm.isHidden |= bra;
+		this.getMainModel().bipedLeftLeg.isHidden |= bll;
+		this.getMainModel().bipedRightLeg.isHidden |= brl;
+
 		if (!entity.isUser() || this.renderManager.renderViewEntity == entity)
 		{
 			double d0 = y;
@@ -125,6 +137,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 	
 	public void doRenderELB(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+
 		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
 		this.mainModel.swingProgress = this.getSwingProgress(entity, partialTicks);
@@ -144,8 +157,17 @@ public class RenderPlayerCyberware extends RenderPlayer
 			entity.inventory.armorInventory[0] = null;	
 			entity.inventory.armorInventory[1] = null;
 		}
-		if (((ModelPlayer)this.mainModel).bipedRightArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
-		if (((ModelPlayer)this.mainModel).bipedLeftArm.isHidden) entity.inventory.offHandInventory[0] = null;
+		if (entity.getPrimaryHand() == EnumHandSide.RIGHT)
+		{
+			if (getMainModel().bipedRightArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (getMainModel().bipedLeftArm.isHidden) entity.inventory.offHandInventory[0] = null;
+		}
+		else
+		{
+			if (getMainModel().bipedLeftArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (getMainModel().bipedRightArm.isHidden) entity.inventory.offHandInventory[0] = null;
+		}
+		
 		try
 		{
 			float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);

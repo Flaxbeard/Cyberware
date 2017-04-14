@@ -1,2 +1,4 @@
-eyeUpgrades_hudlens
-eyeUpgrades_hudlens_scavenged
+prosthetics_prosLegLeft
+prosthetics_prosArmLeft
+prosthetics_prosLegRight
+prosthetics_prosArmRight

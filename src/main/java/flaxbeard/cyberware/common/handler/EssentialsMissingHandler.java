@@ -124,13 +124,13 @@ public class EssentialsMissingHandler
 		}
 		
 		ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
-		if (legLeft != null && !((ILimbReplacement) legLeft.getItem()).isActive(legLeft))
+		if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isActive(legLeft))
 		{
 			numMissingLegs++;
 		}
 		
 		ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
-		if (legRight != null && !((ILimbReplacement) legRight.getItem()).isActive(legRight))
+		if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isActive(legRight))
 		{
 			numMissingLegs++;
 		}
@@ -268,13 +268,13 @@ public class EssentialsMissingHandler
 			}
 			
 			ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
-			if (legLeft != null && !((ILimbReplacement) legLeft.getItem()).isActive(legLeft))
+			if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isActive(legLeft))
 			{
 				numMissingLegs++;
 			}
 			
 			ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
-			if (legRight != null && !((ILimbReplacement) legRight.getItem()).isActive(legRight))
+			if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isActive(legRight))
 			{
 				numMissingLegs++;
 			}
@@ -487,14 +487,14 @@ public class EssentialsMissingHandler
 		
 		boolean leftInactive = false;
 		ItemStack armLeft = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
-		if (armLeft != null && !((ILimbReplacement) armLeft.getItem()).isActive(armLeft))
+		if (armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isActive(armLeft))
 		{
 			leftInactive = true;
 		}
 		
 		boolean rightInactive = false;
 		ItemStack armRight = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
-		if (armRight != null && !((ILimbReplacement) armRight.getItem()).isActive(armLeft))
+		if (armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isActive(armLeft))
 		{
 			rightInactive = true;
 		}

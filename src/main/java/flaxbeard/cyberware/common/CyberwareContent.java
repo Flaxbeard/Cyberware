@@ -44,6 +44,7 @@ import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.integration.am2.ArsMagicaIntegration;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
 import flaxbeard.cyberware.common.item.ItemArmUpgrade;
@@ -70,6 +71,7 @@ import flaxbeard.cyberware.common.item.ItemLowerOrgansUpgrade;
 import flaxbeard.cyberware.common.item.ItemLungsUpgrade;
 import flaxbeard.cyberware.common.item.ItemMuscleUpgrade;
 import flaxbeard.cyberware.common.item.ItemNeuropozyne;
+import flaxbeard.cyberware.common.item.ItemProsthetics;
 import flaxbeard.cyberware.common.item.ItemSkinUpgrade;
 import flaxbeard.cyberware.common.item.ItemSwordCyberware;
 import flaxbeard.cyberware.common.item.VanillaWares.SpiderEyeWare;
@@ -110,6 +112,9 @@ public class CyberwareContent
 	public static Item katana;
 
 	public static Item bodyPart;
+	
+	public static ItemCyberware prosthetics;
+
 	public static ItemCyberware cybereyes;
 	public static ItemCyberware cybereyeUpgrades;
 	public static ItemCyberware eyeUpgrades;
@@ -388,6 +393,9 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 2), new ItemStack(component, 2, 4), new ItemStack(component, 1, 5), new ItemStack(component, 1, 7) }
 				);
 		
+		prosthetics = new ItemProsthetics("prosthetics", 
+				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
+				new String[] { "prosArmLeft", "prosArmRight", "prosLegLeft", "prosLegRight" });
 		
 		ItemStack actuator = new ItemStack(component, 1, 0);
 		ItemStack reactor = new ItemStack(component, 1, 1);
@@ -503,6 +511,11 @@ public class CyberwareContent
 		if (Loader.isModLoaded("ToughAsNails"))
 		{
 			ToughAsNailsIntegration.preInit();
+		}
+		
+		if (Loader.isModLoaded("arsmagica2"))
+		{
+			ArsMagicaIntegration.preInit();
 		}
 	}
 	

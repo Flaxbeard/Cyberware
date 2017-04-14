@@ -9,6 +9,7 @@ public interface ICyberwareTabItem
 	{
 		BLOCKS,
 		BODYPARTS,
+		MISCAUGS,
 		EYES,
 		CRANIUM,
 		HEART,

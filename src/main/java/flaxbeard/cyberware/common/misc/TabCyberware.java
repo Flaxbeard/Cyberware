@@ -89,7 +89,6 @@ public class TabCyberware extends CreativeTabs
 				}
 			}
 		}
-		
 		for (EnumCategory category : EnumCategory.values())
 		{
 			List<ItemStack> toAdd = subLists.get(category);

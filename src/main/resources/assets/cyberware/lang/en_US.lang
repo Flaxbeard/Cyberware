@@ -35,6 +35,11 @@ item.cyberware.cyberlimbs.cyberlegLeft.name=Left Cyberleg
 item.cyberware.cyberlimbs.cyberlegRight.name=Right Cyberleg
 item.cyberware.cyberlimbs.cyberarmLeft.name=Left Cyberarm
 item.cyberware.cyberlimbs.cyberarmRight.name=Right Cyberarm
+item.cyberware.prosthetics.prosLegLeft.name=Left Leg Prosthetic
+item.cyberware.prosthetics.prosLegRight.name=Right Leg Prosthetic
+item.cyberware.prosthetics.prosArmLeft.name=Left Arm Prosthetic
+item.cyberware.prosthetics.prosArmRight.name=Right Arm Prosthetic
+
 
 item.cyberware.manaseerLens.lens.name=Manaseer Lenses
 item.cyberware.manaseerLens.link.name=Manalink
@@ -289,6 +294,10 @@ cyberware.tooltip.cyberlimbs.0=Enables Cyberarm upgrades
 cyberware.tooltip.cyberlimbs.1=Enables Cyberarm upgrades
 cyberware.tooltip.cyberlimbs.2=Enables Cyberleg upgrades
 cyberware.tooltip.cyberlimbs.3=Enables Cyberleg upgrades
+cyberware.tooltip.prosthetics.0=Replaces limbs\nRight click to attach
+cyberware.tooltip.prosthetics.1=Replaces limbs\nRight click to attach
+cyberware.tooltip.prosthetics.2=Replaces limbs\nRight click to attach
+cyberware.tooltip.prosthetics.3=Replaces limbs\nRight click to attach
 cyberware.tooltip.handUpgrades.0=3x3 personal crafting
 cyberware.tooltip.handUpgrades.1=Stronger unarmed attacks
 cyberware.tooltip.handUpgrades.2=Hands mine at stone level

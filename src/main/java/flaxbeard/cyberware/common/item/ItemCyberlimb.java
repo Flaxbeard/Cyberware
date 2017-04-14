@@ -23,6 +23,7 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
+import flaxbeard.cyberware.api.item.ICyberwareTabItem.EnumCategory;
 import flaxbeard.cyberware.api.item.ILimbReplacement;
 import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
 import flaxbeard.cyberware.common.lib.LibConstants;
@@ -170,4 +171,5 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbRep
 			return baseSkinny;
 		}
 	}
+
 }

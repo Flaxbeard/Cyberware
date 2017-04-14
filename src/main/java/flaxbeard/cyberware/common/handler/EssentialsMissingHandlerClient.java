@@ -150,7 +150,7 @@ public class EssentialsMissingHandlerClient
 						{
 							if (limbs[i] != null)
 							{
-								ILimbReplacement lr = ((ILimbReplacement) limbs[i].getItem());
+								ILimbReplacement lr = ((ILimbReplacement) CyberwareAPI.getCyberware(limbs[i]));
 								individualSetups[i] = new Tuple<ResourceLocation, ModelPlayer>(
 													lr.getTexture(limbs[i]), 
 													lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel()));
@@ -171,7 +171,7 @@ public class EssentialsMissingHandlerClient
 							mp.bipedRightArm.isHidden = !setup.equals(individualSetups[1]);
 							mp.bipedLeftLeg.isHidden  = !setup.equals(individualSetups[2]);
 							mp.bipedRightLeg.isHidden = !setup.equals(individualSetups[3]);
-							
+
 							renderF.doCustom = true;
 							renderF.texture = setup.getFirst();
 							renderF.doRender((AbstractClientPlayer) p, event.getX(), event.getY() - (lower ? (11F / 16F) : 0), event.getZ(), p.rotationYaw, event.getPartialRenderTick());
@@ -445,14 +445,14 @@ public class EssentialsMissingHandlerClient
 			
 			boolean leftInactive = false;
 			ItemStack armLeft = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
-			if (armLeft != null && !((ILimbReplacement) armLeft.getItem()).isActive(armLeft))
+			if (armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isActive(armLeft))
 			{
 				leftInactive = true;
 			}
 			
 			boolean rightInactive = false;
 			ItemStack armRight = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
-			if (armRight != null && !((ILimbReplacement) armRight.getItem()).isActive(armLeft))
+			if (armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isActive(armLeft))
 			{
 				rightInactive = true;
 			}
