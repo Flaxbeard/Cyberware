@@ -52,6 +52,7 @@ public class ItemExpCapsule extends Item
 		return true;
 	}
 	
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		if (!playerIn.capabilities.isCreativeMode)

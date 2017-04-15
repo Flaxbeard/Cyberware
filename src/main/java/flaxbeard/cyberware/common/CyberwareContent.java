@@ -54,6 +54,7 @@ import flaxbeard.cyberware.common.item.ItemBodyPart;
 import flaxbeard.cyberware.common.item.ItemBoneUpgrade;
 import flaxbeard.cyberware.common.item.ItemBrainUpgrade;
 import flaxbeard.cyberware.common.item.ItemCreativeBattery;
+import flaxbeard.cyberware.common.item.ItemCyberarmTool;
 import flaxbeard.cyberware.common.item.ItemCybereyeUpgrade;
 import flaxbeard.cyberware.common.item.ItemCybereyes;
 import flaxbeard.cyberware.common.item.ItemCyberheart;
@@ -133,7 +134,10 @@ public class CyberwareContent
 	public static ItemCyberware handUpgrades;
 	public static ItemCyberware legUpgrades;
 	public static ItemCyberware footUpgrades;
+	
 	public static ItemCyberware cyberlimbs;
+	public static ItemCyberware toolArms;
+
 	public static ItemCyberware creativeBattery;
 	
 	public static Item component;
@@ -396,6 +400,11 @@ public class CyberwareContent
 		prosthetics = new ItemProsthetics("prosthetics", 
 				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
 				new String[] { "prosArmLeft", "prosArmRight", "prosLegLeft", "prosLegRight" });
+		
+		toolArms = new ItemCyberarmTool("toolArms", 
+				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM },
+				new String[] { "drillLeft", "drillRight" });
+		toolArms.setEssenceCost(25, 25, 25, 25);
 		
 		ItemStack actuator = new ItemStack(component, 1, 0);
 		ItemStack reactor = new ItemStack(component, 1, 1);

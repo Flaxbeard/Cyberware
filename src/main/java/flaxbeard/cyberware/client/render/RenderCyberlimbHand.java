@@ -41,15 +41,19 @@ public class RenderCyberlimbHand
 	
 	public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, @Nullable ItemStack p_187457_6_, float p_187457_7_)
 	{
-		boolean flag = p_187457_4_ == EnumHand.MAIN_HAND;
-		EnumHandSide enumhandside = flag ? p_187457_1_.getPrimaryHand() : p_187457_1_.getPrimaryHand().opposite();
+		this.renderItemInFirstPerson(p_187457_1_, p_187457_2_, p_187457_3_, p_187457_4_, p_187457_5_, p_187457_6_, p_187457_7_, p_187457_4_ == EnumHand.MAIN_HAND);
+	}
+	
+	public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, @Nullable ItemStack p_187457_6_, float p_187457_7_, boolean forceShow)
+	{
+		boolean flag = forceShow;
+		EnumHandSide enumhandside = p_187457_4_ == EnumHand.MAIN_HAND ? p_187457_1_.getPrimaryHand() : p_187457_1_.getPrimaryHand().opposite();
 		GlStateManager.pushMatrix();
 
 		if (p_187457_6_ == null)
 		{
 			if (flag && !p_187457_1_.isInvisible())
 			{
-				
 				this.renderArmFirstPerson(p_187457_7_, p_187457_5_, enumhandside);
 			}
 		}
@@ -344,23 +348,23 @@ public class RenderCyberlimbHand
 		GlStateManager.popMatrix();
 	}
 	
-	public boolean leftRobot = false;
-	public boolean rightRobot = false;
+	public boolean leftReplacement = false;
+	public boolean rightReplacement = false;
 	
 	private RenderPlayer getEntityRenderObject(AbstractClientPlayer p, EnumHandSide side)
 	{
 		if (side == EnumHandSide.RIGHT)
 		{
-			if (rightRobot)
+			if (rightReplacement)
 			{
 				return EssentialsMissingHandlerClient.renderF;
 			}
 		}
 		else
 		{
-			if (leftRobot)
+			if (leftReplacement)
 			{
-				return EssentialsMissingHandlerClient.renderF;
+				return EssentialsMissingHandlerClient.renderT;
 			}
 		}
 		

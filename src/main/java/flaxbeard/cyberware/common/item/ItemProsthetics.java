@@ -1,34 +1,21 @@
 package flaxbeard.cyberware.common.item;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
-import flaxbeard.cyberware.api.CyberwareUpdateEvent;
+import flaxbeard.cyberware.api.ICyberwareUserData;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
-import flaxbeard.cyberware.api.item.ICyberware.Quality;
-import flaxbeard.cyberware.api.item.ICyberwareTabItem.EnumCategory;
 import flaxbeard.cyberware.api.item.ILimbReplacement;
-import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
-import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbReplacement
 {
@@ -115,5 +102,50 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 	public EnumCategory getCategory(ItemStack stack)
 	{
 		return EnumCategory.MISCAUGS;
+	}
+	
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
+	{
+		if (CyberwareAPI.hasCapability(player))
+		{
+			ICyberwareUserData data = CyberwareAPI.getCapability(player);
+			if (!data.hasEssential(getSlot(stack), getSide(stack)))
+			{
+				ItemStack[] items = data.getInstalledCyberware(getSlot(stack));
+				for (int i = 0; i < items.length; i++)
+				{
+					if (items[i] == null)
+					{
+						items[i] = stack.copy();
+						data.setInstalledCyberware(player, getSlot(stack), items);
+						if (getSide(stack) == EnumSide.LEFT)
+						{
+							boolean hr = data.hasEssential(getSlot(stack), EnumSide.RIGHT);
+							data.setHasEssential(getSlot(stack), true, hr);
+						}
+						else
+						{
+							boolean hl = data.hasEssential(getSlot(stack), EnumSide.LEFT);
+							data.setHasEssential(getSlot(stack), hl, true);
+						}
+						if (!player.capabilities.isCreativeMode)
+						{
+							--stack.stackSize;
+						}
+						
+						if (!player.worldObj.isRemote)
+						{
+							CyberwareAPI.updateData(player);
+						}
+						
+						return new ActionResult(EnumActionResult.SUCCESS, stack);
+					}
+				}
+				
+			}
+		}
+		return new ActionResult(EnumActionResult.FAIL, stack);
+
 	}
 }

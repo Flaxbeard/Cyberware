@@ -28,6 +28,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 
 	public boolean doMuscles = false;
 	public boolean doCustom = false;
+	public boolean canHoldItems = true;
 	public ResourceLocation texture = robo;
 
 	public RenderPlayerCyberware(RenderManager renderManager, boolean arms)
@@ -56,7 +57,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 	@Override
 	public void renderRightArm(AbstractClientPlayer clientPlayer)
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture(robo);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		super.renderRightArm(clientPlayer);
 		
 		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 1)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT && clientPlayer.getHeldItemMainhand() == null
@@ -80,7 +81,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 	@Override
 	public void renderLeftArm(AbstractClientPlayer clientPlayer)
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture(robo);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		super.renderLeftArm(clientPlayer);
 
 		
@@ -159,13 +160,13 @@ public class RenderPlayerCyberware extends RenderPlayer
 		}
 		if (entity.getPrimaryHand() == EnumHandSide.RIGHT)
 		{
-			if (getMainModel().bipedRightArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
-			if (getMainModel().bipedLeftArm.isHidden) entity.inventory.offHandInventory[0] = null;
+			if (getMainModel().bipedRightArm.isHidden || !canHoldItems) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (getMainModel().bipedLeftArm.isHidden || !canHoldItems) entity.inventory.offHandInventory[0] = null;
 		}
 		else
 		{
-			if (getMainModel().bipedLeftArm.isHidden) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
-			if (getMainModel().bipedRightArm.isHidden) entity.inventory.offHandInventory[0] = null;
+			if (getMainModel().bipedLeftArm.isHidden || !canHoldItems) entity.inventory.mainInventory[entity.inventory.currentItem] = null;
+			if (getMainModel().bipedRightArm.isHidden || !canHoldItems) entity.inventory.offHandInventory[0] = null;
 		}
 		
 		try
@@ -226,7 +227,6 @@ public class RenderPlayerCyberware extends RenderPlayer
 			GlStateManager.enableAlpha();
 			this.mainModel.setLivingAnimations(entity, f6, f5, partialTicks);
 			this.mainModel.setRotationAngles(f6, f5, f8, f2, f7, f4, entity);
-
 			if (this.renderOutlines)
 			{
 				boolean flag1 = this.setScoreTeamColor(entity);
@@ -254,6 +254,7 @@ public class RenderPlayerCyberware extends RenderPlayer
 			else
 			{
 				boolean flag = this.setDoRenderBrightness(entity, partialTicks);
+				
 				this.renderModel(entity, f6, f5, f8, f2, f7, f4);
 
 				if (flag)
