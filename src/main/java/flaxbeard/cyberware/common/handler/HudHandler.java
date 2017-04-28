@@ -9,15 +9,12 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +32,6 @@ import flaxbeard.cyberware.api.hud.NotificationInstance;
 import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.client.KeyBinds;
 import flaxbeard.cyberware.client.gui.GuiHudConfiguration;
-import flaxbeard.cyberware.client.gui.hud.HudNBTData;
 import flaxbeard.cyberware.client.gui.hud.MissingPowerDisplay;
 import flaxbeard.cyberware.client.gui.hud.NotificationDisplay;
 import flaxbeard.cyberware.client.gui.hud.PowerDisplay;
@@ -126,258 +122,259 @@ public class HudHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onDrawScreenPost(RenderGameOverlayEvent.Post event)
+	public void onDrawScreenPost(RenderTickEvent event)
 	{
-		if (event.getType() == ElementType.POTION_ICONS)
+		if (event.phase == Phase.END)
 		{
 			GlStateManager.pushMatrix();
 			Minecraft mc = Minecraft.getMinecraft();
 			EntityPlayerSP p = mc.thePlayer;
-			
-			float floatAmt = 0F;
-			boolean active = false;
-			if (CyberwareAPI.hasCapability(p))
+			if (p != null)
 			{
-				List<ItemStack> hudjackItems = CyberwareAPI.getCapability(p).getHudjackItems();
-				for (ItemStack stack : hudjackItems)
+				float floatAmt = 0F;
+				boolean active = false;
+				if (CyberwareAPI.hasCapability(p))
 				{
-					if (((IHudjack) CyberwareAPI.getCyberware(stack)).isActive(stack))
+					List<ItemStack> hudjackItems = CyberwareAPI.getCapability(p).getHudjackItems();
+					for (ItemStack stack : hudjackItems)
 					{
-						active = true;
-						if (CyberwareConfig.ENABLE_FLOAT)
+						if (((IHudjack) CyberwareAPI.getCyberware(stack)).isActive(stack))
 						{
-							if (CyberwareAPI.getCyberware(stack) == CyberwareContent.eyeUpgrades)
+							active = true;
+							if (CyberwareConfig.ENABLE_FLOAT)
 							{
-								floatAmt = CyberwareConfig.HUDLENS_FLOAT;
+								if (CyberwareAPI.getCyberware(stack) == CyberwareContent.eyeUpgrades)
+								{
+									floatAmt = CyberwareConfig.HUDLENS_FLOAT;
+								}
+								else
+								{
+									floatAmt = CyberwareConfig.HUDJACK_FLOAT;
+								}
 							}
-							else
-							{
-								floatAmt = CyberwareConfig.HUDJACK_FLOAT;
-							}
+							break;
 						}
-						break;
 					}
 				}
-			}
-						
-			double accelLastY = lastVelY - lastLastVelY;
-			double accelY = p.motionY - lastVelY;
-			double accelPitch = accelLastY + (accelY - accelLastY) * (event.getPartialTicks() + p.ticksExisted - lastTick) / 2F;
-						
-			double pitchCameraMove = floatAmt * ((p.prevRenderArmPitch + (p.renderArmPitch - p.prevRenderArmPitch) * event.getPartialTicks()) - p.rotationPitch);
-			double yawCameraMove = floatAmt * ((p.prevRenderArmYaw + (p.renderArmYaw - p.prevRenderArmYaw) * event.getPartialTicks()) - p.rotationYaw);
-
-			GlStateManager.translate(yawCameraMove, pitchCameraMove + accelPitch * 50F * floatAmt, 0);
-			
-			if (p.ticksExisted > lastTick + 1)
-			{
-				lastTick = p.ticksExisted;
-				lastLastVelX = lastVelX;
-				lastLastVelY = lastVelY;
-				lastLastVelZ = lastVelZ;
-				lastVelX = p.motionX;
-				lastVelY = p.motionY;
-				lastVelZ = p.motionZ;
-			}
-			
-			CyberwareHudEvent hudEvent = new CyberwareHudEvent(event.getResolution(), active);
-			MinecraftForge.EVENT_BUS.post(hudEvent);
-			List<IHudElement> elements = hudEvent.getElements();
-			boolean active2 = hudEvent.isHudjackAvailable();
-			
-			ScaledResolution sr = event.getResolution();
-			for (IHudElement element : elements)
-			{
-				if (element.getHeight() + GuiHudConfiguration.getAbsoluteY(sr, element) <= 3)
+							
+				double accelLastY = lastVelY - lastLastVelY;
+				double accelY = p.motionY - lastVelY;
+				ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+				double accelPitch = accelLastY + (accelY - accelLastY) * (event.renderTickTime + p.ticksExisted - lastTick) / 2F;
+							
+				double pitchCameraMove = floatAmt * ((p.prevRenderArmPitch + (p.renderArmPitch - p.prevRenderArmPitch) * event.renderTickTime) - p.rotationPitch);
+				double yawCameraMove = floatAmt * ((p.prevRenderArmYaw + (p.renderArmYaw - p.prevRenderArmYaw) * event.renderTickTime) - p.rotationYaw);
+		
+				GlStateManager.translate(yawCameraMove, pitchCameraMove + accelPitch * 50F * floatAmt, 0);
+				
+				if (p.ticksExisted > lastTick + 1)
 				{
-					GuiHudConfiguration.setYFromAbsolute(sr, element, 0 - element.getHeight() + 4);
+					lastTick = p.ticksExisted;
+					lastLastVelX = lastVelX;
+					lastLastVelY = lastVelY;
+					lastLastVelZ = lastVelZ;
+					lastVelX = p.motionX;
+					lastVelY = p.motionY;
+					lastVelZ = p.motionZ;
 				}
 				
-				if (GuiHudConfiguration.getAbsoluteY(sr, element) >= sr.getScaledHeight() - 3)
-				{
-					GuiHudConfiguration.setYFromAbsolute(sr, element, sr.getScaledHeight() - 4);
-				}
+				CyberwareHudEvent hudEvent = new CyberwareHudEvent(sr, active);
+				MinecraftForge.EVENT_BUS.post(hudEvent);
+				List<IHudElement> elements = hudEvent.getElements();
+				boolean active2 = hudEvent.isHudjackAvailable();
 				
-				if (element.getWidth() + GuiHudConfiguration.getAbsoluteX(sr, element) <= 3)
+				for (IHudElement element : elements)
 				{
-					GuiHudConfiguration.setXFromAbsolute(sr, element, 0 - element.getWidth() + 4);
-				}
-				
-				if (GuiHudConfiguration.getAbsoluteX(sr, element) >= sr.getScaledWidth() - 3)
-				{
-					GuiHudConfiguration.setXFromAbsolute(sr, element, sr.getScaledWidth() - 4);
-				}
-				
-				GL11.glPushMatrix();
-				element.render(p, sr, active2, mc.currentScreen instanceof GuiHudConfiguration, event.getPartialTicks());
-				GL11.glPopMatrix();
-			}
-			
-			// Display a prompt to the user to open the radial menu if they haven't yet
-			if (CyberwareAPI.hasCapability(mc.thePlayer))
-			{
-				ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
-				if (data.getActiveItems().size() > 0)
-				{
-					boolean done = CyberwareAPI.getCapability(mc.thePlayer).hasOpenedRadialMenu();
-					if (!done)
+					if (element.getHeight() + GuiHudConfiguration.getAbsoluteY(sr, element) <= 3)
 					{
-						String s = I18n.format("cyberware.gui.openMenu", KeyBinds.menu.getDisplayName());
-						FontRenderer fr = mc.fontRendererObj;
-						fr.drawStringWithShadow(s, sr.getScaledWidth() - fr.getStringWidth(s) - 5, 5, CyberwareAPI.getHUDColorHex());
+						GuiHudConfiguration.setYFromAbsolute(sr, element, 0 - element.getHeight() + 4);
 					}
-				}
-			}
 					
-				/*if (active)
-				{
-					float currTime = p.ticksExisted + event.getPartialTicks();
+					if (GuiHudConfiguration.getAbsoluteY(sr, element) >= sr.getScaledHeight() - 3)
+					{
+						GuiHudConfiguration.setYFromAbsolute(sr, element, sr.getScaledHeight() - 4);
+					}
+					
+					if (element.getWidth() + GuiHudConfiguration.getAbsoluteX(sr, element) <= 3)
+					{
+						GuiHudConfiguration.setXFromAbsolute(sr, element, 0 - element.getWidth() + 4);
+					}
+					
+					if (GuiHudConfiguration.getAbsoluteX(sr, element) >= sr.getScaledWidth() - 3)
+					{
+						GuiHudConfiguration.setXFromAbsolute(sr, element, sr.getScaledWidth() - 4);
+					}
 					
 					GL11.glPushMatrix();
-					GlStateManager.enableBlend();
-					ICyberwareUserData data = CyberwareAPI.getCapability(p);
-					
-					mc.getTextureManager().bindTexture(HUD_TEXTURE);
-			
-					ScaledResolution res = event.getResolution();
-					int left = 5;
-					int top = 5;
-					
-					Iterable<ItemStack> currInv = p.getArmorInventoryList();
-					if (currInv != inv)
+					element.render(p, sr, active2, mc.currentScreen instanceof GuiHudConfiguration, event.renderTickTime);
+					GL11.glPopMatrix();
+				}
+				
+				// Display a prompt to the user to open the radial menu if they haven't yet
+				if (CyberwareAPI.hasCapability(mc.thePlayer))
+				{
+					ICyberwareUserData data = CyberwareAPI.getCapability(mc.thePlayer);
+					if (data.getActiveItems().size() > 0)
 					{
-						inv = currInv;
-						boolean temp = lightArmor;
-						lightArmor = updateLightArmor();
-						if (lightArmor != temp)
+						boolean done = CyberwareAPI.getCapability(mc.thePlayer).hasOpenedRadialMenu();
+						if (!done)
 						{
-							addNotification(new NotificationInstance(currTime, new NotificationArmor(lightArmor)));
+							String s = I18n.format("cyberware.gui.openMenu", KeyBinds.menu.getDisplayName());
+							FontRenderer fr = mc.fontRendererObj;
+							fr.drawStringWithShadow(s, sr.getScaledWidth() - fr.getStringWidth(s) - 5, 5, CyberwareAPI.getHUDColorHex());
 						}
 					}
-		
-					FontRenderer fr = mc.fontRendererObj;
-					
-					if (p.ticksExisted % 20 == 0)
-					{
-						cachedPercent = data.getPercentFull();
-						cachedCap = data.getCapacity();
-						cachedTotal = data.getStoredPower();
-					}
-		
-					int temp = radioRange;
-					radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
-					if (radioRange != temp)
-					{
-						addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
-					}
-					
-					float[] color = CyberwareAPI.getHUDColor();
-					int colorHex = CyberwareAPI.getHUDColorHex();
-					
-					if (cachedPercent != -1)
-					{
-						int amount = Math.round((21F * cachedPercent));
-		
-						boolean danger = (cachedPercent <= .2F);
-						boolean superDanger = danger && (cachedPercent <= .05F);
-						int xOffset = (danger ? 39 : 0);
+				}
 						
-						if (!superDanger || p.ticksExisted % 4 != 0)
-						{
-							GlStateManager.pushMatrix();
-							if (!danger) GlStateManager.color(color[0], color[1], color[2]);
-							ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
-							ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
-							
-							ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
-							GlStateManager.popMatrix();
-		
-							fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
-						}
-						top += 28;
-					}
-					
-					List<NotificationInstance> nTR = new ArrayList<NotificationInstance>();
-					for (int i = 0; i < notifications.size(); i++)
+					/*if (active)
 					{
-						NotificationInstance ni = notifications.get(i);
-						INotification notification = ni.getNotification();
-						if (currTime - ni.getCreatedTime() < notification.getDuration() + 25)
+						float currTime = p.ticksExisted + event.getPartialTicks();
+						
+						GL11.glPushMatrix();
+						GlStateManager.enableBlend();
+						ICyberwareUserData data = CyberwareAPI.getCapability(p);
+						
+						mc.getTextureManager().bindTexture(HUD_TEXTURE);
+				
+						ScaledResolution res = event.getResolution();
+						int left = 5;
+						int top = 5;
+						
+						Iterable<ItemStack> currInv = p.getArmorInventoryList();
+						if (currInv != inv)
 						{
-							double pct = Math.max(0F, ((currTime - ni.getCreatedTime() - notification.getDuration()) / 30F));
-			
-							float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-							
-							GL11.glPushMatrix();
-							GL11.glColor3f(1.0F, 1.0F, 1.0F);
-							GL11.glTranslatef(0F, move, 0F);
-							int index = (notifications.size() - 1) - i;
-							notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);
-							GL11.glPopMatrix();
-						}
-						else
-						{
-							nTR.add(ni);
-						}
-					}
-					
-					for (NotificationInstance ni : nTR)
-					{
-						notifications.remove(ni);
-					}
-					
-					RenderItem ir = mc.getRenderItem();
-					List<ItemStack> stacks = data.getPowerOutages();
-					List<Integer> stackTimes = data.getPowerOutageTimes();
-					List<Integer> toRemove = new ArrayList<Integer>();
-					left -= 1;
-					float zL = ir.zLevel;
-					ir.zLevel = -300;
-					for (int i = stacks.size() - 1; i >= 0; i--)
-					{
-						ItemStack stack = stacks.get(i);
-						if (stack != null)
-						{
-							int time = stackTimes.get(i);
-							boolean keep = p.ticksExisted - time < 50;
-							double pct = Math.max(0F, ((currTime - time - 20) / 30F));
-		
-							float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
-							if (keep)
+							inv = currInv;
+							boolean temp = lightArmor;
+							lightArmor = updateLightArmor();
+							if (lightArmor != temp)
 							{
+								addNotification(new NotificationInstance(currTime, new NotificationArmor(lightArmor)));
+							}
+						}
+			
+						FontRenderer fr = mc.fontRendererObj;
+						
+						if (p.ticksExisted % 20 == 0)
+						{
+							cachedPercent = data.getPercentFull();
+							cachedCap = data.getCapacity();
+							cachedTotal = data.getStoredPower();
+						}
+			
+						int temp = radioRange;
+						radioRange = TileEntityBeacon.isInRange(p.worldObj, p.posX, p.posY, p.posZ);
+						if (radioRange != temp)
+						{
+							addNotification(new NotificationInstance(currTime, new NotificationRadio(radioRange)));
+						}
+						
+						float[] color = CyberwareAPI.getHUDColor();
+						int colorHex = CyberwareAPI.getHUDColorHex();
+						
+						if (cachedPercent != -1)
+						{
+							int amount = Math.round((21F * cachedPercent));
+			
+							boolean danger = (cachedPercent <= .2F);
+							boolean superDanger = danger && (cachedPercent <= .05F);
+							int xOffset = (danger ? 39 : 0);
+							
+							if (!superDanger || p.ticksExisted % 4 != 0)
+							{
+								GlStateManager.pushMatrix();
+								if (!danger) GlStateManager.color(color[0], color[1], color[2]);
+								ClientUtils.drawTexturedModalRect(left, top, xOffset, 0, 13, 2 + (21 - amount));
+								ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 13 + xOffset, 2 + (21 - amount), 13, amount + 2);
+								
+								ClientUtils.drawTexturedModalRect(left, top + 2 + (21 - amount), 26 + xOffset, 2 + (21 - amount), 13, amount + 2);
+								GlStateManager.popMatrix();
+			
+								fr.drawStringWithShadow(cachedTotal + " / " + cachedCap, left + 15, top + 8, danger ? 0xFF0000 : colorHex);
+							}
+							top += 28;
+						}
+						
+						List<NotificationInstance> nTR = new ArrayList<NotificationInstance>();
+						for (int i = 0; i < notifications.size(); i++)
+						{
+							NotificationInstance ni = notifications.get(i);
+							INotification notification = ni.getNotification();
+							if (currTime - ni.getCreatedTime() < notification.getDuration() + 25)
+							{
+								double pct = Math.max(0F, ((currTime - ni.getCreatedTime() - notification.getDuration()) / 30F));
+				
+								float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
+								
 								GL11.glPushMatrix();
-								GL11.glTranslatef(-move, 0F, 0F);
-								
-								fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
-								
-								RenderHelper.enableStandardItemLighting();
-								ir.renderItemAndEffectIntoGUI(stack, left, top);
-								RenderHelper.disableStandardItemLighting();
-		
+								GL11.glColor3f(1.0F, 1.0F, 1.0F);
+								GL11.glTranslatef(0F, move, 0F);
+								int index = (notifications.size() - 1) - i;
+								notification.render(5 + index * 18, res.getScaledHeight() - 5 - 14);
 								GL11.glPopMatrix();
-								top += 18;
 							}
 							else
 							{
-								toRemove.add(i);
+								nTR.add(ni);
 							}
 						}
-					}
-					ir.zLevel = zL;
-					
-					for (int i : toRemove)
-					{
-						stacks.remove(i);
-						stackTimes.remove(i);
-					}
-					
-					mc.getTextureManager().bindTexture(Gui.ICONS);
-		
-					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					GL11.glPopMatrix();
-				}*/
-			GlStateManager.popMatrix();	
+						
+						for (NotificationInstance ni : nTR)
+						{
+							notifications.remove(ni);
+						}
+						
+						RenderItem ir = mc.getRenderItem();
+						List<ItemStack> stacks = data.getPowerOutages();
+						List<Integer> stackTimes = data.getPowerOutageTimes();
+						List<Integer> toRemove = new ArrayList<Integer>();
+						left -= 1;
+						float zL = ir.zLevel;
+						ir.zLevel = -300;
+						for (int i = stacks.size() - 1; i >= 0; i--)
+						{
+							ItemStack stack = stacks.get(i);
+							if (stack != null)
+							{
+								int time = stackTimes.get(i);
+								boolean keep = p.ticksExisted - time < 50;
+								double pct = Math.max(0F, ((currTime - time - 20) / 30F));
+			
+								float move = (float) ((20 * Math.sin(pct * (Math.PI / 2F))));
+								if (keep)
+								{
+									GL11.glPushMatrix();
+									GL11.glTranslatef(-move, 0F, 0F);
+									
+									fr.drawStringWithShadow("!", left + 14, top + 8, 0xFF0000);
+									
+									RenderHelper.enableStandardItemLighting();
+									ir.renderItemAndEffectIntoGUI(stack, left, top);
+									RenderHelper.disableStandardItemLighting();
+			
+									GL11.glPopMatrix();
+									top += 18;
+								}
+								else
+								{
+									toRemove.add(i);
+								}
+							}
+						}
+						ir.zLevel = zL;
+						
+						for (int i : toRemove)
+						{
+							stacks.remove(i);
+							stackTimes.remove(i);
+						}
+						
+						mc.getTextureManager().bindTexture(Gui.ICONS);
+			
+						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+						GL11.glPopMatrix();
+					}*/
+				GlStateManager.popMatrix();	
+			}
 		}
 	}
-
 }
