@@ -117,7 +117,7 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	}
 
 	@Override
-	public boolean isActive(ItemStack stack)
+	public boolean isLimbActive(ItemStack stack)
 	{
 		return true;
 	}
@@ -138,7 +138,7 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny)
+	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
 	{
 		return model;
 	}

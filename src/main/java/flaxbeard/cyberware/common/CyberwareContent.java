@@ -44,6 +44,7 @@ import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
 import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
 import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.entity.EntityThrownBlock;
 import flaxbeard.cyberware.common.integration.am2.ArsMagicaIntegration;
 import flaxbeard.cyberware.common.integration.botania.BotaniaIntegration;
 import flaxbeard.cyberware.common.integration.tan.ToughAsNailsIntegration;
@@ -175,12 +176,16 @@ public class CyberwareContent
 			}
 		}
 		
+		
 		EntityRegistry.registerModEntity(EntityBytebug.class, "bytebug", 1, Cyberware.INSTANCE, 80, 3, true);
 		EntityRegistry.registerEgg(EntityBytebug.class, 0x6B6B6B, 0x008E8E);
 		if (Loader.isModLoaded("EnderIO"))
 		{
 			FMLInterModComms.sendMessage("EnderIO", "poweredSpawner:blacklist:add", "cyberware.bytebug");
 		}
+		
+		EntityRegistry.registerModEntity(EntityThrownBlock.class, "thrown_block", 2, Cyberware.INSTANCE, 80, 3, true);
+
 		
 		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
 
@@ -402,9 +407,9 @@ public class CyberwareContent
 				new String[] { "prosArmLeft", "prosArmRight", "prosLegLeft", "prosLegRight" });
 		
 		toolArms = new ItemCyberarmTool("toolArms", 
-				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM },
-				new String[] { "drillLeft", "drillRight" });
-		toolArms.setEssenceCost(25, 25, 25, 25);
+				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM },
+				new String[] { "drillLeft", "drillRight", "sawLeft", "sawRight", "lifterLeft", "lifterRight" });
+		toolArms.setEssenceCost(25, 25, 25, 25, 25, 25);
 		
 		ItemStack actuator = new ItemStack(component, 1, 0);
 		ItemStack reactor = new ItemStack(component, 1, 1);

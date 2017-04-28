@@ -20,6 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
+import flaxbeard.cyberware.api.render.ISpecialArmRenderer;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemHandUpgrade;
 
@@ -60,6 +61,11 @@ public class RenderPlayerCyberware extends RenderPlayer
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		super.renderRightArm(clientPlayer);
 		
+		if (mainModel instanceof ISpecialArmRenderer)
+		{
+			((ISpecialArmRenderer)mainModel).postRenderArm(EnumHandSide.RIGHT);
+		}
+		
 		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1)) && CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 1)) && Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT && clientPlayer.getHeldItemMainhand() == null
 				&& EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))))
 		{
@@ -84,6 +90,10 @@ public class RenderPlayerCyberware extends RenderPlayer
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		super.renderLeftArm(clientPlayer);
 
+		if (mainModel instanceof ISpecialArmRenderer)
+		{
+			((ISpecialArmRenderer)mainModel).postRenderArm(EnumHandSide.LEFT);
+		}
 		
 		if (CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.handUpgrades, 1, 1))
 			&& CyberwareAPI.isCyberwareInstalled(clientPlayer, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))

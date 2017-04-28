@@ -16,10 +16,12 @@ import flaxbeard.cyberware.common.network.OpenRadialMenuPacket.OpenRadialMenuPac
 import flaxbeard.cyberware.common.network.ParticlePacket.ParticlePacketHandler;
 import flaxbeard.cyberware.common.network.ProgressionSyncPacket.ProgressionSyncPacketHandler;
 import flaxbeard.cyberware.common.network.ScannerSmashPacket.ScannerSmashPacketHandler;
+import flaxbeard.cyberware.common.network.ShootBlockPacket.ShootBlockPacketHandler;
 import flaxbeard.cyberware.common.network.SurgeryRemovePacket.SurgeryRemovePacketHandler;
 import flaxbeard.cyberware.common.network.SwitchHeldItemAndRotationPacket.SwitchHeldItemAndRotationPacketHandler;
 import flaxbeard.cyberware.common.network.SyncHotkeyPacket.SyncHotkeyPacketHandler;
 import flaxbeard.cyberware.common.network.SyncHudDataPacket.SyncHudDataPacketHandler;
+import flaxbeard.cyberware.common.network.ToggleCyberarmPacket.ToggleCyberarmPacketHandler;
 import flaxbeard.cyberware.common.network.TriggerActiveAbilityPacket.TriggerActiveAbilityPacketHandler;
 import flaxbeard.cyberware.common.network.UpdateConfigPacket.UpdateConfigPacketHandler;
 
@@ -49,6 +51,8 @@ public class CyberwarePacketHandler
 		INSTANCE.registerMessage(UpdateHudColorPacketHandler.class, UpdateHudColorPacket.class, 13, Side.SERVER);
 		INSTANCE.registerMessage(UpdateConfigPacketHandler.class, UpdateConfigPacket.class, 14, Side.CLIENT);
 		INSTANCE.registerMessage(ProgressionSyncPacketHandler.class, ProgressionSyncPacket.class, 15, Side.CLIENT);
+		INSTANCE.registerMessage(ToggleCyberarmPacketHandler.class, ToggleCyberarmPacket.class, 16, Side.SERVER);
+		INSTANCE.registerMessage(ShootBlockPacketHandler.class, ShootBlockPacket.class, 17, Side.SERVER);
 
 	}
 }

@@ -49,6 +49,7 @@ import flaxbeard.cyberware.client.render.RenderCyberlimbHand;
 import flaxbeard.cyberware.client.render.RenderPlayerCyberware;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
+import flaxbeard.cyberware.common.item.ItemCyberarmTool;
 
 public class EssentialsMissingHandlerClient
 {
@@ -154,7 +155,7 @@ public class EssentialsMissingHandlerClient
 								individualSetups[i] = new Tuple<>(
 													lr.getTexture(limbs[i]), 
 													new Tuple<>(
-															lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel()),
+															lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel(), p),
 															lr.canHoldItems(limbs[i])
 															));
 								setups.add(individualSetups[i]);
@@ -451,7 +452,7 @@ public class EssentialsMissingHandlerClient
 			boolean leftInactive = false;
 			boolean leftBad = false;
 			ItemStack armLeft = cyberware.getLimb(EnumSlot.ARM, EnumSide.LEFT);
-			if (armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isActive(armLeft))
+			if (armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isLimbActive(armLeft))
 			{
 				leftInactive = true;
 			}
@@ -465,7 +466,7 @@ public class EssentialsMissingHandlerClient
 			boolean rightBad = false;
 			ItemStack armRight = cyberware.getLimb(EnumSlot.ARM, EnumSide.RIGHT);
 
-			if (armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isActive(armRight))
+			if (armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isLimbActive(armRight))
 			{
 				rightInactive = true;
 			}
@@ -582,6 +583,8 @@ public class EssentialsMissingHandlerClient
 		}
 	}
 	
+	private boolean wasHittingBlock = false;
+	
 	private void renderItemInFirstPerson(float partialTicks)
 	{
 		ItemRenderer ir = mc.getItemRenderer();
@@ -630,7 +633,7 @@ public class EssentialsMissingHandlerClient
 		{
 			ILimbReplacement lr = ((ILimbReplacement) CyberwareAPI.getCyberware(leftArm));
 			leftTexture = lr.getTexture(leftArm);
-			leftModel = lr.getModel(leftArm, bigArms, renderF.getMainModel(), renderT.getMainModel());
+			leftModel = lr.getModel(leftArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
 		}
 		 
 		ItemStack rightArm = cyberware.getLimb(EnumSlot.ARM, EnumSide.RIGHT);
@@ -640,7 +643,7 @@ public class EssentialsMissingHandlerClient
 		{
 			ILimbReplacement lr = ((ILimbReplacement) CyberwareAPI.getCyberware(rightArm));
 			rightTexture = lr.getTexture(rightArm);
-			rightModel = lr.getModel(rightArm, bigArms, renderF.getMainModel(), renderT.getMainModel());
+			rightModel = lr.getModel(rightArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
 		}
 		
 		ItemStack mainHand = player.getPrimaryHand() == EnumHandSide.RIGHT ? rightArm : leftArm;
@@ -655,40 +658,61 @@ public class EssentialsMissingHandlerClient
 		RenderCyberlimbHand.INSTANCE.leftReplacement = hasReplacementLeft;
 		RenderCyberlimbHand.INSTANCE.rightReplacement = hasReplacementRight;
 		
-		if (mainHand != null &&
-				((ILimbReplacement) CyberwareAPI.getCyberware(mainHand)).showAsOffhandIfMainhandEmpty(mainHand))
+		boolean fg = !(offHand != null && ((ILimbReplacement) CyberwareAPI.getCyberware(offHand)).showAsOffhandIfMainhandEmpty(offHand));
+		if (mainHand != null && CyberwareAPI.getCyberware(mainHand) instanceof ItemCyberarmTool)
 		{
-			float f4 = 0f;
-			float change = (float) Math.sin(f * Math.PI * 2f) * 0.05F;
+			if (!wasHittingBlock && Minecraft.getMinecraft().playerController != null)
+			{
+				if (Minecraft.getMinecraft().playerController.getIsHittingBlock())
+				{
+					wasHittingBlock = true;
+				}
+			}
+			
+			float f4 = fg ? (wasHittingBlock ? 0 : f) : 0;
+			
+			if (f == 0)
+			{
+				wasHittingBlock = false;
+			}
+			float change = fg ? (float) Math.sin(f * Math.PI * 2f) * 0.05F : 0;
 			float f5 = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * partialTicks);
 			RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.MAIN_HAND, f4, null, f5 + change, true);
 		}
-		else
+		else if (flag && !missingSecondArm)
 		{
+			float f3 = enumhand == EnumHand.MAIN_HAND && fg ? f : 0.0F;
+			float f5 = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * partialTicks);
+			RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.MAIN_HAND, f3, itemStackMainHand, f5);
+		}
 
-			if (flag && !missingSecondArm)
+		if (flag1 && !missingArm)
+		{
+			float f4 = enumhand == EnumHand.OFF_HAND ? f : 0.0F;
+			float f6 = 1.0F - (prevEquippedProgressOffHand + (equippedProgressOffHand - prevEquippedProgressOffHand) * partialTicks);
+			RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.OFF_HAND, f4, itemStackOffHand, f6);
+		}
+		else if (offHand != null &&
+				((ILimbReplacement) CyberwareAPI.getCyberware(offHand)).showAsOffhandIfMainhandEmpty(offHand))
+		{
+			if (!wasHittingBlock && Minecraft.getMinecraft().playerController != null)
 			{
-				boolean fg = !(offHand != null && itemStackMainHand == null && ((ILimbReplacement) CyberwareAPI.getCyberware(offHand)).showAsOffhandIfMainhandEmpty(offHand));
-				float f3 = enumhand == EnumHand.MAIN_HAND && fg ? f : 0.0F;
-				float f5 = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * partialTicks);
-				RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.MAIN_HAND, f3, itemStackMainHand, f5);
+				if (Minecraft.getMinecraft().playerController.getIsHittingBlock())
+				{
+					wasHittingBlock = true;
+				}
 			}
-	
-			if (flag1 && !missingArm)
+			
+			float f4 = wasHittingBlock ? 0 : f;
+			
+			if (f == 0)
 			{
-				float f4 = enumhand == EnumHand.OFF_HAND ? f : 0.0F;
-				float f6 = 1.0F - (prevEquippedProgressOffHand + (equippedProgressOffHand - prevEquippedProgressOffHand) * partialTicks);
-				RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.OFF_HAND, f4, itemStackOffHand, f6);
+				wasHittingBlock = false;
 			}
-			else if (offHand != null && itemStackMainHand == null &&
-					((ILimbReplacement) CyberwareAPI.getCyberware(offHand)).showAsOffhandIfMainhandEmpty(offHand))
-			{
-				
-				float f4 = 0f;
-				float change = (float) Math.sin(f * Math.PI * 2f) * 0.05F;
-				float f5 = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * partialTicks);
-				RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.OFF_HAND, f4, null, f5 + change, true);
-			}
+
+			float change = (float) Math.sin(f * Math.PI * 2f) * 0.10F;
+			float f5 = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * partialTicks);
+			RenderCyberlimbHand.INSTANCE.renderItemInFirstPerson(player, partialTicks, f1, EnumHand.OFF_HAND, f4, null, f5 + change, true);
 		}
 		
 		renderF.setMainModel(tempF);

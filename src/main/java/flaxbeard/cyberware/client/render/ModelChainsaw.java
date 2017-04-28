@@ -1,26 +1,22 @@
 package flaxbeard.cyberware.client.render;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import flaxbeard.cyberware.common.item.ItemCyberarmTool;
 
-public class ModelDrill extends ModelPlayer
+public class ModelChainsaw extends ModelPlayer
 {
 	public ModelRenderer rDrillHousing;
 	public ModelRenderer rPipes;
-	public ModelRenderer rBit1;
-	public ModelRenderer rBit2;
-	public ModelRenderer rBit3;
-	public ModelRenderer rBit4;
+	public ModelRenderer rChainBase;
+	public ModelRenderer[] rChainPieces;
 	public ModelRenderer lDrillHousing;
 	public ModelRenderer lPipes;
-	public ModelRenderer lBit1;
-	public ModelRenderer lBit2;
-	public ModelRenderer lBit3;
-	public ModelRenderer lBit4;
+	public ModelRenderer lChainBase;
+	public ModelRenderer[] lChainPieces;
 
-	public ModelDrill()
+	public ModelChainsaw()
 	{
 		super(0F, false);
 		textureHeight = 64;
@@ -35,32 +31,40 @@ public class ModelDrill extends ModelPlayer
 		rPipes.setRotationPoint(-5.0F, 2.0F, 0.0F);
 		
 		rDrillHousing = new ModelRenderer(this, 16, 16);
-		rDrillHousing.addBox(-4.0F, 4.0F, -3.0F, 6, 4, 6, 0);
+		rDrillHousing.addBox(-3.501F, 4.0F, -3.0F, 5, 4, 6, 0);
 		
-		rBit1 = new ModelRenderer(this, 0, 54);
-		rBit1.addBox(-4.0F, 8.0F, -4.0F, 8, 2, 8, 0);
-		rBit1.setRotationPoint(-1F, 0F, 0F);
+		rChainPieces = new ModelRenderer[22];
+		for (int i = 0; i < rChainPieces.length; i++)
+		{
+			rChainPieces[i] = new ModelRenderer(this, 0, 32 + (i % 8) * 2);
+			rChainPieces[i].addBox(-1F, -0.5F, -0.5F, 2, 1, 1, 0);
+			float[] offset = ItemCyberarmTool.getOffset(i);
+			rChainPieces[i].setRotationPoint(offset[0] - 2, offset[1], offset[2]);
+			
+			float[] tO1 = ItemCyberarmTool.getOffset(i - 0.1F);
+			float[] tO2 = ItemCyberarmTool.getOffset(i + 0.1F);
+			float deltaY = tO2[1] - tO1[1];
+			float deltaZ = tO2[2] - tO1[2];
+			float rads = (float) Math.atan2(deltaZ, deltaY);
+			rChainPieces[i].rotateAngleX = rads;
+			
+			if (i % 2 == 0)
+			{
+				ModelRenderer spike = new ModelRenderer(this, 6, 32 + ((i/2) % 4) * 2);
+				spike.addBox(-0.5F, -0.5F, -1.49F, 1, 1, 1);
+				rChainPieces[i].addChild(spike);
+			}
+			bipedRightArm.addChild(rChainPieces[i]);
+		}
+		rChainBase = new ModelRenderer(this, 0, 0);
+		rChainBase.addBox(-1.5F, 7.1F, -1.0F, 1, 9, 2, 0);
 		
-		rBit2 = new ModelRenderer(this, 32, 54);
-		rBit2.addBox(-3.0F, 10.0F, -3.0F, 6, 2, 6, 0);
-		rBit2.setRotationPoint(-1F, 0F, 0F);
-		
-		
-		rBit3 = new ModelRenderer(this, 0, 0);
-		rBit3.addBox(-2.0F, 12.0F, -2.0F, 4, 2, 4, 0);
-		rBit3.setRotationPoint(-1F, 0F, 0F);
-		
-		
-		rBit4 = new ModelRenderer(this, 16, 0);
-		rBit4.addBox(-1.0F, 14.0F, -1.0F, 2, 2, 2, 0);
-		rBit4.setRotationPoint(-1F, 0F, 0F);
-		
+
+
 		bipedRightArm.addChild(rDrillHousing);
-		bipedRightArm.addChild(rBit1);
-		bipedRightArm.addChild(rBit2);
-		bipedRightArm.addChild(rBit3);
-		bipedRightArm.addChild(rBit4);
+		bipedRightArm.addChild(rChainBase);
 		bipedRightArm.addChild(rPipes);
+		
 		
 		bipedLeftArm = new ModelRenderer(this, 40, 16);
 		bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 6, 4, 0);
@@ -72,31 +76,38 @@ public class ModelDrill extends ModelPlayer
 		lPipes.setRotationPoint(-5.0F, 2.0F, 0.0F);
 		
 		lDrillHousing = new ModelRenderer(this, 16, 16);
-		lDrillHousing.addBox(-2.0F, 4.0F, -3.0F, 6, 4, 6, 0);
+		lDrillHousing.addBox(-1.501F, 4.0F, -3.0F, 5, 4, 6, 0);
 		
-		lBit1 = new ModelRenderer(this, 0, 54);
-		lBit1.addBox(-4.0F, 8.0F, -4.0F, 8, 2, 8, 0);
-		lBit1.setRotationPoint(1F, 0F, 0F);
+		lChainPieces = new ModelRenderer[22];
+		for (int i = 0; i < lChainPieces.length; i++)
+		{
+			lChainPieces[i] = new ModelRenderer(this, 0, 32 + (i % 8) * 2);
+			lChainPieces[i].addBox(-1F, -0.5F, -0.5F, 2, 1, 1, 0);
+			float[] offset = ItemCyberarmTool.getOffset(i);
+			lChainPieces[i].setRotationPoint(offset[0], offset[1], offset[2]);
+			
+			float[] tO1 = ItemCyberarmTool.getOffset(i - 0.1F);
+			float[] tO2 = ItemCyberarmTool.getOffset(i + 0.1F);
+			float deltaY = tO2[1] - tO1[1];
+			float deltaZ = tO2[2] - tO1[2];
+			float rads = (float) Math.atan2(deltaZ, deltaY);
+			lChainPieces[i].rotateAngleX = rads;
+			
+			if (i % 2 == 0)
+			{
+				ModelRenderer spike = new ModelRenderer(this, 6, 32 + ((i/2) % 4) * 2);
+				spike.addBox(-0.5F, -0.5F, -1.49F, 1, 1, 1);
+				lChainPieces[i].addChild(spike);
+			}
+			bipedLeftArm.addChild(lChainPieces[i]);
+		}
+		lChainBase = new ModelRenderer(this, 0, 0);
+		lChainBase.addBox(0.5F, 7.1F, -1.0F, 1, 9, 2, 0);
 		
-		lBit2 = new ModelRenderer(this, 32, 54);
-		lBit2.addBox(-3.0F, 10.0F, -3.0F, 6, 2, 6, 0);
-		lBit2.setRotationPoint(1F, 0F, 0F);
-		
-		
-		lBit3 = new ModelRenderer(this, 0, 0);
-		lBit3.addBox(-2.0F, 12.0F, -2.0F, 4, 2, 4, 0);
-		lBit3.setRotationPoint(1F, 0F, 0F);
-		
-		
-		lBit4 = new ModelRenderer(this, 16, 0);
-		lBit4.addBox(-1.0F, 14.0F, -1.0F, 2, 2, 2, 0);
-		lBit4.setRotationPoint(1F, 0F, 0F);
-		
+
+
 		bipedLeftArm.addChild(lDrillHousing);
-		bipedLeftArm.addChild(lBit1);
-		bipedLeftArm.addChild(lBit2);
-		bipedLeftArm.addChild(lBit3);
-		bipedLeftArm.addChild(lBit4);
+		bipedLeftArm.addChild(lChainBase);
 		bipedLeftArm.addChild(lPipes);
 		
 		
@@ -122,6 +133,5 @@ public class ModelDrill extends ModelPlayer
 		this.bipedLeftArm.rotateAngleX *= 0.3;
 		this.bipedLeftArm.rotateAngleX -= Math.toRadians(40);
     }
-    
 
 }

@@ -135,7 +135,7 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbRep
 	
 	
 	@Override
-	public boolean isActive(ItemStack stack)
+	public boolean isLimbActive(ItemStack stack)
 	{
 		NBTTagCompound data = CyberwareAPI.getCyberwareNBT(stack);
 		if (!data.hasKey("active"))
@@ -160,7 +160,7 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbRep
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny)
+	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
 	{
 		if (wideArms)
 		{

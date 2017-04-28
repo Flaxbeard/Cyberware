@@ -24,11 +24,12 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,14 +41,13 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.ICyberwareUserData;
-import flaxbeard.cyberware.api.item.ILimbReplacement;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
+import flaxbeard.cyberware.api.item.ILimbReplacement;
 import flaxbeard.cyberware.client.ClientUtils;
 import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
-import flaxbeard.cyberware.common.item.ItemCyberlimb;
 
 public class EssentialsMissingHandler
 {
@@ -125,13 +125,13 @@ public class EssentialsMissingHandler
 		}
 		
 		ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
-		if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isActive(legLeft))
+		if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isLimbActive(legLeft))
 		{
 			numMissingLegs++;
 		}
 		
 		ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
-		if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isActive(legRight))
+		if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isLimbActive(legRight))
 		{
 			numMissingLegs++;
 		}
@@ -269,13 +269,13 @@ public class EssentialsMissingHandler
 			}
 			
 			ItemStack legLeft = cyberware.getLimb(EnumSlot.LEG, EnumSide.LEFT);
-			if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isActive(legLeft))
+			if (legLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legLeft)).isLimbActive(legLeft))
 			{
 				numMissingLegs++;
 			}
 			
 			ItemStack legRight = cyberware.getLimb(EnumSlot.LEG, EnumSide.RIGHT);
-			if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isActive(legRight))
+			if (legRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(legRight)).isLimbActive(legRight))
 			{
 				numMissingLegs++;
 			}
@@ -456,6 +456,17 @@ public class EssentialsMissingHandler
 	}
 	
 	@SubscribeEvent
+	public void handleLeftClickEntity(AttackEntityEvent event)
+	{
+		EntityLivingBase e = event.getEntityLiving();
+		if (CyberwareAPI.hasCapability(e))
+		{
+			ICyberwareUserData cyberware = CyberwareAPI.getCapability(e);
+			processEvent(event, EnumHand.MAIN_HAND, event.getEntityPlayer(), cyberware, 2);
+		}
+	}
+	
+	@SubscribeEvent
 	public void handleRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
 		EntityLivingBase e = event.getEntityLiving();
@@ -505,8 +516,8 @@ public class EssentialsMissingHandler
 		ItemStack armRight = cyberware.getLimb(EnumSlot.ARM, EnumSide.RIGHT);
 		if (check == 0)
 		{
-			leftInactive = armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isActive(armLeft);
-			rightInactive = armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isActive(armRight);
+			leftInactive = armLeft != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armLeft)).isLimbActive(armLeft);
+			rightInactive = armRight != null && !((ILimbReplacement) CyberwareAPI.getCyberware(armRight)).isLimbActive(armRight);
 		}
 		else if (check == 1)
 		{

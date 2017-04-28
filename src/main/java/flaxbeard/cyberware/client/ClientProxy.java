@@ -19,6 +19,7 @@ import flaxbeard.cyberware.client.gui.tablet.TabletContent;
 import flaxbeard.cyberware.client.render.CyberwareMeshDefinition;
 import flaxbeard.cyberware.client.render.RenderBytebug;
 import flaxbeard.cyberware.client.render.RenderCyberZombie;
+import flaxbeard.cyberware.client.render.RenderThrownBlock;
 import flaxbeard.cyberware.client.render.TileEntityBeaconLargeRenderer;
 import flaxbeard.cyberware.client.render.TileEntityEngineeringRenderer;
 import flaxbeard.cyberware.client.render.TileEntityRFIDContainerRenderer;
@@ -36,6 +37,7 @@ import flaxbeard.cyberware.common.block.tile.TileEntitySurgery;
 import flaxbeard.cyberware.common.block.tile.TileEntitySurgeryChamber;
 import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
+import flaxbeard.cyberware.common.entity.EntityThrownBlock;
 import flaxbeard.cyberware.common.handler.CreativeMenuHandler;
 import flaxbeard.cyberware.common.handler.CyberwareMenuHandler;
 import flaxbeard.cyberware.common.handler.EssentialsMissingHandlerClient;
@@ -68,6 +70,7 @@ public class ClientProxy extends CommonProxy
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityCyberZombie.class, RenderCyberZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBytebug.class, RenderBytebug::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityThrownBlock.class, RenderThrownBlock::new);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityScanner.class, new TileEntityScannerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEngineeringTable.class, new TileEntityEngineeringRenderer());

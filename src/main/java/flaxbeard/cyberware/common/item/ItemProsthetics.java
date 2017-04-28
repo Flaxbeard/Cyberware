@@ -51,7 +51,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 
 
 	@Override
-	public boolean isActive(ItemStack stack)
+	public boolean isLimbActive(ItemStack stack)
 	{
 		return true;
 	}
@@ -67,7 +67,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny)
+	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
 	{
 		if (wideArms)
 		{
