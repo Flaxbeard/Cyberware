@@ -21,6 +21,9 @@ public class PowerDisplay extends HudElementBase
 	private static int cachedTotal = 0;
 	private static float cachedPercent = 0;
 
+	private static int cachedProd = 0;
+	private static int cachedCons = 0;
+	
 	public PowerDisplay()
 	{
 		super("cyberware:power");
@@ -53,6 +56,8 @@ public class PowerDisplay extends HudElementBase
 				cachedPercent = data.getPercentFull();
 				cachedCap = data.getCapacity();
 				cachedTotal = data.getStoredPower();
+				cachedProd = data.getProduction();
+				cachedCons = data.getConsumption();
 			}
 			
 			float[] color = CyberwareAPI.getHUDColor();
@@ -79,7 +84,11 @@ public class PowerDisplay extends HudElementBase
 	
 					String output = cachedTotal + " / " + cachedCap;
 					int textX = flipHoriz ? x + getWidth() - 15 - fr.getStringWidth(output) : x + 15;
-					fr.drawStringWithShadow(output, textX, y + 8, danger ? 0xFF0000 : colorHex);
+					fr.drawStringWithShadow(output, textX, y + 4, danger ? 0xFF0000 : colorHex);
+					
+					output = "-" + cachedCons + " / +" + cachedProd;
+					textX = flipHoriz ? x + getWidth() - 15 - fr.getStringWidth(output) : x + 15;
+					fr.drawStringWithShadow(output, textX, y + 14, danger ? 0xFF0000 : colorHex);
 				}
 			}
 			

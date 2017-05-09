@@ -31,6 +31,8 @@ public interface ICyberwareUserData
 	public float getPercentFull();
 	public int getCapacity();
 	public int getStoredPower();
+	public int getProduction();
+	public int getConsumption();
 	public boolean usePower(ItemStack stack, int amount);
 	public List<ItemStack> getPowerOutages();
 	public List<Integer> getPowerOutageTimes();
