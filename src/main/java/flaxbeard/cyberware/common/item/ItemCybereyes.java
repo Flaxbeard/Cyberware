@@ -1,6 +1,7 @@
 package flaxbeard.cyberware.common.item;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -84,8 +85,12 @@ public class ItemCybereyes extends ItemCyberware
 			
 			if (isBlind && !e.isCreative())
 			{
+				GlStateManager.pushMatrix();
+				GlStateManager.enableBlend();
+				GlStateManager.color(1F, 1F, 1F, .9F);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(EssentialsMissingHandler.BLACK_PX);
 				ClientUtils.drawTexturedModalRect(0, 0, 0, 0, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+				GlStateManager.popMatrix();
 			}
 		}
 	}

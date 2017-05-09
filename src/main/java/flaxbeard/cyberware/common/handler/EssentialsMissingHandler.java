@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -381,8 +382,12 @@ public class EssentialsMissingHandler
 				
 				if (!cyberware.hasEssential(EnumSlot.EYES) && !e.isCreative())
 				{
+					GlStateManager.pushMatrix();
+					GlStateManager.enableBlend();
+					GlStateManager.color(1F, 1F, 1F, .9F);
 					Minecraft.getMinecraft().getTextureManager().bindTexture(BLACK_PX);
 					ClientUtils.drawTexturedModalRect(0, 0, 0, 0, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+					GlStateManager.popMatrix();
 				}
 			}
 			
