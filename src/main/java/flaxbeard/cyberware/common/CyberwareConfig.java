@@ -59,6 +59,8 @@ public class CyberwareConfig
 	
 	public static boolean DEFAULT_DROP = false;
 	public static boolean DEFAULT_KEEP = false;
+	
+	public static float DROP_CHANCE = 100F;
 
 	public static boolean KATANA = true;
 	public static boolean CLOTHES = true;
@@ -139,7 +141,8 @@ public class CyberwareConfig
 		
 		DEFAULT_DROP = config.getBoolean("Default for gamerule cyberware_dropCyberware", C_GAMERULES, DEFAULT_DROP, "Determines if players drop their Cyberware on death. Does not change settings on existing worlds, use /gamerule for that. Overridden if cyberware_keepCyberware is true");
 		DEFAULT_KEEP = config.getBoolean("Default for gamerule cyberware_keepCyberware", C_GAMERULES, DEFAULT_KEEP, "Determines if players keep their Cyberware between lives. Does not change settings on existing worlds, use /gamerule for that.");
-
+		DROP_CHANCE = config.getFloat("Chance of successful drop", C_GAMERULES, DROP_CHANCE, 0F, 100F, "If dropCyberware enabled, chance for a piece of Cyberware to successfuly drop instead of being destroyed.");
+		
 		ENGINEERING_CHANCE = config.getFloat("Chance of blueprint from Engineering Table", C_MACHINES, ENGINEERING_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE = config.getFloat("Chance of blueprint from Scanner", C_MACHINES, SCANNER_CHANCE, 0, 100F, "");
 		SCANNER_CHANCE_ADDL = config.getFloat("Additive chance for Scanner per extra item", C_MACHINES, SCANNER_CHANCE_ADDL, 0, 100F, "");

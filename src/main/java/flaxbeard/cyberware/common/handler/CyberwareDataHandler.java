@@ -133,7 +133,7 @@ public class CyberwareDataHandler
 									}
 								}
 								
-								if (!found)
+								if (!found && p.worldObj.rand.nextFloat() < CyberwareConfig.DROP_CHANCE / 100F)
 								{
 									EntityItem item = new EntityItem(p.worldObj, p.posX, p.posY, p.posZ, toDrop);
 									p.worldObj.spawnEntityInWorld(item);
