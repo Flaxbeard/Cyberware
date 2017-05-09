@@ -10,8 +10,6 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.GL11;
 
-import vazkii.botania.client.core.helper.ShaderHelper;
-
 public class ShaderUtil
 {
 	private static final int VERT = ARBVertexShader.GL_VERTEX_SHADER_ARB;
@@ -21,13 +19,12 @@ public class ShaderUtil
 	
 	public static void init()
 	{
-		alpha = createShader(null, "/assets/cyberware/shaders/greyscale.frag");
+		alpha = createShader(null, "/assets/cyberware/shaders/alpha.frag");
 	}
 	
 	public static void alpha(float av)
 	{
 		ARBShaderObjects.glUseProgramObjectARB(alpha);
-		
 		int a = ARBShaderObjects.glGetUniformLocationARB(alpha, "alpha");
 		ARBShaderObjects.glUniform1fARB(a, av);
 	}
@@ -113,7 +110,7 @@ public class ShaderUtil
 	
 	private static String readFileAsString(String filename) throws Exception
 	{
-		InputStream in = ShaderHelper.class.getResourceAsStream(filename);
+		InputStream in = ShaderUtil.class.getResourceAsStream(filename);
 
 		if(in == null)
 			return "";

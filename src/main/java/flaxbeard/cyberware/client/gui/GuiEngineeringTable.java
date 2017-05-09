@@ -24,6 +24,7 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.item.IBlueprint;
 import flaxbeard.cyberware.client.ShaderUtil;
 import flaxbeard.cyberware.common.CyberwareConfig;
+import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 import flaxbeard.cyberware.common.block.tile.TileEntityComponentBox;
 import flaxbeard.cyberware.common.block.tile.TileEntityEngineeringTable;
@@ -231,7 +232,7 @@ public class GuiEngineeringTable extends GuiContainer
 		}
 		
 		GlStateManager.pushMatrix();
-		ShaderUtil.alpha(1F);
+		ShaderUtil.alpha(0.35F);
 		ItemStack blueprintStack = engineering.slots.getStackInSlot(8);
 		if (blueprintStack != null && blueprintStack.getItem() instanceof IBlueprint)
 		{
@@ -274,14 +275,13 @@ public class GuiEngineeringTable extends GuiContainer
 				{
 					if (engineering.slots.getStackInSlot(k) == null)
 					{
-						this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, toRender.get(index), 71 + 18 * (k % 2), -1 + 18 * (k / 2));
-						if (toRender.get(index).stackSize > 1)
-						{
-							FontRenderer font = toRender.get(index).getItem().getFontRenderer(toRender.get(index));
-							if (font == null) font = fontRendererObj;
-							
-							this.itemRender.renderItemOverlayIntoGUI(font, toRender.get(index), 71 + 18 * (k % 2), -1 + 18 * (k / 2), Integer.toString(toRender.get(index).stackSize));
-						}
+						this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, toRender.get(index), offset + 71 + 18 * (k % 2), -1 + 18 * (k / 2));
+
+						FontRenderer font = toRender.get(index).getItem().getFontRenderer(toRender.get(index));
+						if (font == null) font = fontRendererObj;
+						
+						this.itemRender.renderItemOverlayIntoGUI(font, toRender.get(index), offset + 71 + 18 * (k % 2), -1 + 18 * (k / 2), "+" + Integer.toString(toRender.get(index).stackSize));
+					
 						index++;
 					}
 				}
@@ -289,6 +289,29 @@ public class GuiEngineeringTable extends GuiContainer
 		}
 		ShaderUtil.releaseShader();
 		GlStateManager.popMatrix();
+
+		if (this.archive() != null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0, 100F);
+
+			TileEntityBlueprintArchive archive = archive();
+			for (int h = 0; h < archive.slots.getSlots(); h++)
+			{
+				ItemStack item = archive.slots.getStackInSlot(h);
+
+				if (item != null && item.getItem() instanceof IBlueprint)
+				{
+					IBlueprint blueprint = (IBlueprint) item.getItem();
+					ItemStack prod = blueprint.getIconForDisplay(item);
+					this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, prod, offset + 181 + 18 * (h % 3), 22 + 18 * (h / 3));
+				}
+			}
+			
+			
+			GlStateManager.popMatrix();
+		}
+		
 		
 	}
 

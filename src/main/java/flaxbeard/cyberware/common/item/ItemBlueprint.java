@@ -238,4 +238,18 @@ public class ItemBlueprint extends Item implements IBlueprint
 		}
 		return null;
 	}
+	
+	@Override
+	public ItemStack getIconForDisplay(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			NBTTagCompound comp = stack.getTagCompound();
+			if (comp.hasKey("blueprintItem"))
+			{
+				return ItemStack.loadItemStackFromNBT(comp.getCompoundTag("blueprintItem"));
+			}
+		}
+		return null;
+	}
 }

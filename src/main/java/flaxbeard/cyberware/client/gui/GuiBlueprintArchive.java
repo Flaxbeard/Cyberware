@@ -3,10 +3,12 @@ package flaxbeard.cyberware.client.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
+import flaxbeard.cyberware.api.item.IBlueprint;
 import flaxbeard.cyberware.common.block.tile.TileEntityBlueprintArchive;
 
 @SideOnly(Side.CLIENT)
@@ -38,6 +40,24 @@ public class GuiBlueprintArchive extends GuiContainer
 	{
 		this.fontRendererObj.drawString(this.archive.getDisplayName().getUnformattedText(), 8, 6, 4210752);
 		this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, 100F);
+
+		for (int h = 0; h < archive.slots.getSlots(); h++)
+		{
+			ItemStack item = archive.slots.getStackInSlot(h);
+
+			if (item != null && item.getItem() instanceof IBlueprint)
+			{
+				IBlueprint blueprint = (IBlueprint) item.getItem();
+				ItemStack prod = blueprint.getIconForDisplay(item);
+				this.itemRender.renderItemAndEffectIntoGUI(this.mc.thePlayer, prod, 8 + 18 * (h % 9), 18 + 18 * (h / 9));
+			}
+		}
+		
+		
+		GlStateManager.popMatrix();
 	}
 
 	/**
