@@ -6,4 +6,8 @@ public interface IBlueprint
 {
 	public ItemStack getResult(ItemStack stack, ItemStack[] items);
 	public ItemStack[] consumeItems(ItemStack stack, ItemStack[] items);
+	default ItemStack[] getRequirementsForDisplay(ItemStack stack)
+	{
+		return null;
+	}
 }

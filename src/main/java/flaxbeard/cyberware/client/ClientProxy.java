@@ -75,6 +75,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(CreativeMenuHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(CyberwareMenuHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(HudHandler.INSTANCE);
+		ShaderUtil.init();
 
 		if (CyberwareConfig.CLOTHES)
 		{
