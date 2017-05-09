@@ -42,6 +42,7 @@ public class CyberwareConfig
 	public static int ZOMBIE_MIN_PACK = 1;
 	public static int ZOMBIE_MAX_PACK = 1;
 	public static boolean NO_ZOMBIES = false;
+	public static boolean NO_CLOTHES = false;
 	
 	public static int HUDR = 76;
 	public static int HUDG = 255;
@@ -130,6 +131,7 @@ public class CyberwareConfig
 		ZOMBIE_WEIGHT = config.getInt("Spawning weight of Cyberzombies", C_MOBS, ZOMBIE_WEIGHT, 0, Integer.MAX_VALUE, "Vanilla Zombie = 100, Enderman = 10, Witch = 5");
 		ZOMBIE_MIN_PACK = config.getInt("Minimum Cyberzombie pack size", C_MOBS, ZOMBIE_MIN_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 1, Witch = 1");
 		ZOMBIE_MAX_PACK = config.getInt("Maximum Cyberzombie pack size", C_MOBS, ZOMBIE_MAX_PACK, 0, Integer.MAX_VALUE, "Vanilla Zombie = 4, Enderman = 4, Witch = 1");
+		NO_CLOTHES = config.getBoolean("Prevent mobs from spawning with Cyberware clothing", C_MOBS, NO_CLOTHES, "");
 
 		DROP_RARITY = config.getFloat("Percent chance a Cyberzombie drops an item", C_MOBS, DROP_RARITY, 0F, 100F, "");
 		

@@ -194,7 +194,7 @@ public class CyberwareDataHandler
 				return;
 			}
 		}
-		if (event.getEntityLiving() instanceof EntityZombie && CyberwareConfig.CLOTHES && !(event.getEntityLiving() instanceof EntityPigZombie))
+		if (event.getEntityLiving() instanceof EntityZombie && CyberwareConfig.CLOTHES && !CyberwareConfig.NO_CLOTHES && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
 			EntityZombie zom = (EntityZombie) event.getEntityLiving();
 
