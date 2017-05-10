@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import am2.api.ArsMagicaAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +51,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private List<ItemStack> outOfPower = new ArrayList<ItemStack>();
 	private List<Integer> outOfPowerTimes = new ArrayList<Integer>();
 	private List<ItemStack> specialBatteries = new ArrayList<ItemStack>();
-	private int essence = 0;
+	private int missingEssence = 0;
 	private int maxEssence = 0;
 	private List<ItemStack> activeItems = new ArrayList<ItemStack>();
 	private List<ItemStack> hudjackItems = new ArrayList<ItemStack>();
@@ -80,7 +81,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 				}
 			}
 		}
-		essence = maxEssence = CyberwareConfig.ESSENCE;
+		missingEssence = 0;
 		for (int i = 0; i < wares.length; i++)
 		{
 			wares[i] = CyberwareConfig.getStartingItems(EnumSlot.values()[i]).clone();
@@ -581,7 +582,7 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		compound.setTag("powerBufferLast", writeMap(this.powerBufferLast));
 		compound.setInteger("powerCap", this.powerCap);
 		compound.setInteger("storedPower", this.storedPower);
-		compound.setInteger("essence", essence);
+		compound.setInteger("missingEssence", missingEssence);
 		compound.setTag("hud", hudData);
 		compound.setInteger("color", hudColor);
 		compound.setBoolean("hasOpenedRadialMenu", hasOpenedRadialMenu);
@@ -637,7 +638,14 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 		powerBufferLast = readMap((NBTTagList) tag.getTag("powerBufferLast"));
 
 		storedPower = tag.getInteger("storedPower");
-		essence = tag.getInteger("essence");
+		if (tag.hasKey("essence"))
+		{
+			missingEssence = getMaxEssence() - tag.getInteger("essence");
+		}
+		else
+		{
+			missingEssence = tag.getInteger("missingEssence");
+		}
 		hudData = tag.getCompoundTag("hud");
 		hasOpenedRadialMenu = tag.getBoolean("hasOpenedRadialMenu");
 		NBTTagList essentialList = (NBTTagList) tag.getTag("discard");
@@ -774,22 +782,43 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	private boolean isImmune = false;
 
 	@Override
+	@Deprecated
 	public int getEssence()
 	{
-		return essence;
+		return getMaxEssence() - missingEssence;
 	}
 	
 	@Override
+	@Deprecated
 	public int getMaxEssence()
 	{
 		return CyberwareConfig.ESSENCE;
 		//return maxEssence; TODO
 	}
-
+	
 	@Override
+	@Deprecated
 	public void setEssence(int e)
 	{
-		essence = e;
+		missingEssence = getMaxEssence() - e;
+	}
+	
+	@Override
+	public int getMaxTolerance(EntityLivingBase e)
+	{
+		return (int) e.getAttributeMap().getAttributeInstance(CyberwareAPI.TOLERANCE_ATTR).getAttributeValue();
+	}
+	
+	@Override
+	public int getTolerance(EntityLivingBase e)
+	{
+		return getMaxTolerance(e) - missingEssence;
+	}
+	
+	@Override
+	public void setTolerance(EntityLivingBase e, int amnt)
+	{
+		missingEssence = getMaxTolerance(e) - amnt;
 	}
 
 	@Override

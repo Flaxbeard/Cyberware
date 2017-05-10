@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -26,6 +28,7 @@ import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.api.item.IMenuItem;
+import flaxbeard.cyberware.common.CyberwareConfig;
 import flaxbeard.cyberware.common.network.CyberwareSyncPacket;
 
 public final class CyberwareAPI
@@ -50,6 +53,11 @@ public final class CyberwareAPI
 
 	@CapabilityInject(ICyberwareUserData.class)
 	public static final Capability<ICyberwareUserData> CYBERWARE_CAPABILITY = null;
+	
+	/**
+	 * Maximum Tolerance, per-player
+	 */
+	public static final IAttribute TOLERANCE_ATTR = new RangedAttribute(null, "cyberware.tolerance", CyberwareConfig.ESSENCE, 0.0f, Double.MAX_VALUE).setDescription("Tolerance").setShouldWatch(true);
 	
 	public static Map<ItemStack, ICyberware> linkedWare = new HashMap<ItemStack, ICyberware>();
 	
