@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
@@ -100,6 +101,7 @@ public class EssentialsMissingHandler
 		
 		if (cyberware.getTolerance(e) < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
 		{
+			e.addPotionEffect(new PotionEffect(CyberwareContent.rejectionEffect, 110, 0, true, false));
 			e.attackEntityFrom(lowessence, 2F);
 		}
 					

@@ -133,6 +133,7 @@ public class CyberwareContent
 	public static Item blueprint;
 
 	public static Potion neuropozyneEffect;
+	public static Potion rejectionEffect;
 
 	public static List<Item> items;
 	public static List<Block> blocks;
@@ -166,7 +167,8 @@ public class CyberwareContent
 			}
 		}
 		
-		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
+		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d, 0);
+		rejectionEffect = new PotionNeuropozyne("rejection", true, 0xFF0000, 1);
 
 		blueprintArchive = new BlockBlueprintArchive();
 		componentBox = new BlockComponentBox();
