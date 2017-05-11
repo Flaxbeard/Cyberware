@@ -30,18 +30,7 @@ public class ItemBodyPart extends ItemCyberware implements ISidedLimb
 	@Override
 	public boolean isIncompatible(ItemStack stack, ItemStack other)
 	{
-		if (stack.getItemDamage() <= 7)
-		{
-			return CyberwareAPI.getCyberware(other).isEssential(other);
-		}
-		
-		ICyberware ware = CyberwareAPI.getCyberware(other);
-		
-		if (ware instanceof ISidedLimb)
-		{
-			return ware.isEssential(other) && ((ISidedLimb) ware).getSide(other) == this.getSide(stack);
-		}
-		return false;
+		return CyberwareAPI.getCyberware(other).isEssential(other);
 	}
 	
 	@Override

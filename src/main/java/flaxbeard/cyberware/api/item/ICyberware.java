@@ -90,10 +90,14 @@ public interface ICyberware
 		SKIN(18, "skin"),
 		MUSCLE(19, "muscle"),
 		BONE(20, "bone"),
-		ARM(21, "arm", true, true),
-		HAND(22, "hand", true, false),
-		LEG(23, "leg", true, true),
-		FOOT(24, "foot", true, false);
+		ARM(21, "armRight"),
+		HAND(22, "handRight", false, false),
+		LEG(23, "legRight"),
+		FOOT(24, "footRight", false, false),
+		ARMLEFT(25, "armLeft"),
+		HANDLEFT(26, "handLeft", false, false),
+		LEGLEFT(27, "legLeft"),
+		FOOTLEFT(28, "footLeft", false, false);
 		
 		private final int slotNumber;
 		private final String name;
@@ -104,7 +108,7 @@ public interface ICyberware
 		{
 			this.slotNumber = slot;
 			this.name = name;
-			this.sidedSlot = sidedSlot;
+			this.sidedSlot = false;
 			this.hasEssential = hasEssential;
 		}
 		
@@ -159,8 +163,10 @@ public interface ICyberware
 		return "cyberware.gui.tablet.catalog.sort.other";
 	}
 
+	@Deprecated
 	public interface ISidedLimb
 	{
+		@Deprecated
 		public EnumSide getSide(ItemStack stack);
 		
 		public enum EnumSide

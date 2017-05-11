@@ -41,7 +41,7 @@ import flaxbeard.cyberware.common.block.BlockRFIDContainer;
 import flaxbeard.cyberware.common.block.BlockScanner;
 import flaxbeard.cyberware.common.block.BlockSurgery;
 import flaxbeard.cyberware.common.block.BlockSurgeryChamber;
-import flaxbeard.cyberware.common.effect.PotionNeuropozyne;
+import flaxbeard.cyberware.common.effect.PotionCyberware;
 import flaxbeard.cyberware.common.entity.EntityBytebug;
 import flaxbeard.cyberware.common.entity.EntityCyberZombie;
 import flaxbeard.cyberware.common.entity.EntityThrownBlock;
@@ -146,6 +146,7 @@ public class CyberwareContent
 	public static Item blueprint;
 
 	public static Potion neuropozyneEffect;
+	public static Potion rejectionEffect;
 
 	public static List<Item> items;
 	public static List<Block> blocks;
@@ -186,9 +187,12 @@ public class CyberwareContent
 		
 		EntityRegistry.registerModEntity(EntityThrownBlock.class, "thrown_block", 2, Cyberware.INSTANCE, 80, 3, true);
 
-		
-		neuropozyneEffect = new PotionNeuropozyne("neuropozyne", false, 0x47453d);
+		// Potion Effects
+		neuropozyneEffect = new PotionCyberware("neuropozyne", false, 0x47453d, 0);
+		rejectionEffect = new PotionCyberware("rejection", true, 0xFF0000, 1);
 
+		
+		// Blocks
 		blueprintArchive = new BlockBlueprintArchive();
 		componentBox = new BlockComponentBox();
 
@@ -206,6 +210,7 @@ public class CyberwareContent
 		blueprint = new ItemBlueprint("blueprint");
 		component = new ItemCyberwareBase("component", "actuator", "reactor", "titanium", "ssc", "plating", "fiberoptics", "fullerene", "synthnerves", "storage", "microelectric");
 		
+		// Clothing
 		if (CyberwareConfig.CLOTHES)
 		{
 			shadesMat1 = EnumHelper.addArmorMaterial("SHADES", "cyberware:vanity", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
@@ -224,6 +229,7 @@ public class CyberwareContent
 			trenchcoat = new ItemArmorCyberware("trenchcoat", trenchMat, 0, EntityEquipmentSlot.CHEST);
 		}
 
+		// Weapons
 		if (CyberwareConfig.KATANA)
 		{
 			katanaMat = EnumHelper.addToolMaterial("KATANA", 
@@ -237,10 +243,11 @@ public class CyberwareContent
 			katana = new ItemSwordCyberware("katana", katanaMat);
 		}
 		
-		bodyPart = new ItemBodyPart("bodyPart", 
-				new EnumSlot[] { EnumSlot.EYES, EnumSlot.CRANIUM, EnumSlot.HEART, EnumSlot.LUNGS, EnumSlot.LOWER_ORGANS, EnumSlot.SKIN, EnumSlot.MUSCLE, EnumSlot.BONE, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
-				new String[] { "eyes", "brain", "heart", "lungs", "stomach", "skin", "muscles", "bones", "armLeft", "armRight", "legLeft", "legRight"});
 		
+		// Cyberware
+		bodyPart = new ItemBodyPart("bodyPart", 
+				new EnumSlot[] { EnumSlot.EYES, EnumSlot.CRANIUM, EnumSlot.HEART, EnumSlot.LUNGS, EnumSlot.LOWER_ORGANS, EnumSlot.SKIN, EnumSlot.MUSCLE, EnumSlot.BONE, EnumSlot.ARMLEFT, EnumSlot.ARM, EnumSlot.LEGLEFT, EnumSlot.LEG },
+				new String[] { "eyes", "brain", "heart", "lungs", "stomach", "skin", "muscles", "bones", "armLeft", "armRight", "legLeft", "legRight"});
 		
 		cybereyes = new ItemCybereyes("cybereyes", EnumSlot.EYES);
 		cybereyes.setEssenceCost(8); // 0.2.0 Changed from 10
@@ -403,11 +410,11 @@ public class CyberwareContent
 				);
 		
 		prosthetics = new ItemProsthetics("prosthetics", 
-				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
+				new EnumSlot[] { EnumSlot.ARMLEFT, EnumSlot.ARM, EnumSlot.LEGLEFT, EnumSlot.LEG },
 				new String[] { "prosArmLeft", "prosArmRight", "prosLegLeft", "prosLegRight" });
 		
 		toolArms = new ItemCyberarmTool("toolArms", 
-				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM, EnumSlot.ARM },
+				new EnumSlot[] { EnumSlot.ARMLEFT, EnumSlot.ARM, EnumSlot.ARMLEFT, EnumSlot.ARM, EnumSlot.ARMLEFT, EnumSlot.ARM },
 				new String[] { "drillLeft", "drillRight", "sawLeft", "sawRight", "lifterLeft", "lifterRight" });
 		toolArms.setEssenceCost(25, 25, 25, 25, 25, 25);
 		
@@ -423,7 +430,7 @@ public class CyberwareContent
 		ItemStack cell = new ItemStack(component, 1, 9);
 
 		
-		
+		// Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(surgeryChamber.ib),
 				"III",
 				"IBI",
@@ -516,6 +523,9 @@ public class CyberwareContent
 					Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "blockRedstone", Character.valueOf('P'), new ItemStack(Items.DIAMOND_PICKAXE), Character.valueOf('S'), new ItemStack(Items.DIAMOND_SWORD), Character.valueOf('A'), new ItemStack(Items.DIAMOND_AXE)
 					));
 		}
+		
+		
+		// Integration
 		
 		if (Loader.isModLoaded("Botania"))
 		{

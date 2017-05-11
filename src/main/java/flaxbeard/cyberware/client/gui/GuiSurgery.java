@@ -223,7 +223,9 @@ public class GuiSurgery extends GuiContainer
 	private GuiButtonSurgeryLocation[] crossSectionIcons = new GuiButtonSurgeryLocation[3];
 	private GuiButtonSurgeryLocation[] armIcons = new GuiButtonSurgeryLocation[2];
 	private GuiButtonSurgeryLocation[] legIcons = new GuiButtonSurgeryLocation[2];
-
+	private GuiButtonSurgeryLocation[] leftArmIcons = new GuiButtonSurgeryLocation[2];
+	private GuiButtonSurgeryLocation[] leftLegIcons = new GuiButtonSurgeryLocation[2];
+	
 	private PageConfiguration current;
 	private PageConfiguration target;
 	private PageConfiguration ease;
@@ -265,7 +267,7 @@ public class GuiSurgery extends GuiContainer
 	private float[] lastDownX = new float[5];
 	private float rotateVelocity = 0;
 	
-	private PageConfiguration[] configs = new PageConfiguration[25];
+	private PageConfiguration[] configs = new PageConfiguration[29];
 	List<SlotSurgery> visibleSlots = new ArrayList<SlotSurgery>();
 	private int parent;
 	
@@ -283,10 +285,10 @@ public class GuiSurgery extends GuiContainer
 		configs[0] = new PageConfiguration(0, 0, 0, 50, 35, 35, -50, 10);
 		configs[1] = new PageConfiguration(50, 0, 210, 150, 0, 0, -150, 0);
 		configs[2] = new PageConfiguration(15, 0, 100, 130, 0, 0, -150, 0);
-		configs[3] = new PageConfiguration(-50, 0, 100, 130, 0, 0, -150, 0);
-		configs[4] = new PageConfiguration(50, 0, 100, 130, 0, 0, -150, 0);
-		configs[5] = new PageConfiguration(-70, 0, 10, 130, 0, 0, -150, 0);
-		configs[6] = new PageConfiguration(70, 0, 10, 130, 0, 0, -150, 0);
+		configs[3] = new PageConfiguration(50, 0, 100, 130, 0, 0, -150, 0);
+		configs[4] = new PageConfiguration(-50, 0, 100, 130, 0, 0, -150, 0);
+		configs[5] = new PageConfiguration(70, 0, 10, 130, 0, 0, -150, 0);
+		configs[6] = new PageConfiguration(-70, 0, 10, 130, 0, 0, -150, 0);
 		configs[7] = new PageConfiguration(0, 0, 0, 50, 170, 125, 0, 0);
 
 		configs[11] = new PageConfiguration(160, 0, 300, 200);
@@ -300,11 +302,17 @@ public class GuiSurgery extends GuiContainer
 		configs[19] = new PageConfiguration(0, 0, 0, 50, 170, 180, 0, 0);
 		configs[20] = new PageConfiguration(0, 0, 0, 50, 170, 180, 0, 0);
 
-		configs[21] = new PageConfiguration(-70, 0, 180, 200);
-		configs[22] = new PageConfiguration(-70, 0, 120, 220);
+		configs[21] = new PageConfiguration(70, 0, 180, 200);
+		configs[22] = new PageConfiguration(70, 0, 120, 220);
 		
 		configs[23] = new PageConfiguration(10, 0, 20, 200);
 		configs[24] = new PageConfiguration(10, 0, -30, 220);
+		
+		configs[25] = new PageConfiguration(-70, 0, 180, 200);
+		configs[26] = new PageConfiguration(-70, 0, 120, 220);
+		
+		configs[27] = new PageConfiguration(-10, 0, 20, 200);
+		configs[28] = new PageConfiguration(-10, 0, -30, 220);
 
 		current = ease = target = configs[0].copy();
 		
@@ -320,10 +328,11 @@ public class GuiSurgery extends GuiContainer
 		int j = (this.height - this.ySize) / 2;
 		this.buttonList.add(bodyIcons[0] = new GuiButtonSurgery(1, i + (this.xSize / 2) - 18, j + 8, 36, 27));
 		this.buttonList.add(bodyIcons[1] = new GuiButtonSurgery(2, i + (this.xSize / 2) - 13, j + 35, 26, 38));
-		this.buttonList.add(bodyIcons[2] = new GuiButtonSurgery(3, i + (this.xSize / 2) - 8 + 21, j + 35, 16, 38));
-		this.buttonList.add(bodyIcons[3] = new GuiButtonSurgery(4, i + (this.xSize / 2) - 8 - 21, j + 35, 16, 38));
-		this.buttonList.add(bodyIcons[4] = new GuiButtonSurgery(5, i + (this.xSize / 2) - 6 + 7, j + 73, 12, 39));
-		this.buttonList.add(bodyIcons[5] = new GuiButtonSurgery(6, i + (this.xSize / 2) - 6 - 7, j + 73, 12, 39));
+		this.buttonList.add(bodyIcons[2] = new GuiButtonSurgery(3, i + (this.xSize / 2) - 8 - 21, j + 35, 16, 38));
+		this.buttonList.add(bodyIcons[3] = new GuiButtonSurgery(4, i + (this.xSize / 2) - 8 + 21, j + 35, 16, 38));
+		this.buttonList.add(bodyIcons[4] = new GuiButtonSurgery(5, i + (this.xSize / 2) - 6 - 7, j + 73, 12, 39));
+		this.buttonList.add(bodyIcons[5] = new GuiButtonSurgery(6, i + (this.xSize / 2) - 6 + 7, j + 73, 12, 39));
+		
 		this.buttonList.add(back = new InterfaceButton(8, i + this.xSize - 25, j + 5, Type.BACK));
 		this.buttonList.add(index = new InterfaceButton(9, i + this.xSize - 22, j + 5, Type.INDEX));
 		back.visible = false;
@@ -343,10 +352,14 @@ public class GuiSurgery extends GuiContainer
 		this.buttonList.add(crossSectionIcons[0] = new GuiButtonSurgeryLocation(18, -12F, -8, -1F));
 		this.buttonList.add(crossSectionIcons[1] = new GuiButtonSurgeryLocation(19, 12F, -1, 2F));
 		this.buttonList.add(crossSectionIcons[2] = new GuiButtonSurgeryLocation(20, 3F, 5, 12F));
-		this.buttonList.add(armIcons[0] = new GuiButtonSurgeryLocation(21, 0F, 10, -5.3F));
-		this.buttonList.add(armIcons[1] = new GuiButtonSurgeryLocation(22, 0F, 16, -6.0F));
-		this.buttonList.add(legIcons[0] = new GuiButtonSurgeryLocation(23, 0F, 1, -2.2F));
-		this.buttonList.add(legIcons[1] = new GuiButtonSurgeryLocation(24, 0F, 6.4F, -2.2F));
+		this.buttonList.add(armIcons[0] = new GuiButtonSurgeryLocation(21, 0F, 10, 5.3F));
+		this.buttonList.add(armIcons[1] = new GuiButtonSurgeryLocation(22, 0F, 16, 6.0F));
+		this.buttonList.add(leftArmIcons[0] = new GuiButtonSurgeryLocation(25, 0F, 10, -5.3F));
+		this.buttonList.add(leftArmIcons[1] = new GuiButtonSurgeryLocation(26, 0F, 16, -6.0F));
+		this.buttonList.add(legIcons[0] = new GuiButtonSurgeryLocation(23, 0F, 1, 2.2F));
+		this.buttonList.add(legIcons[1] = new GuiButtonSurgeryLocation(24, 0F, 6.4F, 2.2F));
+		this.buttonList.add(leftLegIcons[0] = new GuiButtonSurgeryLocation(27, 0F, 1, -2.2F));
+		this.buttonList.add(leftLegIcons[1] = new GuiButtonSurgeryLocation(28, 0F, 6.4F, -2.2F));
 		//this.buttonList.add(headIcons[0] = new GuiButtonSurgeryLocation(6, 4F, 19, 0));
 		updateSlots(true);
 	}
@@ -511,15 +524,7 @@ public class GuiSurgery extends GuiContainer
 				parent = page;
 			}
 			
-			if (button.id == 4)
-			{
-				prepTransition(20, 3);
-			}
-			else if (button.id == 6)
-			{
-				prepTransition(20, 5);
-			}
-			else if (button.id == 13)
+			if (button.id == 13)
 			{
 				prepTransition(20, 12);
 			}
@@ -561,6 +566,12 @@ public class GuiSurgery extends GuiContainer
 			case 3:
 				list = armIcons;
 				break;
+			case 6:
+				list = leftLegIcons;
+				break;
+			case 4:
+				list = leftArmIcons;
+				break;
 		}
 		
 		for (int i = 0; i < list.length; i++)
@@ -600,6 +611,12 @@ public class GuiSurgery extends GuiContainer
 				break;
 			case 3:
 				list = armIcons;
+				break;
+			case 6:
+				list = leftLegIcons;
+				break;
+			case 4:
+				list = leftArmIcons;
 				break;
 		}
 		
@@ -778,8 +795,8 @@ public class GuiSurgery extends GuiContainer
 		GlStateManager.popMatrix();
 	}
 	
-	private static ItemStackHandler lastLastInv = new ItemStackHandler(120);
-	private static ItemStackHandler lastInv = new ItemStackHandler(120);
+	private static ItemStackHandler lastLastInv = new ItemStackHandler(EnumSlot.values().length * 10);
+	private static ItemStackHandler lastInv = new ItemStackHandler(EnumSlot.values().length * 10);
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
@@ -1009,31 +1026,33 @@ public class GuiSurgery extends GuiContainer
 			
 			renderEntity(skeleton, i + (this.xSize / 2) + ease.x, j + 110 + ease.y, ease.scale, endRotate);
 	
-			scissor(i + 3, j + 3 + (int) (percentageSkele * 125), 170, 125 - (int) (percentageSkele * 125));
-					
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			
-			float f = player.renderYawOffset;
-			float f1 = player.rotationYaw;
-			float f2 = player.rotationPitch;
-			float f3 = player.prevRotationYawHead;
-			float f4 = player.rotationYawHead;
-			
-			player.renderYawOffset = player.rotationYaw = player.rotationPitch = player.prevRotationYawHead = 0;
-			player.rotationYaw = skeleton.rotationYaw;
-			player.rotationYawHead = skeleton.getRotationYawHead();
-			float sp = player.swingProgress;
-			player.swingProgress = 0F;
-		  
-			renderEntity(player, i + (this.xSize / 2) + ease.x, j + 115 + (ease.y) * (60F / 63F), ease.scale * (57F / 50F), ease.rotation  + (float) (5F * Math.sin((time) / 25F)));
-			
-			player.swingProgress = sp;
-			player.renderYawOffset = f;
-			player.rotationYaw = f1;
-			player.rotationPitch = f2;
-			player.prevRotationYawHead = f3;
-			player.rotationYawHead = f4;
-			
+			if (percentageSkele != 1)
+			{
+				scissor(i + 3, j + 3 + (int) (percentageSkele * 125), 170, 125 - (int) (percentageSkele * 125));
+						
+				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+				
+				float f = player.renderYawOffset;
+				float f1 = player.rotationYaw;
+				float f2 = player.rotationPitch;
+				float f3 = player.prevRotationYawHead;
+				float f4 = player.rotationYawHead;
+				
+				player.renderYawOffset = player.rotationYaw = player.rotationPitch = player.prevRotationYawHead = 0;
+				player.rotationYaw = skeleton.rotationYaw;
+				player.rotationYawHead = skeleton.getRotationYawHead();
+				float sp = player.swingProgress;
+				player.swingProgress = 0F;
+			  
+				renderEntity(player, i + (this.xSize / 2) + ease.x, j + 115 + (ease.y) * (60F / 63F), ease.scale * (57F / 50F), ease.rotation  + (float) (5F * Math.sin((time) / 25F)));
+				
+				player.swingProgress = sp;
+				player.renderYawOffset = f;
+				player.rotationYaw = f1;
+				player.rotationPitch = f2;
+				player.prevRotationYawHead = f3;
+				player.rotationYawHead = f4;
+			}
 			
 			
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -1384,24 +1403,7 @@ public class GuiSurgery extends GuiContainer
 			{
 				EnumSlot slot = EnumSlot.values()[k / 2];
 				
-				if (slot.isSided())
-				{
-					if (k % 2 ==0)
-					{
-						if (surgery.isEssentialMissing[k])
-						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".left"));
-						}
-					}
-					else
-					{
-						if (surgery.isEssentialMissing[k])
-						{
-							missingSlots.add(I18n.format("cyberware.gui.missingEssential." + slot.getBaseName() + ".right"));
-						}
-					}
-				}
-				else if (k % 2 ==0)
+				if (k % 2 ==0)
 				{
 					if (surgery.isEssentialMissing[k])
 					{

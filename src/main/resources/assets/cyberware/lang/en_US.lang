@@ -149,7 +149,7 @@ cyberware.gui.missingEssential.foot.right=Missing right foot, will be unusable
 cyberware.gui.noEssence=No tolerance, will cause death
 cyberware.gui.criticalEssence=Low tolerance, will cause rejection
 cyberware.gui.back=Back (or Right Mouse Button)
-cyberware.gui.noPower=No power production
+cyberware.gui.noPower=Lacking internal power production
 cyberware.gui.remove=(Click to remove)
 cyberware.gui.add=(Click to add %1$s)
 cyberware.gui.index=Index
@@ -195,6 +195,7 @@ cyberware.tooltip.joinerOr=or
 
 cyberware.tooltip.neuropozyne=Anti-Rejection (20:00)
 cyberware.potion.neuropozyne=Anti-Rejection
+cyberware.potion.rejection=Aug Rejection
 
 cyberware.tooltip.componentBox=Shift-click to place or pick up
 cyberware.tooltip.componentBox2=Accessible by Engineering Table if nearby or in inventory
@@ -256,7 +257,7 @@ cyberware.tooltip.cybereyeUpgrades.1=See underwater
 cyberware.tooltip.cybereyeUpgrades.2=Displays internal power info\nAllows upgrades to overlay a HUD
 cyberware.tooltip.cybereyeUpgrades.3=Highlights nearby creatures
 cyberware.tooltip.cybereyeUpgrades.4=Zoom in on distant objects
-cyberware.tooltip.eyeUpgrades.0=Displays internal power info\nAllows upgrades to overlay a HUD
+cyberware.tooltip.eyeUpgrades.0=Displays internal power info\nAllows upgrades to overlay a HUD\nUsable with organic eyes
 cyberware.tooltip.manaseerLens.0=Reveals functional radius of flowers\nDisplays additional redstone information
 cyberware.tooltip.manaseerLens.1=Reveals functional radius of flowers\nDisplays additional redstone information
 cyberware.tooltip.expCapsule.before=

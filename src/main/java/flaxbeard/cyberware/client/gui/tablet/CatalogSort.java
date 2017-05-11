@@ -11,8 +11,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import org.lwjgl.input.Mouse;
-
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -20,7 +18,7 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.progression.ProgressionHelper;
-import flaxbeard.cyberware.client.ShaderHelper;
+import flaxbeard.cyberware.client.ShaderUtil;
 import flaxbeard.cyberware.client.gui.GuiTablet;
 
 public interface CatalogSort
@@ -153,7 +151,7 @@ public interface CatalogSort
 							GlStateManager.translate(x, y + 1, 0);
 							GlStateManager.scale(.5F, .5F, .5F);
 													
-							ShaderHelper.greyscale(unlocked ? hovered ? .8F : .6F : .3F);
+							ShaderUtil.greytint(0.0F, 0.85F, 1.0F, unlocked ? hovered ? .8F : .6F : .3F);
 	
 							if (!unlocked)
 							{
@@ -166,7 +164,7 @@ public interface CatalogSort
 							
 							tablet.getItemRenderer().renderItemAndEffectIntoGUI(tablet.mc.thePlayer, item, 0, 0);
 												
-							ShaderHelper.releaseShader();
+							ShaderUtil.releaseShader();
 							GlStateManager.popMatrix();
 			
 							RenderHelper.disableStandardItemLighting();

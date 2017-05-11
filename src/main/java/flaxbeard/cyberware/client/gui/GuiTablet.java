@@ -21,9 +21,8 @@ import org.lwjgl.opengl.GL11;
 import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
-import flaxbeard.cyberware.client.ShaderHelper;
+import flaxbeard.cyberware.client.ShaderUtil;
 import flaxbeard.cyberware.client.gui.tablet.TabletContent;
-import flaxbeard.cyberware.common.CyberwareContent;
 
 public class GuiTablet extends GuiScreen
 {
@@ -236,9 +235,9 @@ public class GuiTablet extends GuiScreen
 			GlStateManager.scale(request.scale, request.scale, request.scale);
 			GlStateManager.translate(-8F, -8F, 0F);
 			RenderHelper.enableGUIStandardItemLighting();
-			ShaderHelper.greyscale(request.trans);
+			ShaderUtil.greytint(0.0F, 0.85F, 1.0F, request.trans);
 			this.itemRender.renderItemAndEffectIntoGUI(request.stack, 0, 0);
-			ShaderHelper.releaseShader();
+			ShaderUtil.releaseShader();
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popMatrix();
 		}

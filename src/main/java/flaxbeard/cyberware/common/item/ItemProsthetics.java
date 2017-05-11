@@ -36,11 +36,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 	{
 		ICyberware ware = CyberwareAPI.getCyberware(other);
 		
-		if (ware instanceof ISidedLimb)
-		{
-			return ware.isEssential(other) && ((ISidedLimb) ware).getSide(other) == this.getSide(stack);
-		}
-		return false;
+		return ware.isEssential(other);
 	}
 	
 	@Override
@@ -67,7 +63,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
+	public Object getModel(ItemStack itemStack, boolean wideArms, Object baseWide, Object baseSkinny, EntityPlayer player)
 	{
 		if (wideArms)
 		{
@@ -110,7 +106,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 		if (CyberwareAPI.hasCapability(player))
 		{
 			ICyberwareUserData data = CyberwareAPI.getCapability(player);
-			if (!data.hasEssential(getSlot(stack), getSide(stack)))
+			if (!data.hasEssential(getSlot(stack)))
 			{
 				ItemStack[] items = data.getInstalledCyberware(getSlot(stack));
 				for (int i = 0; i < items.length; i++)
@@ -121,13 +117,11 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 						data.setInstalledCyberware(player, getSlot(stack), items);
 						if (getSide(stack) == EnumSide.LEFT)
 						{
-							boolean hr = data.hasEssential(getSlot(stack), EnumSide.RIGHT);
-							data.setHasEssential(getSlot(stack), true, hr);
+							data.setHasEssential(getSlot(stack), true);
 						}
 						else
 						{
-							boolean hl = data.hasEssential(getSlot(stack), EnumSide.LEFT);
-							data.setHasEssential(getSlot(stack), hl, true);
+							data.setHasEssential(getSlot(stack), true);
 						}
 						if (!player.capabilities.isCreativeMode)
 						{

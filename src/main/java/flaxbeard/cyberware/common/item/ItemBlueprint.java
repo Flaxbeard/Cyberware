@@ -220,4 +220,36 @@ public class ItemBlueprint extends Item implements IBlueprint
 		}
 		throw new IllegalStateException("Consuming items when items shouldn't be consumed!");
 	}
+	
+	@Override
+	public ItemStack[] getRequirementsForDisplay(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			NBTTagCompound comp = stack.getTagCompound();
+			if (comp.hasKey("blueprintItem"))
+			{
+				ItemStack blueprintItem = ItemStack.loadItemStackFromNBT(comp.getCompoundTag("blueprintItem"));
+				if (blueprintItem != null && CyberwareAPI.canDeconstruct(blueprintItem))
+				{
+					return CyberwareAPI.getComponents(blueprintItem).clone();
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public ItemStack getIconForDisplay(ItemStack stack)
+	{
+		if (stack.hasTagCompound())
+		{
+			NBTTagCompound comp = stack.getTagCompound();
+			if (comp.hasKey("blueprintItem"))
+			{
+				return ItemStack.loadItemStackFromNBT(comp.getCompoundTag("blueprintItem"));
+			}
+		}
+		return null;
+	}
 }

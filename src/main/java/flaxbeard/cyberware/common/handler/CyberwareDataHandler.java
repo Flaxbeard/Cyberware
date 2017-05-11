@@ -20,6 +20,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -53,6 +54,16 @@ public class CyberwareDataHandler
 	public static final String KEEP_WARE_GAMERULE = "cyberware_keepCyberware";
 	public static final String DROP_WARE_GAMERULE = "cyberware_dropCyberware";
 
+	@SubscribeEvent
+	public void onEntityConstructed(EntityConstructing event)
+	{
+		if (event.getEntity() instanceof EntityLivingBase)
+		{
+			EntityLivingBase living = (EntityLivingBase) event.getEntity();
+			living.getAttributeMap().registerAttribute(CyberwareAPI.TOLERANCE_ATTR);
+		}
+	}
+	
 	@SubscribeEvent
 	public void worldLoad(WorldEvent.Load event)
 	{
@@ -142,7 +153,7 @@ public class CyberwareDataHandler
 									}
 								}
 								
-								if (!found)
+								if (!found && p.worldObj.rand.nextFloat() < CyberwareConfig.DROP_CHANCE / 100F)
 								{
 									EntityItem item = new EntityItem(p.worldObj, p.posX, p.posY, p.posZ, toDrop);
 									p.worldObj.spawnEntityInWorld(item);
@@ -203,7 +214,7 @@ public class CyberwareDataHandler
 				return;
 			}
 		}
-		if (event.getEntityLiving() instanceof EntityZombie && CyberwareConfig.CLOTHES && !(event.getEntityLiving() instanceof EntityPigZombie))
+		if (event.getEntityLiving() instanceof EntityZombie && CyberwareConfig.CLOTHES && !CyberwareConfig.NO_CLOTHES && !(event.getEntityLiving() instanceof EntityPigZombie))
 		{
 			EntityZombie zom = (EntityZombie) event.getEntityLiving();
 

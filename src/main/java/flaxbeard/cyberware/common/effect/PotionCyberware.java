@@ -13,16 +13,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import flaxbeard.cyberware.Cyberware;
 
-public class PotionNeuropozyne extends Potion
+public class PotionCyberware extends Potion
 {
 	private static final ResourceLocation resource = new ResourceLocation(Cyberware.MODID + ":textures/gui/potions.png");
-	private final int iconIndex = 0;
+	private int iconIndex = 0;
 	
-	public PotionNeuropozyne(String name, boolean isBadEffectIn, int liquidColorIn)
+	public PotionCyberware(String name, boolean isBadEffectIn, int liquidColorIn, int iconIndex)
 	{
 		super(isBadEffectIn, liquidColorIn);
 		GameRegistry.register(this, new ResourceLocation(Cyberware.MODID, name));
 		setPotionName("cyberware.potion." + name);
+		this.iconIndex = iconIndex;
 	}
 	
 	@Override

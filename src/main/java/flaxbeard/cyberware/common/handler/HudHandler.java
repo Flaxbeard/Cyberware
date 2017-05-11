@@ -373,8 +373,8 @@ public class HudHandler
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 						GL11.glPopMatrix();
 					}*/
-				GlStateManager.popMatrix();	
 			}
+			GlStateManager.popMatrix();	
 		}
 	}
 }

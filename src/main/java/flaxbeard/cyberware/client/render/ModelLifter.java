@@ -161,7 +161,7 @@ public class ModelLifter extends ModelPlayer implements ISpecialArmRenderer
 	{
 		GlStateManager.pushMatrix();
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		GlStateManager.translate(0.5F, 1F, -0);
+		GlStateManager.translate(0.5F, .9F, -0.01F);
 		if (side == EnumHandSide.RIGHT)
 		{
 			GlStateManager.translate(-1, 0F, -0);

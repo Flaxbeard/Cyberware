@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
@@ -99,15 +100,16 @@ public class EssentialsMissingHandler
 			e.attackEntityFrom(brainless, Integer.MAX_VALUE);
 		}
 		
-		if (cyberware.getEssence() < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
+		if (cyberware.getTolerance(e) < CyberwareConfig.CRITICAL_ESSENCE && e instanceof EntityPlayer && e.ticksExisted % 100 == 0 && !e.isPotionActive(CyberwareContent.neuropozyneEffect))
 		{
+			e.addPotionEffect(new PotionEffect(CyberwareContent.rejectionEffect, 110, 0, true, false));
 			e.attackEntityFrom(lowessence, 2F);
 		}
 					
 		int numMissingLegs = 0;
 		int numMissingLegsVisible = 0;
 		
-		if (cyberware.getEssence() <= 0)
+		if (cyberware.getTolerance(e) <= 0)
 		{
 			e.attackEntityFrom(noessence, Integer.MAX_VALUE);
 		}
@@ -383,8 +385,12 @@ public class EssentialsMissingHandler
 				
 				if (!cyberware.hasEssential(EnumSlot.EYES) && !e.isCreative())
 				{
+					GlStateManager.pushMatrix();
+					GlStateManager.enableBlend();
+					GlStateManager.color(1F, 1F, 1F, .9F);
 					Minecraft.getMinecraft().getTextureManager().bindTexture(BLACK_PX);
 					ClientUtils.drawTexturedModalRect(0, 0, 0, 0, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+					GlStateManager.popMatrix();
 				}
 			}
 			

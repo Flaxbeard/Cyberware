@@ -10,34 +10,38 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.GL11;
 
-public class ShaderHelper
+public class ShaderUtil
 {
 	private static final int VERT = ARBVertexShader.GL_VERTEX_SHADER_ARB;
 	private static final int FRAG = ARBFragmentShader.GL_FRAGMENT_SHADER_ARB;
 	
-	public static int greyscale = 0;
 	public static int alpha = 0;
-	
+	public static int tint = 0;
+
 	public static void init()
 	{
-		greyscale = createShader(null, "/assets/cyberware/shaders/greyscale.frag");
-		alpha = createShader(null, "/assets/cyberware/shaders/greyscale.frag");
-	}
-	
-	public static void greyscale(float alpha)
-	{
-		ARBShaderObjects.glUseProgramObjectARB(greyscale);
-		
-		int a = ARBShaderObjects.glGetUniformLocationARB(greyscale, "alpha");
-		ARBShaderObjects.glUniform1fARB(a, alpha);
+		alpha = createShader(null, "/assets/cyberware/shaders/alpha.frag");
+		tint = createShader(null, "/assets/cyberware/shaders/tint.frag");
 	}
 	
 	public static void alpha(float av)
 	{
 		ARBShaderObjects.glUseProgramObjectARB(alpha);
-		
 		int a = ARBShaderObjects.glGetUniformLocationARB(alpha, "alpha");
 		ARBShaderObjects.glUniform1fARB(a, av);
+	}
+	
+	public static void greytint(float rv, float gv, float bv, float av)
+	{
+		ARBShaderObjects.glUseProgramObjectARB(tint);
+		int a = ARBShaderObjects.glGetUniformLocationARB(tint, "alpha");
+		ARBShaderObjects.glUniform1fARB(a, av);
+		a = ARBShaderObjects.glGetUniformLocationARB(tint, "rv");
+		ARBShaderObjects.glUniform1fARB(a, rv);
+		a = ARBShaderObjects.glGetUniformLocationARB(tint, "gv");
+		ARBShaderObjects.glUniform1fARB(a, gv);
+		a = ARBShaderObjects.glGetUniformLocationARB(tint, "bv");
+		ARBShaderObjects.glUniform1fARB(a, bv);
 	}
 	
 	public static void releaseShader()
@@ -121,7 +125,7 @@ public class ShaderHelper
 	
 	private static String readFileAsString(String filename) throws Exception
 	{
-		InputStream in = ShaderHelper.class.getResourceAsStream(filename);
+		InputStream in = ShaderUtil.class.getResourceAsStream(filename);
 
 		if(in == null)
 			return "";

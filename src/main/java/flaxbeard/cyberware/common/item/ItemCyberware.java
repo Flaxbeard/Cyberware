@@ -306,7 +306,10 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 	@Override
 	public EnumCategory getCategory(ItemStack stack)
 	{
-		return EnumCategory.values()[this.getSlot(stack).ordinal() + 3];
+		EnumSlot slot = this.getSlot(stack);
+		if (slot == EnumSlot.ARMLEFT) slot = EnumSlot.ARM;
+		if (slot == EnumSlot.LEGLEFT) slot = EnumSlot.LEG;
+		return EnumCategory.values()[slot.ordinal() + 3];
 	}
 
 	@Override

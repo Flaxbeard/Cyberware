@@ -59,11 +59,8 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	{
 		ICyberware ware = CyberwareAPI.getCyberware(other);
 				
-		if (ware instanceof ISidedLimb)
-		{
-			return ware.isEssential(other) && ((ISidedLimb) ware).getSide(other) == this.getSide(stack);
-		}
-		return false;
+		return ware.isEssential(other);
+		
 	}
 
 	@Override
@@ -138,7 +135,7 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
+	public Object getModel(ItemStack itemStack, boolean wideArms, Object baseWide, Object baseSkinny, EntityPlayer player)
 	{
 		return model;
 	}

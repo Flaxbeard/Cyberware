@@ -20,10 +20,9 @@ import flaxbeard.cyberware.api.item.CyberwareTag;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.tablet.IScrollWheel;
 import flaxbeard.cyberware.api.tablet.ITabletPage;
-import flaxbeard.cyberware.client.ShaderHelper;
+import flaxbeard.cyberware.client.ShaderUtil;
 import flaxbeard.cyberware.client.gui.GuiSurgery;
 import flaxbeard.cyberware.client.gui.GuiTablet;
-import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.item.ItemCyberware;
 
 public class TabletCatalogItem implements ITabletPage, IScrollWheel
@@ -254,7 +253,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 			tablet.drawTexturedModalRect(20, statsBar + 19, 29, 254, width - 40, 1);
 		}
 		
-		ShaderHelper.greyscale(.55F);
+		ShaderUtil.greytint(0.0F, 0.85F, 1.0F, .55F);
 		GlStateManager.pushMatrix();
 		World world = Minecraft.getMinecraft() != null ? Minecraft.getMinecraft().theWorld : null;
 		if (entity == null || entity.isDead)
@@ -268,7 +267,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 		entity.hoverStart = 0F;
 		GuiSurgery.renderEntity(entity, 148, 111, 100, ticks * 3);
 				
-		ShaderHelper.releaseShader();
+		ShaderUtil.releaseShader();
 
 		GlStateManager.popMatrix();
 	

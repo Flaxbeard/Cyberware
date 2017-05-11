@@ -72,12 +72,7 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 	public boolean isIncompatible(ItemStack stack, ItemStack other)
 	{
 		ICyberware ware = CyberwareAPI.getCyberware(other);
-		
-		if (ware instanceof ISidedLimb)
-		{
-			return ware.isEssential(other) && ((ISidedLimb) ware).getSide(other) == this.getSide(stack);
-		}
-		return false;
+		return ware.isEssential(other);
 	}
 	
 	@Override
@@ -145,9 +140,9 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 	private static ModelLifter modelLifter = new ModelLifter();
 	
 	@SideOnly(Side.CLIENT)
-	private static final ResourceLocation textureDrill = new ResourceLocation(Cyberware.MODID + ":textures/models/playerChainsawArm.png");
+	private static final ResourceLocation textureChainsaw = new ResourceLocation(Cyberware.MODID + ":textures/models/playerChainsawArm.png");
 	@SideOnly(Side.CLIENT)
-	private static final ResourceLocation textureChainsaw = new ResourceLocation(Cyberware.MODID + ":textures/models/playerDrillArm.png");
+	private static final ResourceLocation textureDrill = new ResourceLocation(Cyberware.MODID + ":textures/models/playerDrillArm.png");
 	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation textureLifter = new ResourceLocation(Cyberware.MODID + ":textures/models/playerLiftArm.png");
 	
@@ -175,7 +170,7 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelPlayer getModel(ItemStack itemStack, boolean wideArms, ModelPlayer baseWide, ModelPlayer baseSkinny, EntityPlayer player)
+	public Object getModel(ItemStack itemStack, boolean wideArms, Object baseWide, Object baseSkinny, EntityPlayer player)
 	{
 		if ((itemStack.getItemDamage() / 2) == 0)
 		{
@@ -243,7 +238,7 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 
 			if (player == Minecraft.getMinecraft().thePlayer)
 			{
-				boolean isLeft = ((ISidedLimb) CyberwareAPI.getCyberware(itemStack)).getSide(itemStack) == EnumSide.LEFT;
+				boolean isLeft = ((ICyberware) CyberwareAPI.getCyberware(itemStack)).getSlot(itemStack) == EnumSlot.ARMLEFT;
 				float t = Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks();
 				ItemStack active = getActive(player);
 				

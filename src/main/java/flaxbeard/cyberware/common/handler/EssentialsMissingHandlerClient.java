@@ -155,7 +155,7 @@ public class EssentialsMissingHandlerClient
 								individualSetups[i] = new Tuple<>(
 													lr.getTexture(limbs[i]), 
 													new Tuple<>(
-															lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel(), p),
+															(ModelPlayer) lr.getModel(limbs[i], !bigArms, renderF.getMainModel(), renderT.getMainModel(), p),
 															lr.canHoldItems(limbs[i])
 															));
 								setups.add(individualSetups[i]);
@@ -633,7 +633,7 @@ public class EssentialsMissingHandlerClient
 		{
 			ILimbReplacement lr = ((ILimbReplacement) CyberwareAPI.getCyberware(leftArm));
 			leftTexture = lr.getTexture(leftArm);
-			leftModel = lr.getModel(leftArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
+			leftModel = (ModelPlayer) lr.getModel(leftArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
 		}
 		 
 		ItemStack rightArm = cyberware.getLimb(EnumSlot.ARM, EnumSide.RIGHT);
@@ -643,7 +643,7 @@ public class EssentialsMissingHandlerClient
 		{
 			ILimbReplacement lr = ((ILimbReplacement) CyberwareAPI.getCyberware(rightArm));
 			rightTexture = lr.getTexture(rightArm);
-			rightModel = lr.getModel(rightArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
+			rightModel = (ModelPlayer) lr.getModel(rightArm, bigArms, renderF.getMainModel(), renderT.getMainModel(), player);
 		}
 		
 		ItemStack mainHand = player.getPrimaryHand() == EnumHandSide.RIGHT ? rightArm : leftArm;
