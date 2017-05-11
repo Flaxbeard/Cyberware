@@ -16,6 +16,7 @@ public interface ICyberwareUserData
 	public ItemStack[] getInstalledCyberware(EnumSlot slot);
 	public boolean isCyberwareInstalled(ItemStack cyberware);
 	public ItemStack getCyberware(ItemStack cyberware);
+	public ItemStack getCyberwareInSlot(ItemStack cyberware, EnumSlot slot);
 	public int getCyberwareRank(ItemStack cyberware);
 	public ItemStack getLimb(EnumSlot arm, EnumSide left);
 	public void setInstalledCyberware(EntityLivingBase entity, EnumSlot slot, List<ItemStack> cyberware);

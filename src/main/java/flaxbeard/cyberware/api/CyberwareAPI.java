@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import flaxbeard.cyberware.api.hud.UpdateHudColorPacket;
 import flaxbeard.cyberware.api.item.ICyberware;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.api.item.ICyberware.Quality;
 import flaxbeard.cyberware.api.item.IDeconstructable;
 import flaxbeard.cyberware.api.item.IMenuItem;
@@ -392,6 +393,24 @@ public final class CyberwareAPI
 		
 		ICyberwareUserData cyberware = getCapability(targetEntity);
 		return cyberware.isCyberwareInstalled(stack);
+	}
+	
+	/**
+	 * A shortcut method for event handlers and the like to quickly tell if an entity
+	 * has a piece of Cyberware installed. Can handle null entites and entities without
+	 * ICyberwareUserData.
+	 * 
+	 * @param targetEntity	The entity you want to check
+	 * @param stack			The Cyberware you want to check for
+	 * @param slot			The slot to check in
+	 * @return				If the entity has the Cyberware
+	 */
+	public static boolean isCyberwareInstalledInSlot(@Nullable Entity targetEntity, ItemStack stack, EnumSlot slot)
+	{
+		if (!hasCapability(targetEntity)) return false;
+		
+		ICyberwareUserData cyberware = getCapability(targetEntity);
+		return cyberware.getCyberwareInSlot(stack, slot) != null;
 	}
 	
 	/**

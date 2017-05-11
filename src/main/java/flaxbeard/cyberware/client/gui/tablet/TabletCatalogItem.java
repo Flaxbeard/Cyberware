@@ -85,7 +85,7 @@ public class TabletCatalogItem implements ITabletPage, IScrollWheel
 		
 		int titleLen = Math.max(tablet.getStringWidth(title), tablet.getStringWidth(title2));
 		
-		String s = I18n.format(ware.getSlot(item).getUnlocalizedName());
+		String s = I18n.format(ware.getFirstSlot(item).getUnlocalizedName());
 		tablet.drawStringSmall(s, 15, 9, 0x188EA2);
 		
 		s = "9,982,123";

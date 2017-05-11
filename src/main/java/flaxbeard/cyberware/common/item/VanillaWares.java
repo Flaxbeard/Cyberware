@@ -38,9 +38,9 @@ public class VanillaWares
 		}
 
 		@Override
-		public EnumSlot getSlot(ItemStack stack)
+		public EnumSlot[] getSlots(ItemStack stack)
 		{
-			return EnumSlot.EYES;
+			return new EnumSlot[] { EnumSlot.EYES };
 		}
 
 		@Override

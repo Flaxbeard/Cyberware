@@ -255,7 +255,7 @@ public interface CatalogSort
 		@Override
 		public void addItem(TabletCatalogItem item)
 		{
-			EnumSlot slot = CyberwareAPI.getCyberware(item.getItem()).getSlot(item.getItem());
+			EnumSlot slot = CyberwareAPI.getCyberware(item.getItem()).getFirstSlot(item.getItem());
 			Category category = categories.get(slot.ordinal());
 			category.add(item);
 		}

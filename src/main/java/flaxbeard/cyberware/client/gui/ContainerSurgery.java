@@ -94,16 +94,24 @@ public class ContainerSurgery extends Container
 			ItemStack playerStack = getPlayerStack();
 			//if (stack != null && playerStack != null && stack.getit) return false;
 			if (getPlayerStack() != null && !surgery.canDisableItem(playerStack, slot, index % LibConstants.WARE_PER_SLOT)) return false;
-			if (!(stack != null && stack.getItem() != null && CyberwareAPI.isCyberware(stack) && CyberwareAPI.getCyberware(stack).getSlot(stack) == this.slot)) return false;
-			
+			if (!(stack != null && stack.getItem() != null && CyberwareAPI.isCyberware(stack) && CyberwareAPI.getCyberware(stack).canFitInSlot(stack, this.slot))) return false;
+
 			if (CyberwareAPI.areCyberwareStacksEqual(stack, playerStack))
 			{
 				int stackSize = CyberwareAPI.getCyberware(stack).installedStackSize(stack);
 				if (playerStack.stackSize == stackSize) return false;
 			}
-			
-			
+
 			return !doesItemConflict(stack) && areRequirementsFulfilled(stack);
+		}
+		
+		private boolean contains(EnumSlot[] slots, EnumSlot slot)
+		{
+			for (EnumSlot check : slots)
+			{
+				if (check == slot) return true;
+			}
+			return false;
 		}
 		
 		public boolean doesItemConflict(@Nullable ItemStack stack)

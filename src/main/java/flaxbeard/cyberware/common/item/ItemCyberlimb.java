@@ -142,6 +142,7 @@ public class ItemCyberlimb extends ItemCyberware implements ISidedLimb, ILimbRep
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture(ItemStack stack)
 	{
 		if (getQuality(stack) == CyberwareAPI.QUALITY_MANUFACTURED)

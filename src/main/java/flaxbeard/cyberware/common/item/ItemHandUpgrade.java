@@ -31,6 +31,7 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
 import flaxbeard.cyberware.api.item.IMenuItem;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.network.CyberwarePacketHandler;
 import flaxbeard.cyberware.common.network.GuiPacket;
@@ -38,9 +39,9 @@ import flaxbeard.cyberware.common.network.GuiPacket;
 public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 {
 
-	public ItemHandUpgrade(String name, EnumSlot slot, String[] subnames)
+	public ItemHandUpgrade(String name, EnumSlot[] slot, String[] subnames)
 	{
-		super(name, slot, subnames);
+		super(name, new EnumSlot[][] { slot }, subnames);
 		MinecraftForge.EVENT_BUS.register(this);
 
 	}
@@ -88,8 +89,8 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 			boolean last = getLastClaws(e);
 			boolean isEquipped = e.getHeldItemMainhand() == null && 
 					(e.getPrimaryHand() == EnumHandSide.RIGHT ? 
-							(CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 1))) : 
-							(CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))));
+							(CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.ARM)) : 
+							(CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.ARMLEFT)));
 			if (isEquipped && EnableDisableHelper.isEnabled(CyberwareAPI.getCyberware(e, test)))
 			{
 				this.addUnarmedDamage(e, test);
@@ -175,8 +176,8 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 		EntityPlayer p = event.getEntityPlayer();
 		ItemStack test = new ItemStack(this, 1, 2);
 		boolean rightArm = (p.getPrimaryHand() == EnumHandSide.RIGHT ? 
-				(CyberwareAPI.isCyberwareInstalled(p, new ItemStack(CyberwareContent.cyberlimbs, 1, 1))) : 
-				(CyberwareAPI.isCyberwareInstalled(p, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))));
+						(CyberwareAPI.isCyberwareInstalledInSlot(p, test, EnumSlot.ARM)) : 
+						(CyberwareAPI.isCyberwareInstalledInSlot(p, test, EnumSlot.ARMLEFT)));
 		if (rightArm && CyberwareAPI.isCyberwareInstalled(p, test) && p.getHeldItemMainhand() == null)
 		{
 			ItemStack pick = new ItemStack(Items.STONE_PICKAXE);
@@ -193,8 +194,8 @@ public class ItemHandUpgrade extends ItemCyberware implements IMenuItem
 		EntityPlayer p = event.getEntityPlayer();
 		ItemStack test = new ItemStack(this, 1, 2);
 		boolean rightArm = (p.getPrimaryHand() == EnumHandSide.RIGHT ? 
-						(CyberwareAPI.isCyberwareInstalled(p, new ItemStack(CyberwareContent.cyberlimbs, 1, 1))) : 
-						(CyberwareAPI.isCyberwareInstalled(p, new ItemStack(CyberwareContent.cyberlimbs, 1, 0))));
+				(CyberwareAPI.isCyberwareInstalledInSlot(p, test, EnumSlot.ARM)) : 
+				(CyberwareAPI.isCyberwareInstalledInSlot(p, test, EnumSlot.ARMLEFT)));
 		if (rightArm && CyberwareAPI.isCyberwareInstalled(p, test) && p.getHeldItemMainhand() == null)
 		{
 			ItemStack pick = new ItemStack(Items.STONE_PICKAXE);

@@ -132,21 +132,16 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 		return false;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	private static ModelDrill modelDrill = new ModelDrill();
-	@SideOnly(Side.CLIENT)	
-	private static ModelChainsaw modelChainsaw = new ModelChainsaw();
-	@SideOnly(Side.CLIENT)	
-	private static ModelLifter modelLifter = new ModelLifter();
+	private static Object modelDrill = null;
+	private static Object modelChainsaw = null;
+	private static Object modelLifter = null;
 	
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation textureChainsaw = new ResourceLocation(Cyberware.MODID + ":textures/models/playerChainsawArm.png");
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation textureDrill = new ResourceLocation(Cyberware.MODID + ":textures/models/playerDrillArm.png");
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation textureLifter = new ResourceLocation(Cyberware.MODID + ":textures/models/playerLiftArm.png");
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture(ItemStack stack)
 	{
 		switch (stack.getItemDamage() / 2)
@@ -171,7 +166,17 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Object getModel(ItemStack itemStack, boolean wideArms, Object baseWide, Object baseSkinny, EntityPlayer player)
-	{
+	{	
+		if (modelDrill == null)
+		{
+			modelDrill = new ModelDrill();
+			modelChainsaw = new ModelChainsaw();
+			modelLifter = new ModelLifter();
+		}
+		ModelDrill modelDrill	 	= (ModelDrill)    this.modelDrill;
+		ModelChainsaw modelChainsaw = (ModelChainsaw) this.modelChainsaw;
+		ModelLifter modelLifter 	= (ModelLifter)   this.modelLifter;
+
 		if ((itemStack.getItemDamage() / 2) == 0)
 		{
 			if (player == Minecraft.getMinecraft().thePlayer)
@@ -238,7 +243,7 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 
 			if (player == Minecraft.getMinecraft().thePlayer)
 			{
-				boolean isLeft = ((ICyberware) CyberwareAPI.getCyberware(itemStack)).getSlot(itemStack) == EnumSlot.ARMLEFT;
+				boolean isLeft = ((ICyberware) CyberwareAPI.getCyberware(itemStack)).getFirstSlot(itemStack) == EnumSlot.ARMLEFT;
 				float t = Minecraft.getMinecraft().thePlayer.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks();
 				ItemStack active = getActive(player);
 				
@@ -527,6 +532,7 @@ public class ItemCyberarmTool extends ItemCyberware implements ISidedLimb, ILimb
 	
 	boolean wasPressed = false;
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void tick(ClientTickEvent event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();

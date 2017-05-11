@@ -251,7 +251,7 @@ public class CyberwareConfig
 				{
 					throw new RuntimeException("Cyberware configuration error! " + itemName + " is not a valid piece of cyberware!");
 				}
-				if ((CyberwareAPI.getCyberware(stack)).getSlot(stack) != slot)
+				if (!(CyberwareAPI.getCyberware(stack)).canFitInSlot(stack, slot))
 				{
 					throw new RuntimeException("Cyberware configuration error! " + itemEncoded + " will not fit in slot " + slot.getBaseName());
 				}

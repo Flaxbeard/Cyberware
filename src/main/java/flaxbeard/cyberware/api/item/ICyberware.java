@@ -10,14 +10,22 @@ import net.minecraft.item.ItemStack;
 
 public interface ICyberware
 {
-	public EnumSlot getSlot(ItemStack stack);
+
 	public int installedStackSize(ItemStack stack);
 	public ItemStack[][] required(ItemStack stack);
 	public boolean isIncompatible(ItemStack stack, ItemStack comparison);
 	boolean isEssential(ItemStack stack);
 	public List<String> getInfo(ItemStack stack);
 	public int getCapacity(ItemStack wareStack);
-	
+
+	public void onAdded(EntityLivingBase entity, ItemStack stack);
+	public void onRemoved(EntityLivingBase entity, ItemStack stack);
+	public int getEssenceCost(ItemStack stack);
+	default String getUnlocalizedOrigin(ItemStack stack)
+	{
+		return "cyberware.gui.tablet.catalog.sort.other";
+	}
+
 	
 	/**
 	 * Returns a Quality object representing the quality of this stack - all
@@ -30,8 +38,57 @@ public interface ICyberware
 	 */
 	public Quality getQuality(ItemStack stack);
 	
+	/**
+	 * Sets the Quality tag of this ItemStack to the specified Quality and
+	 * returns the changed ItemStack. If the ItemStack cannot contain the
+	 * Quality, returns the passed ItemStack
+	 * 
+	 * @param stack		The ItemStack to apply the Quality to
+	 * @param quality	The Quality to apply
+	 * @return			ItemStack with Quality applied
+	 */
 	public ItemStack setQuality(ItemStack stack, Quality quality);
+	
+	/**
+	 * Whether or not this piece of Cyberware can handle the given Quality
+	 * 
+	 * @param stack		The ItemStack to check
+	 * @param quality	The Quality to check
+	 * @return			Whether this Quality can be applied to this stack
+	 */
 	public boolean canHoldQuality(ItemStack stack, Quality quality);
+	
+	/**
+	 * Returns an array of EnumSlots representing the areas of the body in which
+	 * this piece of Cyberware can be installed. See EnumSlot below.
+	 * 
+	 * @param stack The ItemStack to check
+	 * @return		Array of valid slots
+	 */
+	default EnumSlot[] getSlots(ItemStack stack)
+	{
+		return new EnumSlot[] { getSlot(stack) };
+	}
+	
+	default EnumSlot getFirstSlot(ItemStack stack)
+	{
+		return getSlots(stack)[0];
+	}
+	
+	default boolean canFitInSlot(ItemStack stack, EnumSlot slot)
+	{
+		for (EnumSlot check : getSlots(stack))
+		{
+			if (check == slot) return true;
+		}
+		return false;
+	}
+	
+	@Deprecated
+	default EnumSlot getSlot(ItemStack stack)
+	{
+		return getFirstSlot(stack);
+	}
 
 	public class Quality
 	{
@@ -153,14 +210,6 @@ public interface ICyberware
 		{
 			return hasEssential;
 		}
-	}
-
-	public void onAdded(EntityLivingBase entity, ItemStack stack);
-	public void onRemoved(EntityLivingBase entity, ItemStack stack);
-	public int getEssenceCost(ItemStack stack);
-	default String getUnlocalizedOrigin(ItemStack stack)
-	{
-		return "cyberware.gui.tablet.catalog.sort.other";
 	}
 
 	@Deprecated

@@ -22,15 +22,28 @@ import flaxbeard.cyberware.api.progression.ItemPool;
 
 public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyberwareTabItem, IDeconstructable
 {
-	private EnumSlot[] slots;
+	private EnumSlot[][] slots;
 	private int[] essence;
 	private ItemStack[][] components;
+	
+	public ItemCyberware(String name, EnumSlot[][] slots, String[] subnames)
+	{		
+		super(name, subnames);
+		
+		this.slots = slots;
+		this.essence = new int[subnames.length + 1];
+		this.components = new ItemStack[0][0];
+	}
 	
 	public ItemCyberware(String name, EnumSlot[] slots, String[] subnames)
 	{		
 		super(name, subnames);
 		
-		this.slots = slots;
+		this.slots = new EnumSlot[slots.length][0];
+		for (int i = 0; i < slots.length; i++)
+		{
+			this.slots[i] = new EnumSlot[] { slots[i] };
+		}
 		
 		this.essence = new int[subnames.length + 1];
 		this.components = new ItemStack[0][0];
@@ -110,7 +123,7 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 
 
 	@Override
-	public EnumSlot getSlot(ItemStack stack)
+	public EnumSlot[] getSlots(ItemStack stack)
 	{
 		return slots[Math.min(slots.length - 1, stack.getItemDamage())];
 	}
@@ -306,9 +319,11 @@ public class ItemCyberware extends ItemCyberwareBase implements ICyberware, ICyb
 	@Override
 	public EnumCategory getCategory(ItemStack stack)
 	{
-		EnumSlot slot = this.getSlot(stack);
+		EnumSlot slot = this.getFirstSlot(stack);
 		if (slot == EnumSlot.ARMLEFT) slot = EnumSlot.ARM;
 		if (slot == EnumSlot.LEGLEFT) slot = EnumSlot.LEG;
+		if (slot == EnumSlot.HANDLEFT) slot = EnumSlot.HAND;
+		if (slot == EnumSlot.FOOTLEFT) slot = EnumSlot.FOOT;
 		return EnumCategory.values()[slot.ordinal() + 3];
 	}
 

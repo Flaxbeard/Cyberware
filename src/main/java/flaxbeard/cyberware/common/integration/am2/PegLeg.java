@@ -37,9 +37,9 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	}
 
 	@Override
-	public EnumSlot getSlot(ItemStack stack)
+	public EnumSlot[] getSlots(ItemStack stack)
 	{
-		return EnumSlot.LEG;
+		return new EnumSlot[] { EnumSlot.LEG };
 	}
 
 	@Override
@@ -120,13 +120,12 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	}
 
 
-	@SideOnly(Side.CLIENT)
-	private static final ModelPlayer model = new ModelPegLeg();
+	private static Object model = null;
 	
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation texture = new ResourceLocation(Cyberware.MODID + ":textures/models/pegLeg.png");
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture(ItemStack stack)
 	{
 		return texture;
@@ -137,6 +136,10 @@ public class PegLeg implements ICyberware, ISidedLimb, ILimbReplacement
 	@SideOnly(Side.CLIENT)
 	public Object getModel(ItemStack itemStack, boolean wideArms, Object baseWide, Object baseSkinny, EntityPlayer player)
 	{
+		if (model == null)
+		{
+			model = new ModelPegLeg();
+		}
 		return model;
 	}
 

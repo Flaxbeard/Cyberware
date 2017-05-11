@@ -52,10 +52,10 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 		return true;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation texture = new ResourceLocation(Cyberware.MODID + ":textures/models/playerProsthetic.png");
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture(ItemStack stack)
 	{
 		return texture;
@@ -106,7 +106,7 @@ public class ItemProsthetics extends ItemCyberware implements ISidedLimb, ILimbR
 		if (CyberwareAPI.hasCapability(player))
 		{
 			ICyberwareUserData data = CyberwareAPI.getCapability(player);
-			if (!data.hasEssential(getSlot(stack)))
+			if (!data.hasEssential(getFirstSlot(stack)))
 			{
 				ItemStack[] items = data.getInstalledCyberware(getSlot(stack));
 				for (int i = 0; i < items.length; i++)

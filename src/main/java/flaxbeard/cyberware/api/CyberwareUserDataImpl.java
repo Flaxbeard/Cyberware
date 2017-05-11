@@ -26,7 +26,6 @@ import flaxbeard.cyberware.Cyberware;
 import flaxbeard.cyberware.api.item.HotkeyHelper;
 import flaxbeard.cyberware.api.item.ICyberware;
 import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
-import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb;
 import flaxbeard.cyberware.api.item.ICyberware.ISidedLimb.EnumSide;
 import flaxbeard.cyberware.api.item.IHudjack;
 import flaxbeard.cyberware.api.item.ILimbReplacement;
@@ -540,20 +539,41 @@ public class CyberwareUserDataImpl implements ICyberwareUserData
 	@Override
 	public int getCyberwareRank(ItemStack cyberware)
 	{
-		ItemStack cw = getCyberware(cyberware);
+		int count = 0;
 		
-		if (cw != null)
+		EnumSlot[] slots = CyberwareAPI.getCyberware(cyberware).getSlots(cyberware);
+		for (EnumSlot slot : slots)
 		{
-			return cw.stackSize;
+			ItemStack cw = getCyberwareInSlot(cyberware, slot);
+			
+			if (cw != null)
+			{
+				count += cw.stackSize;
+			}
 		}
 		
-		return 0;
+		return count;
 	}
 	
 	@Override
 	public ItemStack getCyberware(ItemStack cyberware)
 	{
-		ItemStack[] slotItems = getInstalledCyberware(CyberwareAPI.getCyberware(cyberware).getSlot(cyberware));
+		EnumSlot[] slots = CyberwareAPI.getCyberware(cyberware).getSlots(cyberware);
+		for (EnumSlot slot : slots)
+		{
+			ItemStack res = getCyberwareInSlot(cyberware, slot);
+			if (res != null)
+			{
+				return res;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public ItemStack getCyberwareInSlot(ItemStack cyberware, EnumSlot slot)
+	{
+		ItemStack[] slotItems = getInstalledCyberware(slot);
 		for (ItemStack item : slotItems)
 		{
 			if (item != null && item.getItem() == cyberware.getItem() && item.getItemDamage() == cyberware.getItemDamage())

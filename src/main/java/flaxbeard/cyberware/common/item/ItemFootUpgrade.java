@@ -17,15 +17,16 @@ import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.CyberwareUpdateEvent;
 import flaxbeard.cyberware.api.item.EnableDisableHelper;
 import flaxbeard.cyberware.api.item.IMenuItem;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 {
 
-	public ItemFootUpgrade(String name, EnumSlot slot, String[] subnames)
+	public ItemFootUpgrade(String name, EnumSlot[] slot, String[] subnames)
 	{
-		super(name, slot, subnames);
+		super(name, new EnumSlot[][] { slot }, subnames);
 		MinecraftForge.EVENT_BUS.register(this);
 
 	}
@@ -71,11 +72,11 @@ public class ItemFootUpgrade extends ItemCyberware implements IMenuItem
 		if (CyberwareAPI.isCyberwareInstalled(e, test) && e.isInWater() && !e.onGround)
 		{
 			int numLegs = 0;
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 2)))
+			if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.FOOT))
 			{
 				numLegs++;
 			}
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 3)))
+			if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.FOOTLEFT))
 			{
 				numLegs++;
 			}

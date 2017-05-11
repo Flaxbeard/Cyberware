@@ -10,15 +10,16 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import flaxbeard.cyberware.api.CyberwareAPI;
 import flaxbeard.cyberware.api.ICyberwareUserData;
+import flaxbeard.cyberware.api.item.ICyberware.EnumSlot;
 import flaxbeard.cyberware.common.CyberwareContent;
 import flaxbeard.cyberware.common.lib.LibConstants;
 
 public class ItemLegUpgrade extends ItemCyberware
 {
 
-	public ItemLegUpgrade(String name, EnumSlot slot, String[] subnames)
+	public ItemLegUpgrade(String name, EnumSlot[] slot, String[] subnames)
 	{
-		super(name, slot, subnames);
+		super(name, new EnumSlot[][] { slot }, subnames);
 		MinecraftForge.EVENT_BUS.register(this);
 
 	}
@@ -40,11 +41,11 @@ public class ItemLegUpgrade extends ItemCyberware
 		if (CyberwareAPI.isCyberwareInstalled(e, test))
 		{
 			int numLegs = 0;
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 2)))
+			if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.LEG))
 			{
 				numLegs++;
 			}
-			if (CyberwareAPI.isCyberwareInstalled(e, new ItemStack(CyberwareContent.cyberlimbs, 1, 3)))
+			if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.LEGLEFT))
 			{
 				numLegs++;
 			}
@@ -81,9 +82,22 @@ public class ItemLegUpgrade extends ItemCyberware
 		EntityLivingBase e = event.getEntityLiving();
 		
 		ItemStack test = new ItemStack(this, 1, 1);
-		if (event.getSource() == DamageSource.fall && event.getAmount() <= 6F && CyberwareAPI.isCyberwareInstalled(e, test))
+		if (event.getSource() == DamageSource.fall && event.getAmount() <= 8F && CyberwareAPI.isCyberwareInstalled(e, test))
 		{
-			event.setCanceled(true);
+			if (event.getAmount() <= 6F)
+			{
+				event.setCanceled(true);
+			}
+			else
+			{
+				if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.LEG))
+				{
+					if (CyberwareAPI.isCyberwareInstalledInSlot(e, test, EnumSlot.LEGLEFT))
+					{
+						event.setCanceled(true);
+					}
+				}
+			}
 		}
 	}
 

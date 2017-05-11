@@ -284,7 +284,7 @@ public class TileEntitySurgery extends TileEntity implements ITickable
 					{
 						for (int i = 0; i < LibConstants.WARE_PER_SLOT; i++)
 						{
-							if (i != n)
+							if (i != n || (row != slot.ordinal()))
 							{
 								int index = row * LibConstants.WARE_PER_SLOT + i;
 								ItemStack slotStack = slots.getStackInSlot(index);

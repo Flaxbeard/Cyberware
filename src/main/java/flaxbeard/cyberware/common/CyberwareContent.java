@@ -364,14 +364,14 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 2, 1), new ItemStack(component, 2, 8), new ItemStack(component, 1, 9) }
 				);
 		
-		armUpgrades = new ItemArmUpgrade("armUpgrades", EnumSlot.ARM,
+		armUpgrades = new ItemArmUpgrade("armUpgrades", new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARMLEFT },
 				new String[] { "bow"  });
 		armUpgrades.setEssenceCost(3);
 		armUpgrades.setWeights(RARE);
 		armUpgrades.setComponents(
 				new ItemStack[] { new ItemStack(component, 4, 0), new ItemStack(component, 2, 4) });
 		
-		handUpgrades = new ItemHandUpgrade("handUpgrades", EnumSlot.HAND,
+		handUpgrades = new ItemHandUpgrade("handUpgrades", new EnumSlot[] { EnumSlot.HAND, EnumSlot.HANDLEFT },
 				new String[] { "craftHands", "claws", "mining" });
 		handUpgrades.setEssenceCost(2, 2, 1);
 		handUpgrades.setWeights(RARE, RARE, RARE);
@@ -381,7 +381,7 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 1, 2), new ItemStack(component, 1, 4), new ItemStack(component, 2, 6)}
 				);
 		
-		legUpgrades = new ItemLegUpgrade("legUpgrades", EnumSlot.LEG,
+		legUpgrades = new ItemLegUpgrade("legUpgrades", new EnumSlot[] { EnumSlot.LEG, EnumSlot.LEGLEFT },
 				new String[] { "jumpBoost", "fallDamage" });
 		legUpgrades.setEssenceCost(3, 2);
 		legUpgrades.setWeights(RARE, RARE);
@@ -389,7 +389,7 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 2) },
 				new ItemStack[] { new ItemStack(component, 3, 2), new ItemStack(component, 1, 4), new ItemStack(component, 1, 5) });
 		
-		footUpgrades = new ItemFootUpgrade("footUpgrades", EnumSlot.FOOT,
+		footUpgrades = new ItemFootUpgrade("footUpgrades", new EnumSlot[] { EnumSlot.FOOT, EnumSlot.FOOTLEFT },
 				new String[] { "spurs", "aqua", "wheels" });
 		footUpgrades.setEssenceCost(1, 2, 3);
 		footUpgrades.setWeights(UNCOMMON, RARE, UNCOMMON);
@@ -399,7 +399,7 @@ public class CyberwareContent
 				new ItemStack[] { new ItemStack(component, 2, 0), new ItemStack(component, 2, 9) });
 
 		cyberlimbs = new ItemCyberlimb("cyberlimbs", 
-				new EnumSlot[] { EnumSlot.ARM, EnumSlot.ARM, EnumSlot.LEG, EnumSlot.LEG },
+				new EnumSlot[] { EnumSlot.ARMLEFT, EnumSlot.ARM, EnumSlot.LEGLEFT, EnumSlot.LEG },
 				new String[] { "cyberarmLeft", "cyberarmRight", "cyberlegLeft", "cyberlegRight" });
 		cyberlimbs.setEssenceCost(25, 25, 25, 25);
 		cyberlimbs.setComponents(
