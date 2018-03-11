@@ -117,14 +117,7 @@ public class ItemLowerOrgansUpgrade extends ItemCyberware implements IMenuItem
 						int toRemove = getTicksTilRemove(stack);
 						if (!p.isCreative() && toRemove <= 0)
 						{
-							/*if (p.getFoodStats().getSaturationLevel() >= 1F)
-							{
-								p.getFoodStats().setFoodSaturationLevel(p.getFoodStats().getSaturationLevel() - 1);
-							}
-							else
-							{*/
-								p.getFoodStats().setFoodLevel(p.getFoodStats().getFoodLevel() - 1);
-							/*}*/
+							p.getFoodStats().addExhaustion(6F);
 							toRemove = LibConstants.METABOLIC_USES;
 						}
 						else if (toRemove > 0)
